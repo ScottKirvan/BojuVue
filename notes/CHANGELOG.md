@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.0.4](https://github.com/ScottKirvan/BojuVue/compare/v0.0.3...v0.0.4) (2026-08-24)
+
+
+### Bug Fixes
+
+* use RELEASE_PLEASE_TOKEN so push events trigger downstream workflows ([fccebfb](https://github.com/ScottKirvan/BojuVue/commit/fccebfb3229cfaf0e740fbfec358f3f0fd37be37))
+
 ## [0.0.3](https://github.com/ScottKirvan/BojuVue/compare/v0.0.2...v0.0.3) (2026-08-24)
 
 
