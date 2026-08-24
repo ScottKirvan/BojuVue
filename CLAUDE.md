@@ -9,6 +9,28 @@ here so future sessions start with full context rather than re-deriving it.
 
 Update this file in the same commit as the work it documents.
 
+## Project Overview
+
+BojuVue is a Vue 3 + TypeScript component library published to npm as
+`@scottkirvan/bojuvue`. It's consumed by multiple VitePress sites (a homepage blog and
+several local documentation sites) that need shared landing-page/UX components instead
+of duplicating them per repo.
+
+- `src/index.ts` — the single entry point; every component is re-exported from here.
+- `vite.config.ts` — Vite library-mode build (ES module output, `vue` external as a
+  peer dependency, types emitted via `vite-plugin-dts`).
+- `docs/` — a separate VitePress project (its own `package.json`/`node_modules`) that
+  both serves as this library's demo site and doubles as a live component preview:
+  `docs/.vitepress/theme/index.ts` imports directly from `../../../src/index` and
+  registers every exported component globally, so a new component can be seen in a
+  real VitePress site (`npm run docs:dev` from `docs/`) without publishing or
+  `npm link`.
+- Root `npm run build` runs `vue-tsc -b` (typecheck, via composite project
+  references) then `vite build` (emits `dist/`). There's no separate typecheck-only
+  script — `vue-tsc -b --noEmit` isn't valid with composite project references, so
+  `build` is the only way to type-check.
+- `.github/workflows/ci.yml` runs the root build on push/PR.
+
 ## Working Conventions
 
 - Never commit or push directly to `main`. Always branch first, then PR.
