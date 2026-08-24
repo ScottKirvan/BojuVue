@@ -9,6 +9,8 @@
 * fire release-please ([9398d4a](https://github.com/ScottKirvan/BojuVue/commit/9398d4a560dd89f75737dff588f3bdfb80549188))
 * switch npm publish to OIDC trusted publishing (no token required) ([10591ad](https://github.com/ScottKirvan/BojuVue/commit/10591adcba5b9a9f3f949eb6767bb23ba6fb225d))
 
+Includes PRs: [#10](https://github.com/ScottKirvan/BojuVue/pull/10), [#11](https://github.com/ScottKirvan/BojuVue/pull/11), [#9](https://github.com/ScottKirvan/BojuVue/pull/9)
+
 ## 0.0.0 (2026-08-24)
 
 
