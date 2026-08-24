@@ -12,6 +12,7 @@
 ### Bug Fixes
 
 * resolve vue in docs build when it imports outside docs/ ([421c16a](https://github.com/ScottKirvan/BojuVue/commit/421c16a55e1d59c4af9377ae1b90ab561793033f))
+* wire automated npm publish on release ([6519079](https://github.com/ScottKirvan/BojuVue/commit/651907966465b5119c87737f7c37b9593f5a4ba9))
 
 ## Changelog
 >[!NOTE]
