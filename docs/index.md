@@ -27,6 +27,8 @@ features:
     details: TODO - Describe your third key feature here.
 ---
 
+<HelloWorld />
+
 <!-- Begin Sponsors -->
 
 <div align="center" style="margin-top: 3rem; margin-bottom: 2rem;">
