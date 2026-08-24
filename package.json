@@ -1,0 +1,33 @@
+{
+  "name": "@scottkirvan/bojuvue",
+  "version": "0.0.0",
+  "type": "module",
+  "license": "MIT",
+  "description": "Shared Vue 3 component library for ScottKirvan's VitePress sites.",
+  "files": [
+    "dist"
+  ],
+  "main": "./dist/bojuvue.js",
+  "module": "./dist/bojuvue.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/bojuvue.js"
+    }
+  },
+  "scripts": {
+    "build": "vue-tsc -b && vite build"
+  },
+  "devDependencies": {
+    "@types/node": "^26.2.0",
+    "@vitejs/plugin-vue": "^6.0.8",
+    "typescript": "^5.9.3",
+    "vite": "^8.2.2",
+    "vite-plugin-dts": "^5.0.3",
+    "vue-tsc": "^3.3.11"
+  },
+  "peerDependencies": {
+    "vue": "^3.5.41"
+  }
+}

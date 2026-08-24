@@ -3,7 +3,7 @@
 
   <img src="assets/media/logo.jpg" alt="logo" width="200" height="auto" />
     <h1><a href="https://github.com/ScottKirvan/BojuVue">ScottKirvan/BojuVue</a></h1>
-  <h3>Nulla nobis dicta iste minus dolor repellendus aspernatur atque</h3>
+  <h3>A shared Vue 3 component library for ScottKirvan's VitePress sites</h3>
   
   
 <!-- Badges -->
@@ -43,20 +43,20 @@
   </h4>
 </div>
 
-**BojuVue** is voluptatibus magni nemo est. Nulla nobis dicta iste minus dolor repellendus aspernatur atque. Earum expedita aut inventore tempora fugiat deleniti. Molestias minima nam expedita beatae totam ipsa reprehenderit animi. Occaecati quibusdam beatae ducimus voluptate ut doloribus vitae amet. Quia ut ut voluptate dignissimos adipisci dolorum rem.
+**BojuVue** is a Vue 3 component library published to npm as [`@scottkirvan/bojuvue`](https://www.npmjs.com/package/@scottkirvan/bojuvue). It exists so that VitePress sites — this author's homepage blog and several local documentation sites — can share one set of landing-page and UX components instead of duplicating them per repo. Update this repo, bump the version, publish, and every consuming site can pull in the update with `npm update`.
 
 ## Getting Started with This Template
 
 >[!IMPORTANT]
 > **Customization Checklist** - After creating a repository from this template, customize these items:
 >
-> - [ ] Update the project description (line 5 above and in repository settings)
+> - [x] Update the project description (line 5 above and in repository settings)
 > - [ ] Replace `assets/media/logo.jpg` with your project logo
 > - [ ] Update or remove the "View Demo" link (line 35)
 > - [ ] Update or remove the Discord badge/link (lines 28-31)
 > - [ ] Choose and apply a `.gitignore` from `.github/gitignore-templates/` (see [gitignore templates](.github/gitignore-templates/))
 > - [ ] Update the version in `.release-please-manifest.json` to your starting version (e.g., "0.1.0")
-> - [ ] Fill in the Features, Installation, and Usage sections below
+> - [x] Fill in the Features, Installation, and Usage sections below
 > - [ ] Review and update the [Code of Conduct](CODE_OF_CONDUCT.md) contact information
 > - [ ] Enable GitHub Pages in repository settings if you want a project website
 > - [ ] Review and customize `CLAUDE.md` if using AI coding agents, or delete it if not
@@ -126,10 +126,41 @@ Table of Contents
 
 Features
 --------
+- Vue 3 + TypeScript components, built as an ES module via Vite library mode
+- `vue` is a peer dependency, so consuming sites use their own Vue instance — no duplicate copies, no broken reactivity
+- Every component is exported from one entry point (`src/index.ts`), so consuming a new component is a one-line import change
+- The `docs/` VitePress site imports directly from `src/index.ts` and registers every exported component globally, so new components can be previewed live in a real VitePress site without publishing or `npm link`
+
 Installation
 ------------
+```
+npm install @scottkirvan/bojuvue
+```
+
 Usage
 -----
+Import and register components in a consuming VitePress site's `.vitepress/theme/index.ts`:
+
+```ts
+import DefaultTheme from 'vitepress/theme'
+import { SomeComponent } from '@scottkirvan/bojuvue'
+
+export default {
+  extends: DefaultTheme,
+  enhanceApp({ app }) {
+    app.component('SomeComponent', SomeComponent)
+  },
+}
+```
+
+Then use it in any `.md` page. Update later with `npm update`.
+
+### Adding a new component
+
+1. Write the `.vue` file under `src/`
+2. Add one line to `src/index.ts`: `export { default as YourComponent } from './YourComponent.vue'`
+3. Run `npm run docs:dev` (from `docs/`) to preview it live in the VitePress site
+4. Bump the version and `npm publish` to ship it to every consuming site
 
 Contributions / Contact
 -----------------------
