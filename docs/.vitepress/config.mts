@@ -1,9 +1,20 @@
+import { fileURLToPath, URL } from 'node:url'
 import { defineConfig } from 'vitepress'
 
 export default defineConfig({
   title: "BojuVue",
   description: "TODO - Replace with your project description.",
   base: '/BojuVue/',
+  vite: {
+    resolve: {
+      // Components imported from ../src (outside docs/) still need to resolve
+      // `vue` — without this alias, Vite resolves it relative to the importing
+      // file's own directory (repo root), which may not have vue installed.
+      alias: {
+        vue: fileURLToPath(new URL('../node_modules/vue', import.meta.url)),
+      },
+    },
+  },
   themeConfig: {
     nav: [
       { text: 'Home', link: '/' },
