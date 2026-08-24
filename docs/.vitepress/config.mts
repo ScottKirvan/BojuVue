@@ -2,7 +2,7 @@ import { defineConfig } from 'vitepress'
 
 export default defineConfig({
   title: "BojuVue",
-  description: "TODO: Replace with your project description.",
+  description: "TODO - Replace with your project description.",
   base: '/BojuVue/',
   themeConfig: {
     nav: [
