@@ -37,6 +37,15 @@ of duplicating them per repo.
 - Branch names must describe the work (e.g. `fix/login-timeout`, `feat/export-csv`).
   No random characters, UUIDs, or generated suffixes to ensure uniqueness — if a name
   is already taken, pick a more specific descriptive name instead.
+- Treat any branch as provisional once its PR is opened — the owner merges and deletes
+  branches quickly, often within the same session. Before pushing to, or building new
+  commits on, a previously-used branch, run `git fetch --prune` and confirm its remote
+  ref still exists. If it's gone, start fresh off updated `main` rather than continuing
+  on the stale local branch. See `notes/dev/mistakes.md` for the incident that prompted
+  this.
+- After `git fetch --prune` shows a local branch's remote is gone (merged and deleted),
+  delete the local branch too rather than leaving it around — check its commits are
+  actually reflected in `main` first (they will be, post-merge) before `git branch -D`.
 - If a branch name is pre-assigned by tooling (a hosted agent session, a CI runner)
   rather than chosen by you, verify it against this convention before the first push.
   Rename locally (`git branch -m <name>`) if it doesn't match — being handed a name
