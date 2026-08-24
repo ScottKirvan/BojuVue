@@ -27,7 +27,7 @@ features:
     details: TODO - Describe your third key feature here.
 ---
 
-<HelloWorld />
+<HelloWorld title="Hello, BojuVue!" text="This text is passed in from index.md, not hardcoded." />
 
 <!-- Begin Sponsors -->
 
