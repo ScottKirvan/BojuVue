@@ -7,6 +7,8 @@
 
 * add repository field to package.json for npm provenance validation ([5f22366](https://github.com/ScottKirvan/BojuVue/commit/5f22366d876d325605d7b9e5e6790ba12458b5ab))
 
+Includes PRs: [#14](https://github.com/ScottKirvan/BojuVue/pull/14), [#15](https://github.com/ScottKirvan/BojuVue/pull/15)
+
 ## [0.0.2](https://github.com/ScottKirvan/BojuVue/compare/v0.0.1...v0.0.2) (2026-08-24)
 
 
