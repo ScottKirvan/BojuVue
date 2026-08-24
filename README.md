@@ -173,6 +173,10 @@ Credits
 **[ScooterGitTemplate](https://github.com/ScottKirvan/ScooterGitTemplate) Copyright (c) (2025):** [Scott Kirvan](https://github.com/ScottKirvan)  - All rights reserved
 *ScooterGitTemplate is licensed under the [MIT License](LICENSE.md).*
 
+
+
+x
+
 Project Link:  [BojuVue](https://github.com/ScottKirvan/BojuVue)  
 [CHANGELOG](notes/CHANGELOG.md)  
 [TODO](notes/TODO.md)
