@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.0.3](https://github.com/ScottKirvan/BojuVue/compare/v0.0.2...v0.0.3) (2026-08-24)
+
+
+### Bug Fixes
+
+* add repository field to package.json for npm provenance validation ([5f22366](https://github.com/ScottKirvan/BojuVue/commit/5f22366d876d325605d7b9e5e6790ba12458b5ab))
+
 ## [0.0.2](https://github.com/ScottKirvan/BojuVue/compare/v0.0.1...v0.0.2) (2026-08-24)
 
 
