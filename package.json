@@ -4,6 +4,10 @@
   "type": "module",
   "license": "MIT",
   "description": "Shared Vue 3 component library for ScottKirvan's VitePress sites.",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ScottKirvan/BojuVue"
+  },
   "files": [
     "dist"
   ],
