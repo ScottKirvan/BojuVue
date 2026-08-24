@@ -1,6 +1,6 @@
 {
   "name": "@scottkirvan/bojuvue",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "type": "module",
   "license": "MIT",
   "description": "Shared Vue 3 component library for ScottKirvan's VitePress sites.",
