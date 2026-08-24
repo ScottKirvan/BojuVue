@@ -1,5 +1,14 @@
 # Changelog
 
+## [0.0.1](https://github.com/ScottKirvan/BojuVue/compare/v0.0.0...v0.0.1) (2026-08-24)
+
+
+### Bug Fixes
+
+* explicitly set component in release-please config to prevent undefined mismatch ([c146101](https://github.com/ScottKirvan/BojuVue/commit/c1461015bad97107d877dbc1efb0d1f5dee3b98e))
+* fire release-please ([9398d4a](https://github.com/ScottKirvan/BojuVue/commit/9398d4a560dd89f75737dff588f3bdfb80549188))
+* switch npm publish to OIDC trusted publishing (no token required) ([10591ad](https://github.com/ScottKirvan/BojuVue/commit/10591adcba5b9a9f3f949eb6767bb23ba6fb225d))
+
 ## 0.0.0 (2026-08-24)
 
 
