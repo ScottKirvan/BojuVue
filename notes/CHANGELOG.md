@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.0.2](https://github.com/ScottKirvan/BojuVue/compare/v0.0.1...v0.0.2) (2026-08-24)
+
+
+### Bug Fixes
+
+* add NODE_AUTH_TOKEN back alongside provenance flag ([11b2af7](https://github.com/ScottKirvan/BojuVue/commit/11b2af753a72f1de648d44f45339dff847aef91c))
+
 ## [0.0.1](https://github.com/ScottKirvan/BojuVue/compare/v0.0.0...v0.0.1) (2026-08-24)
 
 
