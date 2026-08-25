@@ -9,16 +9,17 @@ download that doesn't exist for this visitor's platform.
 
 This site's own `docs/public/downloadButton.json` is used below — open dev tools and
 override `navigator.platform`/`navigator.userAgent` to see the label and link change.
-The manifest deliberately has no `macos` entry, to demonstrate both behaviors:
-
-With a `fallbackHref`, macOS visitors still see a (generic) button:
+It has an entry for every platform, so both buttons below link to a real page no
+matter which platform gets detected:
 
 <DownloadButton fallback-href="https://github.com/ScottKirvan/BojuVue/releases" />
 
-With no `fallbackHref`, macOS visitors see nothing at all — try switching your
-`navigator.platform` to `MacIntel` in dev tools and reloading to compare:
-
 <DownloadButton />
+
+To see the "no matching platform" case — the second button above hiding itself
+instead of showing a link — remove a platform's entry from
+`docs/public/downloadButton.json` locally and reload, or see the `resolveDownload`
+tests in `src/platform.test.ts`, which cover it directly.
 
 ## Props
 
@@ -44,7 +45,8 @@ site's own build):
   "macos": "https://example.com/releases/app-macos.dmg",
   "linux": "https://example.com/releases/app-linux.tar.gz",
   "android": "https://example.com/releases/app-android.apk",
-  "ios": "https://example.com/releases/app-ios-or-testflight-link"
+  "ios": "https://example.com/releases/app-ios-or-testflight-link",
+  "chromeos": "https://example.com/releases/app-chromeos.apk"
 }
 ```
 
@@ -55,10 +57,11 @@ button. Each platform key also accepts an optional `"<platform>Label"` sibling (
 is the single place both the link and its label live, so there's nothing to keep in
 sync across two different files.
 
-There's no `chromeos` key in the example above deliberately: ChromeOS runs Android
-apps, so if a build ships for `android` but not `chromeos`, ChromeOS visitors
-automatically get the Android link. Add a `chromeos` key only if you publish something
-ChromeOS-specific.
+`chromeos` is the one key with a built-in fallback: ChromeOS runs Android apps, so if
+you omit `chromeos` but provide `android`, ChromeOS visitors automatically get the
+Android link. Provide a `chromeos` key yourself only if you publish something
+ChromeOS-specific — that choice belongs to whoever's shipping builds, not this
+component.
 
 ## Platform detection
 

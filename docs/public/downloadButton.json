@@ -2,7 +2,9 @@
   "version": "0.1.0",
   "windows": "https://github.com/ScottKirvan/BojuVue/releases/latest",
   "windowsLabel": "Get the Windows build",
+  "macos": "https://github.com/ScottKirvan/BojuVue/releases/latest",
   "linux": "https://github.com/ScottKirvan/BojuVue/releases/latest",
   "android": "https://github.com/ScottKirvan/BojuVue/releases/latest",
-  "ios": "https://github.com/ScottKirvan/BojuVue/releases/latest"
+  "ios": "https://github.com/ScottKirvan/BojuVue/releases/latest",
+  "chromeos": "https://github.com/ScottKirvan/BojuVue/releases/latest"
 }
