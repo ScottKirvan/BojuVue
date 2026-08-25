@@ -15,9 +15,9 @@ export default defineConfig({
       formats: ['es'],
     },
     rollupOptions: {
-      external: ['vue'],
+      external: ['vue', 'vitepress'],
       output: {
-        globals: { vue: 'Vue' },
+        globals: { vue: 'Vue', vitepress: 'VitePress' },
       },
     },
   },
