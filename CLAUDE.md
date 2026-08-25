@@ -96,6 +96,36 @@ of duplicating them per repo.
   hard to understand, the fix is clearer naming and structure, not a comment explaining
   what it does.
 
+## Definition of Done for a New Component
+
+A component isn't done when it builds and the happy path works. Before presenting one
+as finished:
+
+- **The data shape is designed, not copied.** If modeling this on an existing or
+  reference implementation, re-justify every field for *this* use case instead of
+  carrying it over by default. An unused field, or one whose relationship to another
+  field is only a naming convention rather than real structure (e.g. a `fooLabel` key
+  that only means something when a `foo` key also happens to exist), is a design
+  smell to fix at design time — not a detail to patch after review points it out.
+  Prefer shapes that make invalid states hard to express.
+- **Every failure and edge path is enumerated, and its user-visible behavior is a
+  deliberate choice** — not whatever falls out of the code by default. What does a
+  user see if a required input never arrives? If nothing matches? If something
+  partially matches? Decide each one on purpose, and document the decision.
+- **Tests exist for anything with real logic, written alongside the code** — not
+  after being asked. Extract logic worth testing into plain, testable functions
+  rather than mounting a component to cover it (see `src/platform.ts` next to
+  `DownloadButton.vue`).
+- **Docs exist alongside the code, not as a follow-up:** every prop's default and
+  whether it's required, every field of any data schema and why it's shaped that way,
+  what a user actually experiences in each failure/edge case (not just that a
+  fallback "exists"), and an explicit callout for anything considered and
+  deliberately not supported, with why.
+
+The bar is "a stranger, with neither of us in the room, could use this correctly" —
+not "the build passes." See `notes/dev/mistakes.md` for the incident that prompted
+writing this down.
+
 ## No Shortcuts
 
 Nothing is deferred without explicit permission from the user. A known issue is still
