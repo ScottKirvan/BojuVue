@@ -46,6 +46,18 @@ describe('detectPlatform', () => {
     ).toBe('macos')
   })
 
+  it('does not mistake a single touch point for iPadOS support — the guard requires > 1, not > 0', () => {
+    expect(
+      detectPlatform(
+        nav({
+          userAgent: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_6)',
+          platform: 'MacIntel',
+          maxTouchPoints: 1,
+        })
+      )
+    ).toBe('macos')
+  })
+
   it('detects Android ahead of Linux, even though Android reports a Linux platform string', () => {
     expect(
       detectPlatform(
@@ -96,6 +108,13 @@ describe('resolveDownload', () => {
     })
   })
 
+  it("defaults fallbackLabel to 'View Downloads' when the caller doesn't provide one", () => {
+    expect(resolveDownload(null, null, { fallbackHref: 'https://example.com/releases' })).toEqual({
+      href: 'https://example.com/releases',
+      label: 'View Downloads',
+    })
+  })
+
   it('returns null (hides the button) when nothing matches and no fallbackHref was given', () => {
     expect(resolveDownload('linux', { windows: { href: 'https://example.com/win.msi' } }, {})).toBeNull()
     expect(resolveDownload('windows', null, {})).toBeNull()
@@ -128,6 +147,15 @@ describe('resolveDownload', () => {
     ).toEqual({
       href: 'https://example.com/android.apk',
       label: 'Get for ChromeOS',
+    })
+  })
+
+  it('falls back to fallbackHref for ChromeOS when the manifest has neither a chromeos nor an android entry', () => {
+    expect(
+      resolveDownload('chromeos', { windows: { href: 'https://example.com/win.msi' } }, options)
+    ).toEqual({
+      href: 'https://example.com/releases',
+      label: 'View Downloads',
     })
   })
 
