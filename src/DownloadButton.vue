@@ -6,14 +6,11 @@ import { detectPlatform, resolveDownload, type DownloadManifest, type PlatformId
 const props = withDefaults(
   defineProps<{
     manifestUrl?: string
-    fallbackHref: string
+    fallbackHref?: string
     fallbackLabel?: string
-    labels?: Partial<Record<PlatformId, string>>
   }>(),
   {
-    manifestUrl: 'latest.json',
-    fallbackLabel: 'View Downloads',
-    labels: () => ({}),
+    manifestUrl: 'downloadButton.json',
   }
 )
 
@@ -35,13 +32,12 @@ const download = computed(() =>
   resolveDownload(platform.value, manifest.value, {
     fallbackHref: props.fallbackHref,
     fallbackLabel: props.fallbackLabel,
-    labels: props.labels,
   })
 )
 </script>
 
 <template>
-  <a class="bv-download-button" :href="download.href" target="_blank" rel="noopener noreferrer">
+  <a v-if="download" class="bv-download-button" :href="download.href" target="_blank" rel="noopener noreferrer">
     {{ download.label }}
   </a>
 </template>

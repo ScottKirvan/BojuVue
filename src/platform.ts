@@ -1,9 +1,11 @@
 export type PlatformId = 'windows' | 'macos' | 'linux' | 'android' | 'ios' | 'chromeos'
 
 // Expected shape of the JSON file DownloadButton fetches:
-// { "version": "1.2.3", "windows": "https://...", "macos": "https://...", ... }
-// Every platform key is optional — omit any you don't ship a build for.
-export type DownloadManifest = { version?: string } & Partial<Record<PlatformId, string>>
+// { "version": "1.2.3", "windows": "https://...", "windowsLabel": "Get the app", ... }
+// Every platform key (and its optional "<platform>Label" override) is optional — omit
+// any you don't ship a build for.
+export type DownloadManifest = { version?: string } & Partial<Record<PlatformId, string>> &
+  Partial<Record<`${PlatformId}Label`, string>>
 
 export interface NavigatorLike {
   userAgent: string
@@ -37,24 +39,32 @@ const defaultLabels: Record<PlatformId, string> = {
   chromeos: 'Get for ChromeOS',
 }
 
+export interface ResolveDownloadOptions {
+  // Omit fallbackHref to hide the button entirely when there's nothing
+  // platform-specific to link to, rather than pointing at a generic page
+  // that may not actually have anything for this visitor's platform.
+  fallbackHref?: string
+  fallbackLabel?: string
+}
+
 export function resolveDownload(
   platform: PlatformId | null,
   manifest: DownloadManifest | null,
-  options: { fallbackHref: string; fallbackLabel: string; labels?: Partial<Record<PlatformId, string>> }
-): { href: string; label: string } {
-  if (!platform) {
-    return { href: options.fallbackHref, label: options.fallbackLabel }
+  options: ResolveDownloadOptions = {}
+): { href: string; label: string } | null {
+  if (platform && manifest) {
+    // ChromeOS runs Android apps — fall back to the Android build if no
+    // ChromeOS-specific one is published.
+    const link = platform === 'chromeos' ? (manifest.chromeos ?? manifest.android) : manifest[platform]
+    if (link) {
+      const label = manifest[`${platform}Label`] ?? defaultLabels[platform]
+      return { href: link, label }
+    }
   }
 
-  const label = options.labels?.[platform] ?? defaultLabels[platform]
-
-  if (!manifest) {
-    return { href: options.fallbackHref, label }
+  if (options.fallbackHref) {
+    return { href: options.fallbackHref, label: options.fallbackLabel ?? 'View Downloads' }
   }
 
-  // ChromeOS runs Android apps — fall back to the Android build if no
-  // ChromeOS-specific one is published.
-  const link = platform === 'chromeos' ? (manifest.chromeos ?? manifest.android) : manifest[platform]
-
-  return { href: link ?? options.fallbackHref, label }
+  return null
 }
