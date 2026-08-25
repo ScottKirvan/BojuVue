@@ -12,9 +12,13 @@ override `navigator.platform`/`navigator.userAgent` to see the label and link ch
 It has an entry for every platform, so both buttons below link to a real page no
 matter which platform gets detected:
 
+<div style="display: flex; flex-wrap: wrap; gap: 12px;">
+
 <BVPlatformButton fallback-href="https://github.com/ScottKirvan/BojuVue/releases" />
 
 <BVPlatformButton />
+
+</div>
 
 To see the "no matching platform" case — the second button above hiding itself
 instead of showing a link — remove a platform's entry from
@@ -23,11 +27,28 @@ tests in `src/platform.test.ts`, which cover it directly.
 
 ## Props
 
+`BVPlatformButton` renders through VitePress's own `VPButton` internally — `size`,
+`theme`, `target`, and `rel` below are plain pass-throughs to it, with the same
+meaning and defaults `VPButton` itself gives them.
+
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
 | `manifestUrl` | `string` | `'platformButton.json'` | Path to the manifest, resolved relative to the site's `base` (so it works the same in local dev and in production). |
 | `fallbackHref` | `string` | *(none)* | Link used when the platform can't be detected, the manifest fetch fails, or the manifest has no entry for the detected platform. **Omit this to hide the button entirely** in those cases instead of showing a generic link. |
 | `fallbackLabel` | `string` | `'View Downloads'` | Button label used alongside `fallbackHref`. |
+| `size` | `'medium' \| 'big'` | `'medium'` (VPButton's default) | Passed straight through to `VPButton`. |
+| `theme` | `'brand' \| 'alt' \| 'sponsor'` | `'brand'` (VPButton's default) | Passed straight through to `VPButton`. |
+| `target` | `string` | *(none)* | Passed straight through to `VPButton`. Left unset by default so `VPButton`'s own smart default applies: `target="_blank"` when the resolved link is external. Set it explicitly only to override that. |
+| `rel` | `string` | *(none)* | Passed straight through to `VPButton`. Left unset by default so `VPButton`'s own smart default applies: `rel="noreferrer"` when the resolved link is external. Set it explicitly only to override that. |
+| `icon` | `string` | *(none)* | Raw SVG markup rendered next to the label via `v-html`. `VPButton` has no icon support of its own (no prop, no slot), so this is a `BVPlatformButton`-only addition rendered alongside it, not inside VPButton's own element. Same trust model as VitePress's own home-page `features[].icon`: it's rendered unescaped, so only ever pass something a site author wrote, never anything sourced from the fetched manifest. |
+
+`tag` is intentionally not exposed — `BVPlatformButton` always calls `VPButton` with
+`tag="a"` internally. `VPButton` would otherwise auto-pick `<a>` vs `<button>` based on
+whether `href` is truthy, and an *empty-string* `href` is falsy in JS; since this
+component's `href` always comes from `resolveDownload`'s resolved logic rather than a
+hand-written string, forcing `tag="a"` avoids silently rendering an inert `<button>`
+if that ever happened. VitePress's own `VPHero.vue` does the same thing for the same
+reason.
 
 `BVPlatformId` is `'windows' \| 'macos' \| 'linux' \| 'android' \| 'ios' \| 'chromeos'`.
 Both `BVPlatformId` and `BVPlatformEntry` (see below) are exported from
@@ -133,6 +154,24 @@ If you ship separate builds per architecture, this component can only get someon
 the right OS, not the right binary — offer an explicit architecture choice on the
 linked page rather than relying on detection for it.
 
+## Spacing
+
+`BVPlatformButton` claims no margin on itself — spacing between it and its neighbors
+(another instance placed next to it, a surrounding layout slot, etc.) is a caller/
+layout concern, not something the component bakes in. Use a flex container with `gap`
+around sibling instances, the way the two demo buttons above are wrapped:
+
+```vue
+<div style="display: flex; flex-wrap: wrap; gap: 12px;">
+  <BVPlatformButton ... />
+  <BVPlatformButton ... />
+</div>
+```
+
+`gap` is the idiomatic CSS-native way to space siblings — unlike margin, it correctly
+skips the gap before the first element and after the last, so it doesn't need any
+first-/last-child exceptions to look right.
+
 ## Usage
 
 ```vue
@@ -148,6 +187,15 @@ import { BVPlatformButton } from '@scottkirvan/bojuvue'
   <BVPlatformButton
     manifest-url="platformButton.json"
     fallback-href="https://github.com/your-org/your-repo/releases"
+  />
+
+  <!-- theme/size pass through to VPButton; icon renders raw SVG next to the label -->
+  <BVPlatformButton
+    manifest-url="platformButton.json"
+    fallback-href="https://github.com/your-org/your-repo/releases"
+    theme="alt"
+    size="big"
+    icon="<svg viewBox='0 0 24 24' width='16' height='16'><path d='M12 2 2 22h20z'/></svg>"
   />
 </template>
 ```
