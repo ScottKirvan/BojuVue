@@ -27,8 +27,6 @@ features:
     details: TODO - Describe your third key feature here.
 ---
 
-<HelloWorld title="Hello, BojuVue!" text="This text is passed in from index.md, not hardcoded." />
-
 <!-- Begin Sponsors -->
 
 <div align="center" style="margin-top: 3rem; margin-bottom: 2rem;">
