@@ -82,24 +82,30 @@ describe('resolveDownload', () => {
     })
   })
 
-  it('falls back when the manifest failed to load, but still uses the platform label', () => {
+  it('falls back with a neutral label when the manifest failed to load — we do not know if this platform has a build', () => {
     expect(resolveDownload('windows', null, options)).toEqual({
       href: 'https://example.com/releases',
-      label: 'Download for Windows',
+      label: 'View Downloads',
     })
+  })
+
+  it('falls back with a neutral label when the manifest has no entry for the detected platform', () => {
+    expect(resolveDownload('linux', { windows: 'https://example.com/win.msi' }, options)).toEqual({
+      href: 'https://example.com/releases',
+      label: 'View Downloads',
+    })
+  })
+
+  it('returns null (hides the button) when nothing matches and no fallbackHref was given', () => {
+    expect(resolveDownload('linux', { windows: 'https://example.com/win.msi' }, {})).toBeNull()
+    expect(resolveDownload('windows', null, {})).toBeNull()
+    expect(resolveDownload(null, null, {})).toBeNull()
   })
 
   it('returns the manifest link and default label for a matched platform', () => {
     expect(resolveDownload('windows', { windows: 'https://example.com/win.msi' }, options)).toEqual({
       href: 'https://example.com/win.msi',
       label: 'Download for Windows',
-    })
-  })
-
-  it('falls back when the manifest has no entry for the detected platform', () => {
-    expect(resolveDownload('linux', { windows: 'https://example.com/win.msi' }, options)).toEqual({
-      href: 'https://example.com/releases',
-      label: 'Download for Linux',
     })
   })
 
@@ -120,9 +126,13 @@ describe('resolveDownload', () => {
     })
   })
 
-  it('honors a caller-supplied label override', () => {
+  it('honors a manifest-supplied label override for the matched platform', () => {
     expect(
-      resolveDownload('windows', { windows: 'https://example.com/win.msi' }, { ...options, labels: { windows: 'Get the app' } })
+      resolveDownload(
+        'windows',
+        { windows: 'https://example.com/win.msi', windowsLabel: 'Get the app' },
+        options
+      )
     ).toEqual({ href: 'https://example.com/win.msi', label: 'Get the app' })
   })
 })
