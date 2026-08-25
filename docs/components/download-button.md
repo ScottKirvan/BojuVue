@@ -75,6 +75,28 @@ checked in a specific order because their signals overlap:
 - **Android before Linux** — Android's `navigator.platform` is often something like
   `"Linux armv8l"`.
 
+If nothing matches — an unrecognized platform, a bot, a browser that doesn't expose
+enough information — detection resolves to "unknown" rather than guessing. That's
+treated exactly the same as a recognized platform with no manifest entry: hidden with
+no `fallbackHref`, or `fallbackHref` shown if one was given.
+
+## Limitations
+
+CPU architecture (x64 vs. ARM64/Apple Silicon, Windows on ARM, etc.) is **not**
+detected, and can't be reliably detected client-side across browsers today:
+
+- `navigator.platform` doesn't expose it, and on Apple Silicon Macs it has
+  historically still reported `"MacIntel"` for legacy compatibility.
+- The API that can genuinely answer this — User-Agent Client Hints
+  (`navigator.userAgentData.getHighEntropyValues(['architecture'])`) — is
+  Chromium-only. Safari and Firefox don't implement it at all, as a deliberate
+  anti-fingerprinting stance, so even a correct implementation would silently fail to
+  detect architecture for a large share of visitors.
+
+If you ship separate builds per architecture, this component can only get someone to
+the right OS, not the right binary — offer an explicit architecture choice on the
+linked page rather than relying on detection for it.
+
 ## Usage
 
 ```vue
