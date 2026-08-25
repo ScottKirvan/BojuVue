@@ -155,6 +155,29 @@ non-VitePress consumers requires two things together, not one:**
    two entries in `vite.config.ts`'s `build.lib.entry` and a `package.json`
    `exports` map with both `.` and `./vitepress`.
 
+**Resolved during PR 5's implementation — how the core renders its button
+without `VPButton`:** section 2 above decided the single (pre-split)
+component should render through the real `VPButton` (imported from
+`vitepress/theme`) instead of hand-copying its CSS. That decision was made
+before the split existed and doesn't survive it unchanged: the adapter is
+supposed to have "no real logic of its own beyond" resolving `base`, so the
+actual button markup has to live in the core — but the core can't import
+`vitepress/theme` (that's still `vitepress`, just a subpath) without
+reintroducing the hard dependency the whole split exists to remove. The
+core instead renders its own `<a>` reusing `VPButton`'s exact class-name
+contract (`"VPButton"` plus its size/theme modifier classes) and
+reimplementing its tiny bit of target/rel/external-link-detection behavior,
+without importing the component or copying any of its CSS property
+declarations. This isn't the CSS-duplication section 2 warned against:
+inside any real VitePress site those classes are already styled for free by
+VitePress's own bundled theme CSS (`VPHero.vue` statically imports
+`VPButton.vue` as part of `DefaultTheme`, so its scoped styles ship in
+every VitePress build regardless of whether this component is used) — only
+the class *names* and a few lines of selection logic are shared, zero
+property values. Outside a VitePress site those classes are simply inert
+hooks. See `src/core/BVPlatformButton.vue`'s template comment for the same
+reasoning in place.
+
 ### 4. Other use cases for the platform-detection primitive
 
 Discussed as future direction, not commitments yet. Most reuse
@@ -236,7 +259,7 @@ the Platform Detection section's ordering notes stay accurate but should
 mention the new UA fallback. Shares `platform.test.ts` with PR 2 (land
 PR 2 first) and `BVPlatformButton.vue` with PR 3.
 
-**5. Architectural split.** Core + VitePress adapter, subpath exports,
+**5. Architectural split — done.** Core + VitePress adapter, subpath exports,
 `vitepress` as an optional peer dependency, two `vite.config.ts` build
 entries. Hard dependency on PR 1 (final names), PR 3 (final prop
 shape/`VPButton` wrapping — splitting before the shape is settled means
@@ -287,6 +310,16 @@ wants one of these, not speculatively:
   itself. A VitePress site developer should never need to remember which of
   two paths a given export lives on; non-VitePress consumers are unaffected
   either way since they only ever import the bare package.
+  **Resolved during PR 5's implementation:** `defaultLabels`, `detectPlatform`,
+  `resolveDownload`, and `resolveManifestUrl` all live in `src/platform.ts`,
+  which has zero dependency on `vitepress` — same as the `BV`-prefixed types.
+  There's no principled reason to gate genuinely framework-agnostic utilities
+  behind the VitePress-only entry point (the "Other use cases" section above
+  doesn't assume VitePress either), so they're exported from **both**
+  `src/index.ts` and `src/vitepress.ts`, with the latter re-exporting the
+  former's copies rather than defining its own. This still satisfies "reachable
+  from `@scottkirvan/bojuvue/vitepress`, not just `BVPlatformButton`" — it's
+  just also reachable from the bare package, which is strictly more useful.
 - **CPU architecture detection stays unsupported, permanently** — not a
   "revisit later" item. The reasoning is already documented in
   `docs/components/download-button.md`'s Limitations section (no reliable

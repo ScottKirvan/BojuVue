@@ -1,9 +1,22 @@
 import { describe, expect, it } from 'vitest'
-import { detectPlatform, resolveDownload, resolveManifestUrl, type NavigatorLike } from './platform'
+import { defaultLabels, detectPlatform, resolveDownload, resolveManifestUrl, type NavigatorLike } from './platform'
 
 function nav(overrides: Partial<NavigatorLike>): NavigatorLike {
   return { userAgent: '', platform: '', maxTouchPoints: 0, ...overrides }
 }
+
+describe('defaultLabels', () => {
+  it('has a label for every BVPlatformId, matching what resolveDownload falls back to', () => {
+    expect(defaultLabels).toEqual({
+      windows: 'Download for Windows',
+      macos: 'Download for macOS',
+      linux: 'Download for Linux',
+      android: 'Get for Android',
+      ios: 'Get for iOS',
+      chromeos: 'Get for ChromeOS',
+    })
+  })
+})
 
 describe('detectPlatform', () => {
   it('returns null when navigator is unavailable', () => {

@@ -5,6 +5,39 @@ links to the matching download from a JSON manifest you host. With no `fallbackH
 given, it hides itself entirely when there's nothing to link to — no promising a
 download that doesn't exist for this visitor's platform.
 
+## Two import paths
+
+`BVPlatformButton` ships as two separate builds, exposed as two separate import paths
+from the same package — pick whichever matches your site:
+
+```ts
+// Framework-agnostic core. Works in any Vue 3 app. Resolves manifestUrl
+// relative to a `base` prop you supply yourself (see below) — pass nothing
+// and it's treated as an empty base.
+import { BVPlatformButton } from '@scottkirvan/bojuvue'
+
+// VitePress adapter. Same component and props, plus it resolves `base`
+// for you from VitePress's own `useData().site.value.base`, so you never
+// pass it yourself.
+import { BVPlatformButton } from '@scottkirvan/bojuvue/vitepress'
+```
+
+If you're building a VitePress site (which this component was originally designed
+for), use the `/vitepress` path — that's what this site's own demo below uses. Use
+the bare package path only if you're embedding `BVPlatformButton` in a plain Vue 3
+app with its own manifest-hosting setup, where there's no VitePress `useData()` to
+read a base path from.
+
+`vitepress` is an *optional* peer dependency — installing `@scottkirvan/bojuvue`
+alone (importing only the bare package path) never requires `vitepress` to be
+installed. Only importing from `@scottkirvan/bojuvue/vitepress` does.
+
+Everything else this package exports — `detectPlatform`, `resolveDownload`,
+`resolveManifestUrl`, `defaultLabels`, and the `BV`-prefixed types — is reachable
+from *both* paths. If you're already importing from `/vitepress` for the component,
+you don't need a second import from the bare package for these; the `/vitepress`
+entry re-exports everything the bare package has.
+
 ## Demo
 
 This site's own `docs/public/platformButton.json` is used below — open dev tools and
@@ -27,33 +60,37 @@ tests in `src/platform.test.ts`, which cover it directly.
 
 ## Props
 
-`BVPlatformButton` renders through VitePress's own `VPButton` internally — `size`,
-`theme`, `target`, and `rel` below are plain pass-throughs to it, with the same
-meaning and defaults `VPButton` itself gives them.
+`BVPlatformButton` renders with VitePress's own `VPButton` class-name contract
+(`VPButton` plus a size/theme modifier class) — `size`, `theme`, `target`, and `rel`
+below have the same meaning and defaults `VPButton` itself gives them, styled for free
+by VitePress's own bundled theme CSS. It doesn't literally import `VPButton`, though
+(see "Two import paths" above) — that's exactly what keeps the bare `@scottkirvan/bojuvue`
+import free of any dependency on `vitepress`.
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `manifestUrl` | `string` | `'platformButton.json'` | Path to the manifest. Either a site-relative path, resolved relative to the site's `base` (so it works the same in local dev and in production), or a full absolute URL (`https://...`/`http://...`), fetched as-is with no `base` prefixing — useful when the manifest is hosted on another origin or CDN rather than alongside the docs site itself. |
-| `fallbackHref` | `string` | *(none)* | Link used when the platform can't be detected, the manifest fetch fails, or the manifest has no entry for the detected platform. **Omit this to hide the button entirely** in those cases instead of showing a generic link. |
+| `base` | `string` | `''` | **Core (`@scottkirvan/bojuvue`) only** — not exposed on the VitePress adapter, which resolves this for you from `useData().site.value.base`. Site base path a site-relative `manifestUrl` is resolved against. Only relevant if you're embedding the core component directly in a non-VitePress Vue app with its own base-path concept. |
+| `manifestUrl` | `string` | `'platformButton.json'` | Path to the manifest. Either a site-relative path, resolved relative to `base` (so it works the same in local dev and in production), or a full absolute URL (`https://...`/`http://...`), fetched as-is with no `base` prefixing — useful when the manifest is hosted on another origin or CDN rather than alongside the docs site itself. Reactive — changing it after mount re-fetches. |
+| `fallbackHref` | `string` | *(none)* | Link used when the platform can't be detected, the manifest fetch fails (including a non-2xx response), or the manifest has no entry for the detected platform. **Omit this to hide the button entirely** in those cases instead of showing a generic link. |
 | `fallbackLabel` | `string` | `'View Downloads'` | Button label used alongside `fallbackHref`. |
-| `size` | `'medium' \| 'big'` | `'medium'` (VPButton's default) | Passed straight through to `VPButton`. |
-| `theme` | `'brand' \| 'alt' \| 'sponsor'` | `'brand'` (VPButton's default) | Passed straight through to `VPButton`. |
-| `target` | `string` | *(none)* | Passed straight through to `VPButton`. Left unset by default so `VPButton`'s own smart default applies: `target="_blank"` when the resolved link is external. Set it explicitly only to override that. |
-| `rel` | `string` | *(none)* | Passed straight through to `VPButton`. Left unset by default so `VPButton`'s own smart default applies: `rel="noreferrer"` when the resolved link is external. Set it explicitly only to override that. |
-| `icon` | `string` | *(none)* | Raw SVG markup rendered next to the label via `v-html`. `VPButton` has no icon support of its own (no prop, no slot), so this is a `BVPlatformButton`-only addition rendered alongside it, not inside VPButton's own element. Same trust model as VitePress's own home-page `features[].icon`: it's rendered unescaped, so only ever pass something a site author wrote, never anything sourced from the fetched manifest. |
+| `size` | `'medium' \| 'big'` | `'medium'` | Same meaning as `VPButton`'s own `size` prop. |
+| `theme` | `'brand' \| 'alt' \| 'sponsor'` | `'brand'` | Same meaning as `VPButton`'s own `theme` prop. |
+| `target` | `string` | *(none)* | Left unset by default so the same smart default `VPButton` uses applies: `target="_blank"` when the resolved link is external. Set it explicitly only to override that. |
+| `rel` | `string` | *(none)* | Left unset by default so the same smart default `VPButton` uses applies: `rel="noreferrer"` when the resolved link is external. Set it explicitly only to override that. |
+| `icon` | `string` | *(none)* | Raw SVG markup rendered next to the label via `v-html`. `VPButton` has no icon support of its own (no prop, no slot), so this is a `BVPlatformButton`-only addition rendered alongside it, not inside the button element itself. Same trust model as VitePress's own home-page `features[].icon`: it's rendered unescaped, so only ever pass something a site author wrote, never anything sourced from the fetched manifest. |
 
-`tag` is intentionally not exposed — `BVPlatformButton` always calls `VPButton` with
-`tag="a"` internally. `VPButton` would otherwise auto-pick `<a>` vs `<button>` based on
-whether `href` is truthy, and an *empty-string* `href` is falsy in JS; since this
-component's `href` always comes from `resolveDownload`'s resolved logic rather than a
-hand-written string, forcing `tag="a"` avoids silently rendering an inert `<button>`
-if that ever happened. VitePress's own `VPHero.vue` does the same thing for the same
-reason.
+The rendered element is always an anchor (`<a>`) — never a `<button>` — since `href`
+always comes from `resolveDownload`'s resolved logic (which never returns an
+empty-string `href`), the same reasoning VitePress's own `VPHero.vue` uses for forcing
+`VPButton`'s `tag="a"` when it already knows it has a link.
 
 `BVPlatformId` is `'windows' \| 'macos' \| 'linux' \| 'android' \| 'ios' \| 'chromeos'`.
-Both `BVPlatformId` and `BVPlatformEntry` (see below) are exported from
-`@scottkirvan/bojuvue` if you're generating a manifest programmatically and want the
-types.
+`BVPlatformId`, `BVPlatformEntry`, and `BVPlatformManifest` (see below) are exported
+from both import paths if you're generating a manifest programmatically and want the
+types. `detectPlatform`, `resolveDownload`, `resolveManifestUrl`, and `defaultLabels`
+— the primitives this component is built from — are exported too, from both paths,
+in case you want to build your own platform-branching UI (see "Other use cases" in
+`notes/dev/PlatformButtonSpec.md`) without using `BVPlatformButton` itself.
 
 ## The manifest file
 
@@ -196,9 +233,11 @@ first-/last-child exceptions to look right.
 
 ## Usage
 
+In a VitePress site (the common case — resolves `base` for you):
+
 ```vue
 <script setup>
-import { BVPlatformButton } from '@scottkirvan/bojuvue'
+import { BVPlatformButton } from '@scottkirvan/bojuvue/vitepress'
 </script>
 
 <template>
@@ -211,13 +250,30 @@ import { BVPlatformButton } from '@scottkirvan/bojuvue'
     fallback-href="https://github.com/your-org/your-repo/releases"
   />
 
-  <!-- theme/size pass through to VPButton; icon renders raw SVG next to the label -->
+  <!-- theme/size mirror VPButton; icon renders raw SVG next to the label -->
   <BVPlatformButton
     manifest-url="platformButton.json"
     fallback-href="https://github.com/your-org/your-repo/releases"
     theme="alt"
     size="big"
     icon="<svg viewBox='0 0 24 24' width='16' height='16'><path d='M12 2 2 22h20z'/></svg>"
+  />
+</template>
+```
+
+In any other Vue 3 app (no `vitepress` install required — pass `base` yourself if
+`manifestUrl` is site-relative and your app is served from a non-root path):
+
+```vue
+<script setup>
+import { BVPlatformButton } from '@scottkirvan/bojuvue'
+</script>
+
+<template>
+  <BVPlatformButton
+    base="/my-app/"
+    manifest-url="platformButton.json"
+    fallback-href="https://github.com/your-org/your-repo/releases"
   />
 </template>
 ```

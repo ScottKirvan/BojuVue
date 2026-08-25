@@ -9,9 +9,19 @@ export default defineConfig({
   ],
   build: {
     lib: {
-      entry: 'src/index.ts',
+      // Two physical entries, not one: 'bojuvue' (src/index.ts) is the
+      // framework-agnostic core, 'vitepress' (src/vitepress.ts) is the
+      // VitePress adapter. Keeping these as separate Rollup entries — not
+      // just separate exports of one bundle — is what actually lets a
+      // core-only consumer avoid ever loading a top-level `import
+      // 'vitepress'` statement; see package.json's `exports` map for the
+      // matching subpath wiring.
+      entry: {
+        bojuvue: 'src/index.ts',
+        vitepress: 'src/vitepress.ts',
+      },
       name: 'BojuVue',
-      fileName: 'bojuvue',
+      fileName: (_format, entryName) => `${entryName}.js`,
       formats: ['es'],
     },
     rollupOptions: {

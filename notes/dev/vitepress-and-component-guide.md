@@ -62,16 +62,30 @@ would take that data as a prop instead.
 
 ## 2. How BojuVue is wired
 
-- `src/index.ts` is the single export barrel. Every component gets one line here:
-  `export { default as ComponentName } from './ComponentName.vue'`.
-- `vite.config.ts` builds `src/index.ts` in Vite library mode — ES module output,
-  `vue` external (a peer dependency, not bundled), types emitted via
-  `vite-plugin-dts`.
+- `src/index.ts` is the core export barrel — framework-agnostic components/utilities,
+  zero dependency on `vitepress`. `src/vitepress.ts` is a second barrel: everything
+  `src/index.ts` has, plus VitePress-aware component builds, under the *same* exported
+  names (the import path — `@scottkirvan/bojuvue` vs. `@scottkirvan/bojuvue/vitepress`
+  — is what disambiguates them, not the name). A component with no VitePress-specific
+  needs just gets one line in `src/index.ts`:
+  `export { default as ComponentName } from './ComponentName.vue'`. A component that
+  does need something VitePress-specific is split into `src/core/ComponentName.vue`
+  (plain props, no `vitepress` import) and `src/vitepress/ComponentName.vue` (a thin
+  adapter), each exported from its respective barrel — see `BVPlatformButton` for the
+  worked example, and `notes/dev/PlatformButtonSpec.md`'s "Split into a core component
+  and a VitePress adapter" section for why.
+- `vite.config.ts` builds **two** Vite library-mode entries — `src/index.ts` →
+  `dist/bojuvue.js`, `src/vitepress.ts` → `dist/vitepress.js` — as genuinely separate
+  physical output files, not two exports of one bundle. That's the part that actually
+  keeps the core import free of `vitepress`: if both compiled into one file, importing
+  only the core would still load a top-level `import 'vitepress'` statement. ES module
+  output, `vue` and `vitepress` external (peer dependencies, not bundled — `vitepress`
+  an *optional* one), types emitted via `vite-plugin-dts`.
 - `docs/` is a separate, independently-installed VitePress project (own
   `package.json`, own `node_modules`) that doubles as a live component preview.
-  `docs/.vitepress/theme/index.ts` imports directly from `../../../src/index` — i.e.
-  straight from this repo's own source, not the built/published package — and loops
-  over every export, registering each one globally:
+  `docs/.vitepress/theme/index.ts` imports directly from `../../../src/vitepress` — i.e.
+  straight from this repo's own VitePress-entry source, not the built/published package
+  — and loops over every export, registering each one globally:
 
   ```ts
   for (const [name, component] of Object.entries(BojuVue)) {
@@ -94,20 +108,59 @@ would take that data as a prop instead.
   build failure — passed locally, failed in the Pages deploy, because only the deploy
   job never installs root deps).
 
-## 3. Adding a new component (worked example: `BVPlatformButton`)
+## 3. Adding a new component
 
-1. Write the `.vue` file under `src/` (e.g. `src/BVPlatformButton.vue`). Standard SFC:
+For a component with no VitePress-specific needs:
+
+1. Write the `.vue` file under `src/` (e.g. `src/YourComponent.vue`). Standard SFC:
    `<script setup lang="ts">` for props/logic, `<template>` for markup, `<style
    scoped>` for CSS scoped to that component alone.
 2. Make configurable text/behavior actual props, not hardcoded strings — use
-   `defineProps<{...}>()` with `withDefaults(...)` for sensible fallback values. This
-   is the difference between a real reusable component and Lucide's `home/`
-   components: a prop the caller can override, vs. a value baked into the file.
-3. Add one line to `src/index.ts`: `export { default as BVPlatformButton } from
-   './BVPlatformButton.vue'`.
-4. Preview it: `cd docs && npm run docs:dev`, then use `<BVPlatformButton />` anywhere in
+   `defineProps<{...}>()` with `withDefaults(...)` for sensible fallback values. Keep
+   the prop type written inline in the macro, not imported from another module — see
+   the note at the end of this section for why. This is the difference between a real
+   reusable component and Lucide's `home/` components: a prop the caller can override,
+   vs. a value baked into the file.
+3. Add one line to `src/index.ts`: `export { default as YourComponent } from
+   './YourComponent.vue'`.
+4. Preview it: `cd docs && npm run docs:dev`, then use `<YourComponent />` anywhere in
    a `.md` file — no import needed (see §2). Pass props to override defaults.
 5. `npm run build` at the repo root to confirm the library itself still builds clean.
+
+For a component that does need something VitePress-specific (worked example:
+`BVPlatformButton`, split as part of `notes/dev/PlatformButtonSpec.md`'s PR 5), do the
+same but split step 1 into two files instead of one:
+
+1. The framework-agnostic logic and markup goes in `src/core/BVPlatformButton.vue` —
+   plain props in (including anything the adapter would otherwise read from a
+   VitePress composable, e.g. a `base` prop standing in for `useData().site.value.base`
+   — resolved by the adapter, not read directly), no `vitepress` import anywhere in the
+   file.
+2. A thin `src/vitepress/BVPlatformButton.vue` adapter calls the VitePress composable
+   it needs, resolves whatever the core needs as a prop, and passes everything else
+   through unchanged — no real logic of its own.
+3. `src/index.ts` exports the core; `src/vitepress.ts` re-exports everything
+   `src/index.ts` has plus exports the adapter, both under the name
+   `BVPlatformButton` — the import path is what disambiguates them, not the name.
+4. Preview via `docs/.vitepress/theme/index.ts`, which registers from
+   `src/vitepress.ts` (the superset), so both the adapter's own behavior and everything
+   re-exported from the core are exercised.
+5. `npm run build` still needs to produce two separate physical files (check
+   `vite.config.ts`'s `build.lib.entry`) — and the core's output file must contain zero
+   reference to `vitepress`, worth grepping for directly after a build touching this.
+
+**On prop types and cross-file imports:** `@vue/compiler-sfc` resolving a
+`defineProps<T>()` type that's imported from another module needs the `typescript`
+package loadable from wherever the `.vue` file is being compiled. That's fine when
+`docs/` compiles a file that's actually inside `docs/` (its own `node_modules` chain
+resolves fine), but `docs/.vitepress/theme/index.ts` compiles files physically outside
+`docs/` (repo-root `src/`) using `docs/`'s own Vue/Vite install, which doesn't carry
+`typescript` as its own dependency — that resolution only succeeds today because the
+repo root's `node_modules` happens to also be present. Keeping the prop type written
+out inline in the `defineProps<T>()` macro itself (as opposed to a type used only for
+a public, non-macro export, e.g. `BVPlatformButtonProps` in
+`src/BVPlatformButton.types.ts`, which is fine in its own file) avoids this dependency
+entirely — confirmed by the same node_modules-renaming check in §4 below.
 
 ## 4. Consuming BojuVue from another (real) site
 
@@ -120,11 +173,13 @@ npm install @scottkirvan/bojuvue
 ```
 
 Then register what you need explicitly in that site's own
-`.vitepress/theme/index.ts`:
+`.vitepress/theme/index.ts`. For a component with a VitePress-aware build, import it
+from the `/vitepress` subpath — same component name, and it resolves anything
+VitePress-specific for you:
 
 ```ts
 import DefaultTheme from 'vitepress/theme'
-import { BVPlatformButton } from '@scottkirvan/bojuvue'
+import { BVPlatformButton } from '@scottkirvan/bojuvue/vitepress'
 
 export default {
   extends: DefaultTheme,
@@ -133,6 +188,10 @@ export default {
   },
 }
 ```
+
+A component with no VitePress-specific build (or a non-VitePress consuming app) is
+imported from the bare `@scottkirvan/bojuvue` path instead — same pattern, no
+`vitepress` install required.
 
 Or, for a component only used on one page, skip global registration entirely and
 import it directly in that page's markdown body (the Lucide pattern from §1):

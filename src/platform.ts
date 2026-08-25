@@ -43,7 +43,7 @@ export function detectPlatform(nav: NavigatorLike | undefined): BVPlatformId | n
   return null
 }
 
-const defaultLabels: Record<BVPlatformId, string> = {
+export const defaultLabels: Record<BVPlatformId, string> = {
   windows: 'Download for Windows',
   macos: 'Download for macOS',
   linux: 'Download for Linux',
