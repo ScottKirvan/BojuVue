@@ -1,16 +1,16 @@
-export type PlatformId = 'windows' | 'macos' | 'linux' | 'android' | 'ios' | 'chromeos'
+export type BVPlatformId = 'windows' | 'macos' | 'linux' | 'android' | 'ios' | 'chromeos'
 
-export interface PlatformEntry {
+export interface BVPlatformEntry {
   href: string
   label?: string
 }
 
-// Expected shape of the JSON file DownloadButton fetches:
+// Expected shape of the JSON file BVPlatformButton fetches:
 // { "windows": { "href": "https://...", "label": "Get the app" }, "macos": { "href": "https://..." } }
 // Every platform key is optional — omit any you don't ship a build for. A label only
 // ever makes sense attached to its own entry, so it's nested under it rather than
 // living as a separate sibling key.
-export type DownloadManifest = Partial<Record<PlatformId, PlatformEntry>>
+export type BVPlatformManifest = Partial<Record<BVPlatformId, BVPlatformEntry>>
 
 export interface NavigatorLike {
   userAgent: string
@@ -21,7 +21,7 @@ export interface NavigatorLike {
 // iOS check must precede macOS: iPadOS reports navigator.platform as
 // "MacIntel" and is only distinguishable via touch support. Android must
 // precede Linux: Android's navigator.platform is often "Linux armv8l".
-export function detectPlatform(nav: NavigatorLike | undefined): PlatformId | null {
+export function detectPlatform(nav: NavigatorLike | undefined): BVPlatformId | null {
   if (!nav) return null
   const ua = nav.userAgent
   const platform = nav.platform || ''
@@ -35,7 +35,7 @@ export function detectPlatform(nav: NavigatorLike | undefined): PlatformId | nul
   return null
 }
 
-const defaultLabels: Record<PlatformId, string> = {
+const defaultLabels: Record<BVPlatformId, string> = {
   windows: 'Download for Windows',
   macos: 'Download for macOS',
   linux: 'Download for Linux',
@@ -53,8 +53,8 @@ export interface ResolveDownloadOptions {
 }
 
 export function resolveDownload(
-  platform: PlatformId | null,
-  manifest: DownloadManifest | null,
+  platform: BVPlatformId | null,
+  manifest: BVPlatformManifest | null,
   options: ResolveDownloadOptions = {}
 ): { href: string; label: string } | null {
   if (platform && manifest) {

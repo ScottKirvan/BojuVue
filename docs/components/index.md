@@ -8,7 +8,7 @@ npm install @scottkirvan/bojuvue
 ```
 
 ```ts
-import { HelloWorld, DownloadButton } from '@scottkirvan/bojuvue'
+import { HelloWorld, BVPlatformButton } from '@scottkirvan/bojuvue'
 ```
 
 See each component's page for its props and a usage example. For how to register a
@@ -20,4 +20,4 @@ component in your own VitePress site (globally via `enhanceApp`, or per-page in 
 | Component | Description |
 | --- | --- |
 | [HelloWorld](./hello-world) | A title above a bordered box with an icon and text. Minimal example component. |
-| [DownloadButton](./download-button) | Detects the visitor's platform and links to the matching download from a JSON manifest. |
+| [BVPlatformButton](./platform-button) | Detects the visitor's platform and links to the matching download from a JSON manifest. |

@@ -9,7 +9,7 @@ export default {
   Layout() {
     return h(DefaultTheme.Layout, null, {
       'home-hero-actions-after': () =>
-        h(BojuVue.DownloadButton, {
+        h(BojuVue.BVPlatformButton, {
           fallbackHref: 'https://github.com/ScottKirvan/BojuVue/releases',
         }),
     })

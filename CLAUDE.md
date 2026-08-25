@@ -115,7 +115,7 @@ as finished:
 - **Tests exist for anything with real logic, written alongside the code** — not
   after being asked. Extract logic worth testing into plain, testable functions
   rather than mounting a component to cover it (see `src/platform.ts` next to
-  `DownloadButton.vue`).
+  `BVPlatformButton.vue`).
 - **Docs exist alongside the code, not as a follow-up:** every prop's default and
   whether it's required, every field of any data schema and why it's shaped that way,
   what a user actually experiences in each failure/edge case (not just that a

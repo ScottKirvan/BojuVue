@@ -1,4 +1,4 @@
-# DownloadButton
+# BVPlatformButton
 
 Detects the visitor's platform (Windows, macOS, Linux, Android, iOS, or ChromeOS) and
 links to the matching download from a JSON manifest you host. With no `fallbackHref`
@@ -7,30 +7,30 @@ download that doesn't exist for this visitor's platform.
 
 ## Demo
 
-This site's own `docs/public/downloadButton.json` is used below — open dev tools and
+This site's own `docs/public/platformButton.json` is used below — open dev tools and
 override `navigator.platform`/`navigator.userAgent` to see the label and link change.
 It has an entry for every platform, so both buttons below link to a real page no
 matter which platform gets detected:
 
-<DownloadButton fallback-href="https://github.com/ScottKirvan/BojuVue/releases" />
+<BVPlatformButton fallback-href="https://github.com/ScottKirvan/BojuVue/releases" />
 
-<DownloadButton />
+<BVPlatformButton />
 
 To see the "no matching platform" case — the second button above hiding itself
 instead of showing a link — remove a platform's entry from
-`docs/public/downloadButton.json` locally and reload, or see the `resolveDownload`
+`docs/public/platformButton.json` locally and reload, or see the `resolveDownload`
 tests in `src/platform.test.ts`, which cover it directly.
 
 ## Props
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `manifestUrl` | `string` | `'downloadButton.json'` | Path to the manifest, resolved relative to the site's `base` (so it works the same in local dev and in production). |
+| `manifestUrl` | `string` | `'platformButton.json'` | Path to the manifest, resolved relative to the site's `base` (so it works the same in local dev and in production). |
 | `fallbackHref` | `string` | *(none)* | Link used when the platform can't be detected, the manifest fetch fails, or the manifest has no entry for the detected platform. **Omit this to hide the button entirely** in those cases instead of showing a generic link. |
 | `fallbackLabel` | `string` | `'View Downloads'` | Button label used alongside `fallbackHref`. |
 
-`PlatformId` is `'windows' \| 'macos' \| 'linux' \| 'android' \| 'ios' \| 'chromeos'`.
-Both `PlatformId` and `PlatformEntry` (see below) are exported from
+`BVPlatformId` is `'windows' \| 'macos' \| 'linux' \| 'android' \| 'ios' \| 'chromeos'`.
+Both `BVPlatformId` and `BVPlatformEntry` (see below) are exported from
 `@scottkirvan/bojuvue` if you're generating a manifest programmatically and want the
 types.
 
@@ -51,7 +51,7 @@ site's own build):
 }
 ```
 
-Each top-level key is a `PlatformId`; its value is a `{ href, label? }` object —
+Each top-level key is a `BVPlatformId`; its value is a `{ href, label? }` object —
 `href` is required, `label` optionally overrides that platform's default button text
 (`windows` above renders "Get the app" instead of the default "Download for Windows").
 A label is always attached to the entry it belongs to, not a separate key floating
@@ -137,16 +137,16 @@ linked page rather than relying on detection for it.
 
 ```vue
 <script setup>
-import { DownloadButton } from '@scottkirvan/bojuvue'
+import { BVPlatformButton } from '@scottkirvan/bojuvue'
 </script>
 
 <template>
   <!-- Shows nothing on platforms with no manifest entry -->
-  <DownloadButton manifest-url="downloadButton.json" />
+  <BVPlatformButton manifest-url="platformButton.json" />
 
   <!-- Always shows something, even on unmatched platforms -->
-  <DownloadButton
-    manifest-url="downloadButton.json"
+  <BVPlatformButton
+    manifest-url="platformButton.json"
     fallback-href="https://github.com/your-org/your-repo/releases"
   />
 </template>
