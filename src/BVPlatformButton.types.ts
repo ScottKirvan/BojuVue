@@ -1,8 +1,10 @@
-// Shared prop surface for both the core `BVPlatformButton` (`./core`) and
-// the VitePress adapter (`./vitepress`) — kept in its own module, separate
-// from `platform.ts`'s detection/manifest logic, so it can be imported by
-// both `.vue` files without either pulling in the other's concerns. Framework
-// -agnostic like `platform.ts`: no import from 'vitepress' here either.
+// Shared prop surface for both the generic Vue implementation of
+// `BVPlatformButton` (`./BVPlatformButton.vue`) and the VitePress-specific
+// implementation (`./vitepress/BVPlatformButton.vue`) — kept in its own
+// module, separate from `platform.ts`'s detection/manifest logic, so it can
+// be imported by both `.vue` files without either pulling in the other's
+// concerns. Framework-agnostic like `platform.ts`: no import from
+// 'vitepress' here either.
 export interface BVPlatformButtonProps {
   manifestUrl?: string
   fallbackHref?: string

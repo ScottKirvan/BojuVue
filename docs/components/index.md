@@ -10,11 +10,11 @@ Some components have a VitePress-aware build, available from a second import pat
 see each component's own page for whether it does and what the difference is:
 
 ```ts
-// Framework-agnostic — works in any Vue 3 app, no vitepress dependency
+// Generic Vue implementation — works in any Vue 3 app, no vitepress dependency
 import { BVPlatformButton } from '@scottkirvan/bojuvue'
 
-// VitePress adapter — same component name, resolves VitePress-specific
-// details (like the site's base path) for you
+// VitePress-specific implementation — same component name, resolves
+// VitePress-specific details (like the site's base path) for you
 import { BVPlatformButton } from '@scottkirvan/bojuvue/vitepress'
 ```
 

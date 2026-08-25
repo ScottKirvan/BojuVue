@@ -15,7 +15,7 @@ async function mountButton(props: Record<string, unknown> = {}) {
   return wrapper
 }
 
-describe('BVPlatformButton (core)', () => {
+describe('BVPlatformButton (generic Vue implementation)', () => {
   beforeEach(() => {
     // No manifest entries for any platform — every test resolves through
     // fallbackHref, keeping assertions independent of jsdom's reported

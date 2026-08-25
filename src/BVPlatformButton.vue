@@ -1,15 +1,15 @@
 <script setup lang="ts">
-import { computed, onMounted, onUnmounted, ref, watch } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import {
   detectPlatform,
   resolveDownload,
   resolveManifestUrl,
-  type BVPlatformManifest,
   type BVPlatformId,
-} from '../platform'
+} from './platform'
+import { useManifestFetch } from './useManifestFetch'
 
 // The prop type is written out inline here (matching `BVPlatformButtonProps`
-// in ../BVPlatformButton.types.ts, which is exported for public/programmatic
+// in ./BVPlatformButton.types.ts, which is exported for public/programmatic
 // use) rather than imported into this macro. `defineProps<T>()` resolving a
 // type from another module needs @vue/compiler-sfc to load the `typescript`
 // package to parse that module — this repo's docs/ site compiles files
@@ -38,9 +38,10 @@ const props = withDefaults(
     icon?: string
     // Site base path to prefix a site-relative `manifestUrl` with. Plain
     // prop — this component has no knowledge of VitePress or any other
-    // host framework; a host adapter (see `BVPlatformButton` exported from
-    // the `./vitepress` entry) is responsible for resolving this (e.g. from
-    // VitePress's own `useData().site.value.base`) and handing it down.
+    // host framework; the VitePress-specific implementation (`BVPlatformButton`
+    // exported from the `./vitepress` entry) resolves this itself (from
+    // VitePress's own `useData().site.value.base`) and passes it in the same
+    // shape here.
     base?: string
   }>(),
   {
@@ -49,42 +50,13 @@ const props = withDefaults(
   }
 )
 
-const manifest = ref<BVPlatformManifest | null>(null)
 const platform = ref<BVPlatformId | null>(null)
 
-let activeFetch: AbortController | null = null
-
-async function loadManifest() {
-  activeFetch?.abort()
-  const controller = new AbortController()
-  activeFetch = controller
-
-  try {
-    const res = await fetch(resolveManifestUrl(props.base, props.manifestUrl), {
-      signal: controller.signal,
-    })
-    manifest.value = res.ok ? await res.json() : null
-  } catch {
-    // A request aborted because it was superseded by a newer one (base/
-    // manifestUrl changed again, or the component unmounted) isn't a real
-    // failure — don't let a stale in-flight abort clobber state a newer
-    // request may already have written.
-    if (controller.signal.aborted) return
-    manifest.value = null
-  }
-}
+const { manifest } = useManifestFetch(() => resolveManifestUrl(props.base, props.manifestUrl))
 
 onMounted(() => {
   platform.value = detectPlatform(typeof navigator === 'undefined' ? undefined : navigator)
-  loadManifest()
 })
-
-// manifestUrl (and, in principle, base) can change after mount — e.g. a
-// VitePress site's `base` can change on a locale switch — so re-fetch
-// whenever either does, rather than only ever fetching once on mount.
-watch(() => [props.base, props.manifestUrl], loadManifest)
-
-onUnmounted(() => activeFetch?.abort())
 
 const download = computed(() =>
   resolveDownload(platform.value, manifest.value, {
@@ -110,10 +82,11 @@ const resolvedRel = computed(() => props.rel ?? (isExternal.value ? 'noreferrer'
   <span v-if="download" class="bv-platform-button">
     <span v-if="icon" class="bv-platform-button-icon" v-html="icon"></span>
     <!--
-      Own class name, not VPButton's — a core component with zero vitepress
-      dependency shouldn't leak VitePress's private, internal class name
-      into a consumer's rendered DOM (confusing outside a VitePress site,
-      and not a stable contract to depend on). Instead it consumes the same
+      Own class name, not VPButton's — this generic Vue implementation has
+      zero vitepress dependency and shouldn't leak VitePress's private,
+      internal class name into a consumer's rendered DOM (confusing outside a
+      VitePress site, and not a stable contract to depend on). Instead it
+      consumes the same
       *public, documented* --vp-button-* CSS custom properties VitePress
       itself exposes for theming (see vars.css) — real design tokens meant
       to be read by exactly this kind of external styling, not duplicated

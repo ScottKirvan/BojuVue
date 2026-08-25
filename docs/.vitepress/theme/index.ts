@@ -5,8 +5,9 @@ import DefaultTheme from 'vitepress/theme'
 // package's `./vitepress` subpath) so this site keeps live-previewing
 // components straight from this repo's own source, the same way it always
 // has — see notes/dev/vitepress-and-component-guide.md §2. This entry
-// re-exports everything the core entry (`../../../src/index`) has, plus the
-// VitePress adapter itself, so registering from here alone is enough.
+// re-exports everything the `../../../src/index` entry has, plus its own
+// VitePress-specific implementations, so registering from here alone is
+// enough.
 import * as BojuVue from '../../../src/vitepress'
 import './custom.css'
 

@@ -130,7 +130,7 @@ Features
 - `vue` is a peer dependency, so consuming sites use their own Vue instance — no duplicate copies, no broken reactivity
 - Every component is exported from one entry point (`src/index.ts`), so consuming a new component is a one-line import change
 - The `docs/` VitePress site imports directly from `src/index.ts`/`src/vitepress.ts` and registers every exported component globally, so new components can be previewed live in a real VitePress site without publishing or `npm link`
-- Some components (currently `BVPlatformButton`) ship as **two builds behind two import paths**: a framework-agnostic core at `@scottkirvan/bojuvue`, with zero dependency on `vitepress`, and a VitePress-aware adapter at `@scottkirvan/bojuvue/vitepress`, same component name, resolving anything VitePress-specific for you. `vitepress` is an *optional* peer dependency — installing the package alone never requires it; only importing from the `/vitepress` path does.
+- Some components (currently `BVPlatformButton`) ship as **two fully independent builds behind two import paths**: a generic implementation at `@scottkirvan/bojuvue`, with zero dependency on `vitepress`, and a VitePress-specific implementation at `@scottkirvan/bojuvue/vitepress`, same component name, resolving anything VitePress-specific for you. Neither component imports or renders the other — the import path is what disambiguates them. `vitepress` is an *optional* peer dependency — installing the package alone never requires it; only importing from the `/vitepress` path does.
 
 Installation
 ------------
@@ -178,11 +178,11 @@ which import path(s) it's available from.
 5. Bump the version and `npm publish` to ship it to every consuming site
 
 If the component needs to read anything VitePress-specific (site data, router, etc.),
-split it the way `BVPlatformButton` is split (see `src/core/`, `src/vitepress/`,
-`src/vitepress.ts`, and `notes/dev/PlatformButtonSpec.md`'s "Split into a core
-component and a VitePress adapter" section) instead of importing `vitepress` directly
-into the component every consumer gets — that's what keeps the bare package usable in
-non-VitePress Vue apps.
+give it two fully independent implementations sharing one exported name the way
+`BVPlatformButton` does (see `src/BVPlatformButton.vue`, `src/vitepress/`,
+`src/vitepress.ts`, and `CLAUDE.md`'s Project Overview section) instead of importing
+`vitepress` directly into the component every consumer gets — that's what keeps the
+bare package usable in non-VitePress Vue apps.
 
 Contributions / Contact
 -----------------------

@@ -16,30 +16,32 @@ BojuVue is a Vue 3 + TypeScript component library published to npm as
 several local documentation sites) that need shared landing-page/UX components instead
 of duplicating them per repo.
 
-- `src/index.ts` — the core entry point; framework-agnostic components/utilities are
+- `src/index.ts` — the generic entry point; framework-agnostic components/utilities are
   re-exported from here. Built to `dist/bojuvue.js`, published as the package's `.`
   export (`@scottkirvan/bojuvue`). Has zero dependency on `vitepress` anywhere in its
   module graph — that's a hard invariant, not an implementation detail; verify it after
   touching anything under `src/` by checking the built `dist/bojuvue.js` (and any chunk
   it imports) for the literal string `vitepress`.
-- `src/vitepress.ts` — the VitePress-adapter entry point. Re-exports everything
-  `src/index.ts` has (same names) plus its own VitePress-aware component builds. Built
-  to `dist/vitepress.js`, published as the package's `./vitepress` export
-  (`@scottkirvan/bojuvue/vitepress`). `vitepress` is an *optional* peer dependency
-  (`peerDependenciesMeta`) — only code reachable from this entry may import it.
-- A component that needs anything VitePress-specific (site data, router, etc.) is split
-  into a **core** (`src/core/ComponentName.vue`, plain props in, no `vitepress` import,
-  works in any Vue 3 app) and a thin **VitePress adapter**
-  (`src/vitepress/ComponentName.vue`, calls `useData()`/etc., hands the result to the
-  core as props, otherwise just passes everything through — no real logic of its own).
-  Both are exported under the *same* component name from their respective entry point
-  (`src/index.ts` vs. `src/vitepress.ts`) — the import path is what disambiguates them,
-  not the name. See `src/core/BVPlatformButton.vue` /
-  `src/vitepress/BVPlatformButton.vue` for the worked example, and
-  `notes/dev/PlatformButtonSpec.md`'s "Split into a core component and a VitePress
-  adapter" section for the full reasoning. A component with no VitePress-specific needs
-  at all just lives directly under `src/` and is exported only from `src/index.ts`, no
-  split required.
+- `src/vitepress.ts` — the VitePress-specific entry point. Re-exports everything
+  `src/index.ts` has (same names) plus its own VitePress-specific component
+  implementations. Built to `dist/vitepress.js`, published as the package's
+  `./vitepress` export (`@scottkirvan/bojuvue/vitepress`). `vitepress` is an *optional*
+  peer dependency (`peerDependenciesMeta`) — only code reachable from this entry may
+  import it.
+- A component that needs anything VitePress-specific (site data, router, etc.) gets
+  **two fully independent implementations sharing one exported name**, disambiguated
+  by import path — neither component imports or renders the other. A generic Vue
+  implementation (`src/ComponentName.vue`, plain props in, no `vitepress` import,
+  works in any Vue 3 app) is exported from `src/index.ts`; a separate VitePress-specific
+  implementation (`src/vitepress/ComponentName.vue`, calls `useData()`/etc. itself and
+  implements its own rendering) is exported from `src/vitepress.ts`. Neither Vue
+  component imports or renders the other — they may both call the same plain utility
+  function or composable for logic that's genuinely shared (see `useManifestFetch` in
+  `src/useManifestFetch.ts`), but that's sharing a utility, not one component owning
+  the other. See `src/BVPlatformButton.vue` / `src/vitepress/BVPlatformButton.vue` for
+  the worked example. A component with no VitePress-specific needs at all just lives
+  directly under `src/` and is exported only from `src/index.ts`, no second
+  implementation required.
 - Prop types passed to a `defineProps<T>()` macro must stay **inline in the `.vue`
   file**, not imported from another module — `@vue/compiler-sfc` resolving a
   cross-file type reference in that position needs the `typescript` package loadable
