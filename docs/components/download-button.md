@@ -30,6 +30,9 @@ tests in `src/platform.test.ts`, which cover it directly.
 | `fallbackLabel` | `string` | `'View Downloads'` | Button label used alongside `fallbackHref`. |
 
 `PlatformId` is `'windows' \| 'macos' \| 'linux' \| 'android' \| 'ios' \| 'chromeos'`.
+Both `PlatformId` and `PlatformEntry` (see below) are exported from
+`@scottkirvan/bojuvue` if you're generating a manifest programmatically and want the
+types.
 
 ## The manifest file
 
@@ -39,27 +42,28 @@ site's own build):
 
 ```json
 {
-  "version": "1.2.3",
-  "windows": "https://example.com/releases/app-windows.msi",
-  "windowsLabel": "Get the app",
-  "macos": "https://example.com/releases/app-macos.dmg",
-  "linux": "https://example.com/releases/app-linux.tar.gz",
-  "android": "https://example.com/releases/app-android.apk",
-  "ios": "https://example.com/releases/app-ios-or-testflight-link",
-  "chromeos": "https://example.com/releases/app-chromeos.apk"
+  "windows": { "href": "https://example.com/releases/app-windows.msi", "label": "Get the app" },
+  "macos": { "href": "https://example.com/releases/app-macos.dmg" },
+  "linux": { "href": "https://example.com/releases/app-linux.tar.gz" },
+  "android": { "href": "https://example.com/releases/app-android.apk" },
+  "ios": { "href": "https://example.com/releases/app-ios-or-testflight-link" },
+  "chromeos": { "href": "https://example.com/releases/app-chromeos.apk" }
 }
 ```
 
+Each top-level key is a `PlatformId`; its value is a `{ href, label? }` object —
+`href` is required, `label` optionally overrides that platform's default button text
+(`windows` above renders "Get the app" instead of the default "Download for Windows").
+A label is always attached to the entry it belongs to, not a separate key floating
+next to it — there's no way to express "a label with nothing to link to."
+
 Every platform key is optional — omit any you don't ship a build for. Without a
 `fallbackHref` prop, a visitor on a platform with no matching key simply won't see the
-button. Each platform key also accepts an optional `"<platform>Label"` sibling (like
-`windowsLabel` above) to override that platform's default button text — the manifest
-is the single place both the link and its label live, so there's nothing to keep in
-sync across two different files.
+button.
 
 `chromeos` is the one key with a built-in fallback: ChromeOS runs Android apps, so if
 you omit `chromeos` but provide `android`, ChromeOS visitors automatically get the
-Android link. Provide a `chromeos` key yourself only if you publish something
+Android entry. Provide a `chromeos` key yourself only if you publish something
 ChromeOS-specific — that choice belongs to whoever's shipping builds, not this
 component.
 

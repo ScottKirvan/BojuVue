@@ -1,11 +1,16 @@
 export type PlatformId = 'windows' | 'macos' | 'linux' | 'android' | 'ios' | 'chromeos'
 
+export interface PlatformEntry {
+  href: string
+  label?: string
+}
+
 // Expected shape of the JSON file DownloadButton fetches:
-// { "version": "1.2.3", "windows": "https://...", "windowsLabel": "Get the app", ... }
-// Every platform key (and its optional "<platform>Label" override) is optional — omit
-// any you don't ship a build for.
-export type DownloadManifest = { version?: string } & Partial<Record<PlatformId, string>> &
-  Partial<Record<`${PlatformId}Label`, string>>
+// { "windows": { "href": "https://...", "label": "Get the app" }, "macos": { "href": "https://..." } }
+// Every platform key is optional — omit any you don't ship a build for. A label only
+// ever makes sense attached to its own entry, so it's nested under it rather than
+// living as a separate sibling key.
+export type DownloadManifest = Partial<Record<PlatformId, PlatformEntry>>
 
 export interface NavigatorLike {
   userAgent: string
@@ -53,12 +58,11 @@ export function resolveDownload(
   options: ResolveDownloadOptions = {}
 ): { href: string; label: string } | null {
   if (platform && manifest) {
-    // ChromeOS runs Android apps — fall back to the Android build if no
+    // ChromeOS runs Android apps — fall back to the Android entry if no
     // ChromeOS-specific one is published.
-    const link = platform === 'chromeos' ? (manifest.chromeos ?? manifest.android) : manifest[platform]
-    if (link) {
-      const label = manifest[`${platform}Label`] ?? defaultLabels[platform]
-      return { href: link, label }
+    const entry = platform === 'chromeos' ? (manifest.chromeos ?? manifest.android) : manifest[platform]
+    if (entry) {
+      return { href: entry.href, label: entry.label ?? defaultLabels[platform] }
     }
   }
 
