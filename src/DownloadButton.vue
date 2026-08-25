@@ -45,11 +45,14 @@ const download = computed(() =>
 <style scoped>
 .bv-download-button {
   display: inline-block;
-  /* When used in VitePress's home-hero-actions-after slot, this renders as a
-     plain sibling after the hero's .actions row, not inside its flex/gutter
-     system (.actions uses a -6px/+6px negative-margin gutter trick) — so it
-     needs its own top margin to avoid sitting flush against the row above. */
-  margin-top: 12px;
+  /* This component carries no spacing from its context — it can render
+     after VitePress's home-hero-actions-after row (needs top margin, since
+     .actions' own -6px/+6px gutter trick doesn't apply to a sibling outside
+     it) or sit next to another instance inline (needs right margin, since
+     adjacent inline-block elements don't get a gap from a source newline
+     alone — it collapses to a single space). Own margin in both directions
+     since it can't rely on either surrounding context to provide it. */
+  margin: 12px 12px 0 0;
   border: 1px solid var(--vp-button-brand-border);
   border-radius: 20px;
   padding: 0 20px;
