@@ -32,6 +32,11 @@ of duplicating them per repo.
   registers every exported component globally, so a new component can be seen in a
   real VitePress site (`npm run docs:dev` from `docs/`) without publishing or
   `npm link`.
+- `docs/components/` — the hand-written API reference (props table + usage example per
+  component), linked from the sidebar in `docs/.vitepress/config.mts`. Every new
+  component needs a page here alongside its code and tests, per the README's "Adding a
+  new component" steps — don't let this drift out of sync with `src/index.ts`'s
+  exports.
 - Any component under `src/` that imports `vue` or `vitepress` needs those to resolve
   correctly when `docs/` builds it — but `docs/`'s deploy job never installs the repo
   root's dependencies, and those imports are physically outside `docs/`, so plain
