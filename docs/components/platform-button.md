@@ -25,7 +25,7 @@ tests in `src/platform.test.ts`, which cover it directly.
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `manifestUrl` | `string` | `'platformButton.json'` | Path to the manifest, resolved relative to the site's `base` (so it works the same in local dev and in production). |
+| `manifestUrl` | `string` | `'platformButton.json'` | Path to the manifest. Either a site-relative path, resolved relative to the site's `base` (so it works the same in local dev and in production), or a full absolute URL (`https://...`/`http://...`), fetched as-is with no `base` prefixing — useful when the manifest is hosted on another origin or CDN rather than alongside the docs site itself. |
 | `fallbackHref` | `string` | *(none)* | Link used when the platform can't be detected, the manifest fetch fails, or the manifest has no entry for the detected platform. **Omit this to hide the button entirely** in those cases instead of showing a generic link. |
 | `fallbackLabel` | `string` | `'View Downloads'` | Button label used alongside `fallbackHref`. |
 
@@ -38,7 +38,21 @@ types.
 
 A plain JSON file, publicly reachable at `manifestUrl` (typically something your
 release process writes into `docs/public/` on each release, independent of the docs
-site's own build):
+site's own build).
+
+`manifestUrl` accepts either a site-relative path (the default,
+`'platformButton.json'`, resolved against the site's VitePress `base`) or a full
+absolute URL. A value starting with `http://` or `https://` is fetched exactly as
+given — the site's `base` is never prepended to it, so pointing at a manifest hosted
+on a separate origin or CDN works without the `base` path mangling the URL:
+
+```vue
+<!-- Site-relative: resolved against the site's base -->
+<BVPlatformButton manifest-url="platformButton.json" />
+
+<!-- Absolute: fetched as-is, base is not prepended -->
+<BVPlatformButton manifest-url="https://cdn.example.com/platformButton.json" />
+```
 
 ```json
 {
@@ -110,6 +124,14 @@ overlap:
   identical to a real Mac; it's only distinguishable by touch support.
 - **Android before Linux** — Android's `navigator.platform` is often something like
   `"Linux armv8l"`.
+
+`navigator.platform` is formally deprecated, and browsers are already
+freezing/limiting what it reports for anti-fingerprinting reasons. Windows, macOS, and
+Linux detection each fall back to a `navigator.userAgent` check when `platform`
+doesn't identify them — the same pattern iOS/Android detection above already relies
+on. Those fallback checks run after the Android and iOS checks, for the same
+overlapping-signal reasons: Android's user agent contains "Linux", and iPadOS's
+contains "Macintosh".
 
 If nothing matches — an unrecognized platform, a bot, a browser that doesn't expose
 enough information — detection resolves to "unknown" rather than guessing. That's
