@@ -5,7 +5,7 @@ hero:
   name: "BojuVue"
   text: "TODO - Short project headline"
   tagline: TODO - Replace with your project tagline.
-  actions:
+  actionsx:
     - theme: brand
       text: View on GitHub
       link: https://github.com/ScottKirvan/BojuVue
