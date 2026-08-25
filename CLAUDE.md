@@ -17,19 +17,36 @@ several local documentation sites) that need shared landing-page/UX components i
 of duplicating them per repo.
 
 - `src/index.ts` — the single entry point; every component is re-exported from here.
-- `vite.config.ts` — Vite library-mode build (ES module output, `vue` external as a
-  peer dependency, types emitted via `vite-plugin-dts`).
+- `vite.config.ts` — Vite library-mode build (ES module output, `vue` and `vitepress`
+  external as peer dependencies, types emitted via `vite-plugin-dts`). Also holds the
+  `test` config (vitest, jsdom environment) — no separate vitest config file.
+- Components with real logic (detection, data-shaping, anything beyond pure rendering)
+  should have that logic extracted into a plain `.ts` module (see `src/platform.ts`)
+  rather than living inline in the `.vue` file's `<script setup>` — much easier to unit
+  test without mounting a component or mocking Vue-specific APIs. The `.vue` file stays
+  a thin wiring shell around it. `npm test` runs the suite (vitest); tests must be
+  written alongside all new code, per the Working Conventions below.
 - `docs/` — a separate VitePress project (its own `package.json`/`node_modules`) that
   both serves as this library's demo site and doubles as a live component preview:
   `docs/.vitepress/theme/index.ts` imports directly from `../../../src/index` and
   registers every exported component globally, so a new component can be seen in a
   real VitePress site (`npm run docs:dev` from `docs/`) without publishing or
   `npm link`.
+- Any component under `src/` that imports `vue` or `vitepress` needs those to resolve
+  correctly when `docs/` builds it — but `docs/`'s deploy job never installs the repo
+  root's dependencies, and those imports are physically outside `docs/`, so plain
+  resolution (or a naive path alias) breaks in CI even when it works locally. Fixed via
+  a scoped Vite plugin in `docs/.vitepress/config.mts`: when the importing file is
+  under repo-root `src/`, resolution is redirected through Vite's normal resolver as if
+  the import came from inside `docs/` instead — so it goes through `vitepress`'s real
+  `package.json` exports map rather than a hand-maintained guess at it. Verify any
+  change here by temporarily renaming root `node_modules` out of the way and confirming
+  `docs:build` (from `docs/`) still succeeds.
 - Root `npm run build` runs `vue-tsc -b` (typecheck, via composite project
   references) then `vite build` (emits `dist/`). There's no separate typecheck-only
   script — `vue-tsc -b --noEmit` isn't valid with composite project references, so
   `build` is the only way to type-check.
-- `.github/workflows/ci.yml` runs the root build on push/PR.
+- `.github/workflows/ci.yml` runs `npm test` then `npm run build` on push/PR.
 
 ## Working Conventions
 

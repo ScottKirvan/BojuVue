@@ -1,13 +1,7 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from 'vue'
 import { useData } from 'vitepress'
-
-export type PlatformId = 'windows' | 'macos' | 'linux' | 'android' | 'ios' | 'chromeos'
-
-// Expected shape of the JSON file at `manifestUrl`:
-// { "version": "1.2.3", "windows": "https://...", "macos": "https://...", ... }
-// Every platform key is optional — omit any you don't ship a build for.
-export type DownloadManifest = { version?: string } & Partial<Record<PlatformId, string>>
+import { detectPlatform, resolveDownload, type DownloadManifest, type PlatformId } from './platform'
 
 const props = withDefaults(
   defineProps<{
@@ -23,38 +17,12 @@ const props = withDefaults(
   }
 )
 
-const defaultLabels: Record<PlatformId, string> = {
-  windows: 'Download for Windows',
-  macos: 'Download for macOS',
-  linux: 'Download for Linux',
-  android: 'Get for Android',
-  ios: 'Get for iOS',
-  chromeos: 'Get for ChromeOS',
-}
-
-// iOS check must precede macOS: iPadOS reports navigator.platform as
-// "MacIntel" and is only distinguishable via touch support. Android must
-// precede Linux: Android's navigator.platform is often "Linux armv8l".
-function detectPlatform(): PlatformId | null {
-  if (typeof navigator === 'undefined') return null
-  const ua = navigator.userAgent
-  const platform = navigator.platform || ''
-  const isIPadOS = platform === 'MacIntel' && navigator.maxTouchPoints > 1
-  if (/iPhone|iPad|iPod/i.test(ua) || isIPadOS) return 'ios'
-  if (/Android/i.test(ua)) return 'android'
-  if (/CrOS/i.test(ua)) return 'chromeos'
-  if (/Win/i.test(platform)) return 'windows'
-  if (/Mac/i.test(platform)) return 'macos'
-  if (/Linux/i.test(platform)) return 'linux'
-  return null
-}
-
 const { site } = useData()
 const manifest = ref<DownloadManifest | null>(null)
 const platform = ref<PlatformId | null>(null)
 
 onMounted(async () => {
-  platform.value = detectPlatform()
+  platform.value = detectPlatform(typeof navigator === 'undefined' ? undefined : navigator)
   try {
     const res = await fetch(`${site.value.base}${props.manifestUrl}`)
     manifest.value = await res.json()
@@ -63,26 +31,18 @@ onMounted(async () => {
   }
 })
 
-const href = computed(() => {
-  if (!manifest.value || !platform.value) return props.fallbackHref
-  // ChromeOS runs Android apps — fall back to the Android build if no
-  // ChromeOS-specific one is published.
-  const link =
-    platform.value === 'chromeos'
-      ? (manifest.value.chromeos ?? manifest.value.android)
-      : manifest.value[platform.value]
-  return link ?? props.fallbackHref
-})
-
-const label = computed(() => {
-  if (!platform.value) return props.fallbackLabel
-  return props.labels[platform.value] ?? defaultLabels[platform.value]
-})
+const download = computed(() =>
+  resolveDownload(platform.value, manifest.value, {
+    fallbackHref: props.fallbackHref,
+    fallbackLabel: props.fallbackLabel,
+    labels: props.labels,
+  })
+)
 </script>
 
 <template>
-  <a class="bv-download-button" :href="href" target="_blank" rel="noopener noreferrer">
-    {{ label }}
+  <a class="bv-download-button" :href="download.href" target="_blank" rel="noopener noreferrer">
+    {{ download.label }}
   </a>
 </template>
 
