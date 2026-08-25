@@ -17,6 +17,13 @@ import type { Plugin } from 'vite'
 // came from inside docs/ instead. That reuses Vite's normal resolution
 // algorithm — package.json exports maps, conditions, everything — exactly
 // as it already works for every file that's actually inside docs/.
+//
+// This is purely internal to this repo's own dev-preview setup (docs/'s
+// theme importing raw source from ../src instead of the published
+// package). A real consuming site never hits this: it imports the already-
+// built dist/bojuvue.js from its own node_modules, with vue/vitepress
+// already resolved as externals at this repo's own build time — ordinary
+// npm peer-dependency resolution, nothing to replicate here.
 const configFilePath = fileURLToPath(import.meta.url)
 const srcDir = fileURLToPath(new URL('../../src/', import.meta.url)).replace(/\\/g, '/')
 
