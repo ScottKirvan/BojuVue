@@ -110,20 +110,19 @@ const resolvedRel = computed(() => props.rel ?? (isExternal.value ? 'noreferrer'
   <span v-if="download" class="bv-platform-button">
     <span v-if="icon" class="bv-platform-button-icon" v-html="icon"></span>
     <!--
-      Renders with VPButton's own class-name contract ("VPButton" plus its
-      size/theme modifier classes) rather than importing the real VPButton
-      component, which would require this module to depend on 'vitepress'.
-      Those exact classes are already styled for free inside any real
-      VitePress site: VPHero.vue statically imports VPButton.vue as part of
-      VitePress's own default theme, so its scoped CSS ships in every
-      VitePress build regardless of whether this component is used — no CSS
-      is duplicated here, only the class names and the tiny bit of
-      tag/target/rel selection behavior VPButton itself has. Outside a
-      VitePress site these classes are simply inert hooks a consumer can
-      style themselves.
+      Own class name, not VPButton's — a core component with zero vitepress
+      dependency shouldn't leak VitePress's private, internal class name
+      into a consumer's rendered DOM (confusing outside a VitePress site,
+      and not a stable contract to depend on). Instead it consumes the same
+      *public, documented* --vp-button-* CSS custom properties VitePress
+      itself exposes for theming (see vars.css) — real design tokens meant
+      to be read by exactly this kind of external styling, not duplicated
+      private CSS. Each property has a fallback value so the button still
+      looks like a clickable button outside VitePress, where those
+      variables are simply undefined, rather than rendering bare.
     -->
     <a
-      class="VPButton"
+      class="bv-platform-button-link"
       :class="[size ?? 'medium', theme ?? 'brand']"
       :href="download.href"
       :target="resolvedTarget"
@@ -152,5 +151,81 @@ const resolvedRel = computed(() => props.rel ?? (isExternal.value ? 'noreferrer'
 .bv-platform-button-icon :deep(svg) {
   width: 1em;
   height: 1em;
+}
+
+.bv-platform-button-link {
+  display: inline-block;
+  border: 1px solid transparent;
+  text-align: center;
+  font-weight: 600;
+  white-space: nowrap;
+  text-decoration: none;
+  transition: color 0.25s, border-color 0.25s, background-color 0.25s;
+}
+
+.bv-platform-button-link:active {
+  transition: color 0.1s, border-color 0.1s, background-color 0.1s;
+}
+
+.bv-platform-button-link.medium {
+  border-radius: 20px;
+  padding: 0 20px;
+  line-height: 38px;
+  font-size: 14px;
+}
+
+.bv-platform-button-link.big {
+  border-radius: 24px;
+  padding: 0 24px;
+  line-height: 46px;
+  font-size: 16px;
+}
+
+.bv-platform-button-link.brand {
+  border-color: var(--vp-button-brand-border, #3c8772);
+  color: var(--vp-button-brand-text, #fff);
+  background-color: var(--vp-button-brand-bg, #3c8772);
+}
+.bv-platform-button-link.brand:hover {
+  border-color: var(--vp-button-brand-hover-border, #359469);
+  color: var(--vp-button-brand-hover-text, #fff);
+  background-color: var(--vp-button-brand-hover-bg, #359469);
+}
+.bv-platform-button-link.brand:active {
+  border-color: var(--vp-button-brand-active-border, #2b8760);
+  color: var(--vp-button-brand-active-text, #fff);
+  background-color: var(--vp-button-brand-active-bg, #2b8760);
+}
+
+.bv-platform-button-link.alt {
+  border-color: var(--vp-button-alt-border, transparent);
+  color: var(--vp-button-alt-text, #3c3c43);
+  background-color: var(--vp-button-alt-bg, #f2f2f3);
+}
+.bv-platform-button-link.alt:hover {
+  border-color: var(--vp-button-alt-hover-border, transparent);
+  color: var(--vp-button-alt-hover-text, #3c3c43);
+  background-color: var(--vp-button-alt-hover-bg, #e6e6e7);
+}
+.bv-platform-button-link.alt:active {
+  border-color: var(--vp-button-alt-active-border, transparent);
+  color: var(--vp-button-alt-active-text, #3c3c43);
+  background-color: var(--vp-button-alt-active-bg, #dcdcdd);
+}
+
+.bv-platform-button-link.sponsor {
+  border-color: var(--vp-button-sponsor-border, transparent);
+  color: var(--vp-button-sponsor-text, #d5389c);
+  background-color: var(--vp-button-sponsor-bg, transparent);
+}
+.bv-platform-button-link.sponsor:hover {
+  border-color: var(--vp-button-sponsor-hover-border, #d5389c);
+  color: var(--vp-button-sponsor-hover-text, #d5389c);
+  background-color: var(--vp-button-sponsor-hover-bg, transparent);
+}
+.bv-platform-button-link.sponsor:active {
+  border-color: var(--vp-button-sponsor-active-border, #d5389c);
+  color: var(--vp-button-sponsor-active-text, #d5389c);
+  background-color: var(--vp-button-sponsor-active-bg, transparent);
 }
 </style>

@@ -30,7 +30,7 @@ describe('BVPlatformButton (core)', () => {
     const wrapper = await mountButton()
     const anchor = wrapper.find('a')
     expect(anchor.exists()).toBe(true)
-    expect(anchor.classes()).toContain('VPButton')
+    expect(anchor.classes()).toContain('bv-platform-button-link')
     expect(anchor.attributes('href')).toBe(FALLBACK_HREF)
   })
 

@@ -155,27 +155,42 @@ non-VitePress consumers requires two things together, not one:**
    two entries in `vite.config.ts`'s `build.lib.entry` and a `package.json`
    `exports` map with both `.` and `./vitepress`.
 
-**Resolved during PR 5's implementation — how the core renders its button
-without `VPButton`:** section 2 above decided the single (pre-split)
-component should render through the real `VPButton` (imported from
-`vitepress/theme`) instead of hand-copying its CSS. That decision was made
-before the split existed and doesn't survive it unchanged: the adapter is
-supposed to have "no real logic of its own beyond" resolving `base`, so the
-actual button markup has to live in the core — but the core can't import
-`vitepress/theme` (that's still `vitepress`, just a subpath) without
-reintroducing the hard dependency the whole split exists to remove. The
-core instead renders its own `<a>` reusing `VPButton`'s exact class-name
-contract (`"VPButton"` plus its size/theme modifier classes) and
-reimplementing its tiny bit of target/rel/external-link-detection behavior,
-without importing the component or copying any of its CSS property
-declarations. This isn't the CSS-duplication section 2 warned against:
-inside any real VitePress site those classes are already styled for free by
-VitePress's own bundled theme CSS (`VPHero.vue` statically imports
-`VPButton.vue` as part of `DefaultTheme`, so its scoped styles ship in
-every VitePress build regardless of whether this component is used) — only
-the class *names* and a few lines of selection logic are shared, zero
-property values. Outside a VitePress site those classes are simply inert
-hooks. See `src/core/BVPlatformButton.vue`'s template comment for the same
+**Resolved during PR 5's implementation, revised in review — how the core
+renders its button without `VPButton`:** section 2 above decided the single
+(pre-split) component should render through the real `VPButton` (imported
+from `vitepress/theme`) instead of hand-copying its CSS. That decision was
+made before the split existed and doesn't survive it unchanged: the adapter
+is supposed to have "no real logic of its own beyond" resolving `base`, so
+the actual button markup has to live in the core — but the core can't
+import `vitepress/theme` (that's still `vitepress`, just a subpath) without
+reintroducing the hard dependency the whole split exists to remove.
+
+The implementation's first pass had the core borrow `VPButton`'s literal
+class name (`"VPButton"` plus its size/theme modifier classes) with zero
+CSS of its own, reasoning that any real VitePress site already ships
+`VPButton.vue`'s scoped CSS site-wide (`Layout.vue`'s static import graph
+includes it regardless of page/layout — verified by grepping a built site's
+CSS bundle: `.VPButton[data-v-...]` is present, and the same single
+stylesheet loads on every page, home or not). That's true and reliable
+*inside* VitePress, but it has two real problems: a non-VitePress consumer's
+rendered DOM shows a meaningless, leaked VitePress-internal class name they
+have no reason to know about, and outside VitePress — the core's whole
+stated purpose — the button renders with zero styling at all, not even a
+generic fallback look.
+
+Revised in review to: the core's own class name
+(`bv-platform-button-link`), with its own `<style scoped>` block covering
+both sizes and all three themes. That style block reads the *same public,
+documented* `--vp-button-*` custom properties VitePress itself exposes for
+theming (real design tokens meant for exactly this), each with a fallback
+value (e.g. `var(--vp-button-brand-bg, #3c8772)`) so the button still looks
+like a clickable button outside VitePress, where those variables are
+undefined. This isn't the CSS-duplication section 2 warned against — that
+was about not using the real component when it's available (true for the
+adapter); the core categorically can't depend on `vitepress`, so consuming
+the public custom-property API is the intended way to get "looks right
+inside VitePress, degrades gracefully outside it." See
+`src/core/BVPlatformButton.vue`'s template/style comments for the same
 reasoning in place.
 
 ### 4. Other use cases for the platform-detection primitive
