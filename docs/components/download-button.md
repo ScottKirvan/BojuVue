@@ -57,6 +57,24 @@ Each top-level key is a `PlatformId`; its value is a `{ href, label? }` object �
 A label is always attached to the entry it belongs to, not a separate key floating
 next to it — there's no way to express "a label with nothing to link to."
 
+The default label used when an entry has no `label`:
+
+| Platform | Default label |
+| --- | --- |
+| `windows` | Download for Windows |
+| `macos` | Download for macOS |
+| `linux` | Download for Linux |
+| `android` | Get for Android |
+| `ios` | Get for iOS |
+| `chromeos` | Get for ChromeOS |
+
+This is keyed off the *visitor's detected platform*, not which entry actually
+supplied the link — a ChromeOS visitor whose link fell back to the `android` entry
+still sees "Get for ChromeOS," since that's what describes them, not the source of
+the link. The `fallbackHref` path is separate and always uses `fallbackLabel`
+(default `'View Downloads'`) regardless of platform, since a generic fallback link
+shouldn't imply anything platform-specific.
+
 Every platform key is optional — omit any you don't ship a build for. Without a
 `fallbackHref` prop, a visitor on a platform with no matching key simply won't see the
 button.
@@ -69,10 +87,24 @@ component.
 
 ## Platform detection
 
-Detection runs once, after the component mounts (`navigator` isn't available during
-VitePress's server-side prerender, so the initial render always shows the fallback
-state — it updates once the browser takes over). A couple of platforms need to be
-checked in a specific order because their signals overlap:
+Detection runs once, after the component mounts — `navigator` isn't available during
+VitePress's server-side prerender, so the very first HTML sent to the browser never
+has a platform-specific answer yet. What a visitor actually experiences depends on
+whether `fallbackHref` was given:
+
+- **With `fallbackHref`:** they see that button immediately on page load. Detection
+  and the manifest fetch both finish almost instantly, at which point the button can
+  silently update in place to the platform-specific link and label — no flicker, no
+  reload, same element.
+- **Without `fallbackHref`:** if nothing platform-specific is found, the button never
+  appears at all. Not a flash-then-disappear — visitors on an unmatched platform never
+  see it in the first place.
+
+Either way, there's no loading state to design for — no spinner, no "detecting your
+platform" message.
+
+A couple of platforms need to be checked in a specific order because their signals
+overlap:
 
 - **iOS before macOS** — modern iPadOS reports `navigator.platform` as `"MacIntel"`,
   identical to a real Mac; it's only distinguishable by touch support.
