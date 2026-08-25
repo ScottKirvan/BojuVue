@@ -76,7 +76,7 @@ describe('resolveDownload', () => {
   const options = { fallbackHref: 'https://example.com/releases', fallbackLabel: 'View Downloads' }
 
   it('falls back when no platform was detected', () => {
-    expect(resolveDownload(null, { windows: 'https://example.com/win.msi' }, options)).toEqual({
+    expect(resolveDownload(null, { windows: { href: 'https://example.com/win.msi' } }, options)).toEqual({
       href: 'https://example.com/releases',
       label: 'View Downloads',
     })
@@ -90,47 +90,52 @@ describe('resolveDownload', () => {
   })
 
   it('falls back with a neutral label when the manifest has no entry for the detected platform', () => {
-    expect(resolveDownload('linux', { windows: 'https://example.com/win.msi' }, options)).toEqual({
+    expect(resolveDownload('linux', { windows: { href: 'https://example.com/win.msi' } }, options)).toEqual({
       href: 'https://example.com/releases',
       label: 'View Downloads',
     })
   })
 
   it('returns null (hides the button) when nothing matches and no fallbackHref was given', () => {
-    expect(resolveDownload('linux', { windows: 'https://example.com/win.msi' }, {})).toBeNull()
+    expect(resolveDownload('linux', { windows: { href: 'https://example.com/win.msi' } }, {})).toBeNull()
     expect(resolveDownload('windows', null, {})).toBeNull()
     expect(resolveDownload(null, null, {})).toBeNull()
   })
 
   it('returns the manifest link and default label for a matched platform', () => {
-    expect(resolveDownload('windows', { windows: 'https://example.com/win.msi' }, options)).toEqual({
+    expect(resolveDownload('windows', { windows: { href: 'https://example.com/win.msi' } }, options)).toEqual({
       href: 'https://example.com/win.msi',
       label: 'Download for Windows',
     })
   })
 
-  it('uses the ChromeOS-specific link when published', () => {
+  it('uses the ChromeOS-specific entry when published', () => {
     expect(
       resolveDownload(
         'chromeos',
-        { chromeos: 'https://example.com/chromeos.apk', android: 'https://example.com/android.apk' },
+        {
+          chromeos: { href: 'https://example.com/chromeos.apk' },
+          android: { href: 'https://example.com/android.apk' },
+        },
         options
       )
     ).toEqual({ href: 'https://example.com/chromeos.apk', label: 'Get for ChromeOS' })
   })
 
-  it('falls back to the Android build for ChromeOS when no ChromeOS-specific one is published', () => {
-    expect(resolveDownload('chromeos', { android: 'https://example.com/android.apk' }, options)).toEqual({
+  it('falls back to the Android entry for ChromeOS when no ChromeOS-specific one is published', () => {
+    expect(
+      resolveDownload('chromeos', { android: { href: 'https://example.com/android.apk' } }, options)
+    ).toEqual({
       href: 'https://example.com/android.apk',
       label: 'Get for ChromeOS',
     })
   })
 
-  it('honors a manifest-supplied label override for the matched platform', () => {
+  it("honors a manifest entry's label override for the matched platform", () => {
     expect(
       resolveDownload(
         'windows',
-        { windows: 'https://example.com/win.msi', windowsLabel: 'Get the app' },
+        { windows: { href: 'https://example.com/win.msi', label: 'Get the app' } },
         options
       )
     ).toEqual({ href: 'https://example.com/win.msi', label: 'Get the app' })
