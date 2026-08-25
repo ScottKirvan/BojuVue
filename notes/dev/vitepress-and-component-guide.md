@@ -79,7 +79,7 @@ would take that data as a prop instead.
   }
   ```
 
-  That's why any `.md` file under `docs/` can use `<DownloadButton />` with **no
+  That's why any `.md` file under `docs/` can use `<BVPlatformButton />` with **no
   import statement** — unlike Lucide's pattern above, which imports each component
   explicitly per page.
   This global-registration shortcut only exists inside this repo's own `docs/`; it's a
@@ -94,18 +94,18 @@ would take that data as a prop instead.
   build failure — passed locally, failed in the Pages deploy, because only the deploy
   job never installs root deps).
 
-## 3. Adding a new component (worked example: `DownloadButton`)
+## 3. Adding a new component (worked example: `BVPlatformButton`)
 
-1. Write the `.vue` file under `src/` (e.g. `src/DownloadButton.vue`). Standard SFC:
+1. Write the `.vue` file under `src/` (e.g. `src/BVPlatformButton.vue`). Standard SFC:
    `<script setup lang="ts">` for props/logic, `<template>` for markup, `<style
    scoped>` for CSS scoped to that component alone.
 2. Make configurable text/behavior actual props, not hardcoded strings — use
    `defineProps<{...}>()` with `withDefaults(...)` for sensible fallback values. This
    is the difference between a real reusable component and Lucide's `home/`
    components: a prop the caller can override, vs. a value baked into the file.
-3. Add one line to `src/index.ts`: `export { default as DownloadButton } from
-   './DownloadButton.vue'`.
-4. Preview it: `cd docs && npm run docs:dev`, then use `<DownloadButton />` anywhere in
+3. Add one line to `src/index.ts`: `export { default as BVPlatformButton } from
+   './BVPlatformButton.vue'`.
+4. Preview it: `cd docs && npm run docs:dev`, then use `<BVPlatformButton />` anywhere in
    a `.md` file — no import needed (see §2). Pass props to override defaults.
 5. `npm run build` at the repo root to confirm the library itself still builds clean.
 
@@ -124,12 +124,12 @@ Then register what you need explicitly in that site's own
 
 ```ts
 import DefaultTheme from 'vitepress/theme'
-import { DownloadButton } from '@scottkirvan/bojuvue'
+import { BVPlatformButton } from '@scottkirvan/bojuvue'
 
 export default {
   extends: DefaultTheme,
   enhanceApp({ app }) {
-    app.component('DownloadButton', DownloadButton)
+    app.component('BVPlatformButton', BVPlatformButton)
   },
 }
 ```
@@ -139,10 +139,10 @@ import it directly in that page's markdown body (the Lucide pattern from §1):
 
 ```md
 <script setup>
-import { DownloadButton } from '@scottkirvan/bojuvue'
+import { BVPlatformButton } from '@scottkirvan/bojuvue'
 </script>
 
-<DownloadButton />
+<BVPlatformButton />
 ```
 
 Updating later is `npm update`.
