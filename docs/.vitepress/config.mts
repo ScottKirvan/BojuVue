@@ -44,8 +44,21 @@ export default defineConfig({
   themeConfig: {
     nav: [
       { text: 'Home', link: '/' },
+      { text: 'Components', link: '/components/' },
       { text: 'GitHub', link: 'https://github.com/ScottKirvan/BojuVue' }
     ],
+    sidebar: {
+      '/components/': [
+        {
+          text: 'Components',
+          items: [
+            { text: 'Overview', link: '/components/' },
+            { text: 'HelloWorld', link: '/components/hello-world' },
+            { text: 'DownloadButton', link: '/components/download-button' },
+          ],
+        },
+      ],
+    },
     socialLinks: [
       { icon: 'github', link: 'https://github.com/ScottKirvan/BojuVue' },
       { icon: 'discord', link: 'https://discord.gg/TN6XJSNK5Y' }

@@ -155,12 +155,18 @@ export default {
 
 Then use it in any `.md` page. Update later with `npm update`.
 
+See the **[component reference](https://scottkirvan.github.io/BojuVue/components/)**
+for every available component's props and a usage example.
+
 ### Adding a new component
 
 1. Write the `.vue` file under `src/`
 2. Add one line to `src/index.ts`: `export { default as YourComponent } from './YourComponent.vue'`
 3. Run `npm run docs:dev` (from `docs/`) to preview it live in the VitePress site
-4. Bump the version and `npm publish` to ship it to every consuming site
+4. Add a reference page at `docs/components/your-component.md` (props table + usage
+   example — copy the structure of an existing page) and link it from
+   `docs/components/index.md` and the sidebar in `docs/.vitepress/config.mts`
+5. Bump the version and `npm publish` to ship it to every consuming site
 
 Contributions / Contact
 -----------------------
