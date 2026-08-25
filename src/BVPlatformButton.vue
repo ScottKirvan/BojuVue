@@ -1,7 +1,13 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from 'vue'
 import { useData } from 'vitepress'
-import { detectPlatform, resolveDownload, type BVPlatformManifest, type BVPlatformId } from './platform'
+import {
+  detectPlatform,
+  resolveDownload,
+  resolveManifestUrl,
+  type BVPlatformManifest,
+  type BVPlatformId,
+} from './platform'
 
 const props = withDefaults(
   defineProps<{
@@ -21,7 +27,7 @@ const platform = ref<BVPlatformId | null>(null)
 onMounted(async () => {
   platform.value = detectPlatform(typeof navigator === 'undefined' ? undefined : navigator)
   try {
-    const res = await fetch(`${site.value.base}${props.manifestUrl}`)
+    const res = await fetch(resolveManifestUrl(site.value.base, props.manifestUrl))
     manifest.value = await res.json()
   } catch {
     manifest.value = null
