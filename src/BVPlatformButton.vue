@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from 'vue'
 import { useData } from 'vitepress'
-import { detectPlatform, resolveDownload, type DownloadManifest, type PlatformId } from './platform'
+import { detectPlatform, resolveDownload, type BVPlatformManifest, type BVPlatformId } from './platform'
 
 const props = withDefaults(
   defineProps<{
@@ -10,13 +10,13 @@ const props = withDefaults(
     fallbackLabel?: string
   }>(),
   {
-    manifestUrl: 'downloadButton.json',
+    manifestUrl: 'platformButton.json',
   }
 )
 
 const { site } = useData()
-const manifest = ref<DownloadManifest | null>(null)
-const platform = ref<PlatformId | null>(null)
+const manifest = ref<BVPlatformManifest | null>(null)
+const platform = ref<BVPlatformId | null>(null)
 
 onMounted(async () => {
   platform.value = detectPlatform(typeof navigator === 'undefined' ? undefined : navigator)
@@ -37,13 +37,13 @@ const download = computed(() =>
 </script>
 
 <template>
-  <a v-if="download" class="bv-download-button" :href="download.href" target="_blank" rel="noopener noreferrer">
+  <a v-if="download" class="bv-platform-button" :href="download.href" target="_blank" rel="noopener noreferrer">
     {{ download.label }}
   </a>
 </template>
 
 <style scoped>
-.bv-download-button {
+.bv-platform-button {
   display: inline-block;
   /* This component carries no spacing from its context — it can render
      after VitePress's home-hero-actions-after row (needs top margin, since
@@ -67,13 +67,13 @@ const download = computed(() =>
   transition: color 0.25s, border-color 0.25s, background-color 0.25s;
 }
 
-.bv-download-button:hover {
+.bv-platform-button:hover {
   border-color: var(--vp-button-brand-hover-border);
   color: var(--vp-button-brand-hover-text);
   background-color: var(--vp-button-brand-hover-bg);
 }
 
-.bv-download-button:active {
+.bv-platform-button:active {
   border-color: var(--vp-button-brand-active-border);
   color: var(--vp-button-brand-active-text);
   background-color: var(--vp-button-brand-active-bg);
