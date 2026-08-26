@@ -129,7 +129,8 @@ Features
 - Vue 3 + TypeScript components, built as an ES module via Vite library mode
 - `vue` is a peer dependency, so consuming sites use their own Vue instance — no duplicate copies, no broken reactivity
 - Every component is exported from one entry point (`src/index.ts`), so consuming a new component is a one-line import change
-- The `docs/` VitePress site imports directly from `src/index.ts` and registers every exported component globally, so new components can be previewed live in a real VitePress site without publishing or `npm link`
+- The `docs/` VitePress site imports directly from `src/index.ts`/`src/vitepress.ts` and registers every exported component globally, so new components can be previewed live in a real VitePress site without publishing or `npm link`
+- Some components (currently `BVPlatformButton`) ship as **two fully independent builds behind two import paths**: a generic implementation at `@scottkirvan/bojuvue`, with zero dependency on `vitepress`, and a VitePress-specific implementation at `@scottkirvan/bojuvue/vitepress`, same component name, resolving anything VitePress-specific for you. Neither component imports or renders the other — the import path is what disambiguates them. `vitepress` is an *optional* peer dependency — installing the package alone never requires it; only importing from the `/vitepress` path does.
 
 Installation
 ------------
@@ -139,24 +140,32 @@ npm install @scottkirvan/bojuvue
 
 Usage
 -----
-Import and register components in a consuming VitePress site's `.vitepress/theme/index.ts`:
+Import and register components in a consuming VitePress site's `.vitepress/theme/index.ts`.
+For a component with a VitePress-aware build (see Features above), prefer importing it
+from `@scottkirvan/bojuvue/vitepress` when your site is a VitePress site:
 
 ```ts
 import DefaultTheme from 'vitepress/theme'
+import { BVPlatformButton } from '@scottkirvan/bojuvue/vitepress'
 import { SomeComponent } from '@scottkirvan/bojuvue'
 
 export default {
   extends: DefaultTheme,
   enhanceApp({ app }) {
+    app.component('BVPlatformButton', BVPlatformButton)
     app.component('SomeComponent', SomeComponent)
   },
 }
 ```
 
+In a non-VitePress Vue 3 app, only the bare `@scottkirvan/bojuvue` path is available —
+components without a VitePress-specific build work exactly the same way there.
+
 Then use it in any `.md` page. Update later with `npm update`.
 
 See the **[component reference](https://scottkirvan.github.io/BojuVue/components/)**
-for every available component's props and a usage example.
+for every available component's props and a usage example — including, per component,
+which import path(s) it's available from.
 
 ### Adding a new component
 
@@ -167,6 +176,13 @@ for every available component's props and a usage example.
    example — copy the structure of an existing page) and link it from
    `docs/components/index.md` and the sidebar in `docs/.vitepress/config.mts`
 5. Bump the version and `npm publish` to ship it to every consuming site
+
+If the component needs to read anything VitePress-specific (site data, router, etc.),
+give it two fully independent implementations sharing one exported name the way
+`BVPlatformButton` does (see `src/BVPlatformButton.vue`, `src/vitepress/`,
+`src/vitepress.ts`, and `CLAUDE.md`'s Project Overview section) instead of importing
+`vitepress` directly into the component every consumer gets — that's what keeps the
+bare package usable in non-VitePress Vue apps.
 
 Contributions / Contact
 -----------------------

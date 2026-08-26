@@ -1,16 +1,16 @@
-export type PlatformId = 'windows' | 'macos' | 'linux' | 'android' | 'ios' | 'chromeos'
+export type BVPlatformId = 'windows' | 'macos' | 'linux' | 'android' | 'ios' | 'chromeos'
 
-export interface PlatformEntry {
+export interface BVPlatformEntry {
   href: string
   label?: string
 }
 
-// Expected shape of the JSON file DownloadButton fetches:
+// Expected shape of the JSON file BVPlatformButton fetches:
 // { "windows": { "href": "https://...", "label": "Get the app" }, "macos": { "href": "https://..." } }
 // Every platform key is optional — omit any you don't ship a build for. A label only
 // ever makes sense attached to its own entry, so it's nested under it rather than
 // living as a separate sibling key.
-export type DownloadManifest = Partial<Record<PlatformId, PlatformEntry>>
+export type BVPlatformManifest = Partial<Record<BVPlatformId, BVPlatformEntry>>
 
 export interface NavigatorLike {
   userAgent: string
@@ -21,7 +21,15 @@ export interface NavigatorLike {
 // iOS check must precede macOS: iPadOS reports navigator.platform as
 // "MacIntel" and is only distinguishable via touch support. Android must
 // precede Linux: Android's navigator.platform is often "Linux armv8l".
-export function detectPlatform(nav: NavigatorLike | undefined): PlatformId | null {
+//
+// navigator.platform is formally deprecated and browsers are already
+// freezing/limiting it for anti-fingerprinting reasons, so each desktop
+// branch also falls back to a navigator.userAgent check — same pattern
+// mobile detection above already relies on. The UA fallbacks must run
+// after the Android check (Android's UA contains "Linux") and after the
+// iOS check (iPadOS's UA contains "Macintosh"), which they do here since
+// desktop detection already runs last.
+export function detectPlatform(nav: NavigatorLike | undefined): BVPlatformId | null {
   if (!nav) return null
   const ua = nav.userAgent
   const platform = nav.platform || ''
@@ -29,19 +37,30 @@ export function detectPlatform(nav: NavigatorLike | undefined): PlatformId | nul
   if (/iPhone|iPad|iPod/i.test(ua) || isIPadOS) return 'ios'
   if (/Android/i.test(ua)) return 'android'
   if (/CrOS/i.test(ua)) return 'chromeos'
-  if (/Win/i.test(platform)) return 'windows'
-  if (/Mac/i.test(platform)) return 'macos'
-  if (/Linux/i.test(platform)) return 'linux'
+  if (/Win/i.test(platform) || /Windows NT/i.test(ua)) return 'windows'
+  if (/Mac/i.test(platform) || /Macintosh/i.test(ua)) return 'macos'
+  if (/Linux/i.test(platform) || /X11|Linux/i.test(ua)) return 'linux'
   return null
 }
 
-const defaultLabels: Record<PlatformId, string> = {
+export const defaultLabels: Record<BVPlatformId, string> = {
   windows: 'Download for Windows',
   macos: 'Download for macOS',
   linux: 'Download for Linux',
   android: 'Get for Android',
   ios: 'Get for iOS',
   chromeos: 'Get for ChromeOS',
+}
+
+// Absolute manifestUrl values (a manifest hosted on another origin/CDN, not
+// alongside the docs site itself) must not be prefixed with the site's
+// VitePress base path — prepending it would mangle an already-complete URL
+// into something unfetchable.
+const ABSOLUTE_URL_PATTERN = /^https?:\/\//i
+
+export function resolveManifestUrl(base: string, manifestUrl: string): string {
+  if (ABSOLUTE_URL_PATTERN.test(manifestUrl)) return manifestUrl
+  return `${base}${manifestUrl}`
 }
 
 export interface ResolveDownloadOptions {
@@ -53,8 +72,8 @@ export interface ResolveDownloadOptions {
 }
 
 export function resolveDownload(
-  platform: PlatformId | null,
-  manifest: DownloadManifest | null,
+  platform: BVPlatformId | null,
+  manifest: BVPlatformManifest | null,
   options: ResolveDownloadOptions = {}
 ): { href: string; label: string } | null {
   if (platform && manifest) {

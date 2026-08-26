@@ -16,9 +16,45 @@ BojuVue is a Vue 3 + TypeScript component library published to npm as
 several local documentation sites) that need shared landing-page/UX components instead
 of duplicating them per repo.
 
-- `src/index.ts` — the single entry point; every component is re-exported from here.
-- `vite.config.ts` — Vite library-mode build (ES module output, `vue` and `vitepress`
-  external as peer dependencies, types emitted via `vite-plugin-dts`). Also holds the
+- `src/index.ts` — the generic entry point; framework-agnostic components/utilities are
+  re-exported from here. Built to `dist/bojuvue.js`, published as the package's `.`
+  export (`@scottkirvan/bojuvue`). Has zero dependency on `vitepress` anywhere in its
+  module graph — that's a hard invariant, not an implementation detail; verify it after
+  touching anything under `src/` by checking the built `dist/bojuvue.js` (and any chunk
+  it imports) for the literal string `vitepress`.
+- `src/vitepress.ts` — the VitePress-specific entry point. Re-exports everything
+  `src/index.ts` has (same names) plus its own VitePress-specific component
+  implementations. Built to `dist/vitepress.js`, published as the package's
+  `./vitepress` export (`@scottkirvan/bojuvue/vitepress`). `vitepress` is an *optional*
+  peer dependency (`peerDependenciesMeta`) — only code reachable from this entry may
+  import it.
+- A component that needs anything VitePress-specific (site data, router, etc.) gets
+  **two fully independent implementations sharing one exported name**, disambiguated
+  by import path — neither component imports or renders the other. A generic Vue
+  implementation (`src/ComponentName.vue`, plain props in, no `vitepress` import,
+  works in any Vue 3 app) is exported from `src/index.ts`; a separate VitePress-specific
+  implementation (`src/vitepress/ComponentName.vue`, calls `useData()`/etc. itself and
+  implements its own rendering) is exported from `src/vitepress.ts`. Neither Vue
+  component imports or renders the other — they may both call the same plain utility
+  function or composable for logic that's genuinely shared (see `useManifestFetch` in
+  `src/useManifestFetch.ts`), but that's sharing a utility, not one component owning
+  the other. See `src/BVPlatformButton.vue` / `src/vitepress/BVPlatformButton.vue` for
+  the worked example. A component with no VitePress-specific needs at all just lives
+  directly under `src/` and is exported only from `src/index.ts`, no second
+  implementation required.
+- Prop types passed to a `defineProps<T>()` macro must stay **inline in the `.vue`
+  file**, not imported from another module — `@vue/compiler-sfc` resolving a
+  cross-file type reference in that position needs the `typescript` package loadable
+  from the compiling file's location, which breaks under `docs/`'s cross-directory
+  source build (see the `vite.config.ts` bullet below) whenever the repo root's
+  `node_modules` isn't present. A type used only for a public, non-macro export (e.g.
+  `BVPlatformButtonProps` in `src/BVPlatformButton.types.ts`) is fine to keep in its
+  own file — the constraint is specifically about the `defineProps<T>()` type
+  position.
+- `vite.config.ts` — Vite library-mode build with **two entries** (`src/index.ts` →
+  `bojuvue`, `src/vitepress.ts` → `vitepress`, producing two separate physical output
+  files — not two exports of one file), ES module output, `vue` and `vitepress`
+  external as peer dependencies, types emitted via `vite-plugin-dts`. Also holds the
   `test` config (vitest, jsdom environment) — no separate vitest config file.
 - Components with real logic (detection, data-shaping, anything beyond pure rendering)
   should have that logic extracted into a plain `.ts` module (see `src/platform.ts`)
@@ -28,9 +64,10 @@ of duplicating them per repo.
   written alongside all new code, per the Working Conventions below.
 - `docs/` — a separate VitePress project (its own `package.json`/`node_modules`) that
   both serves as this library's demo site and doubles as a live component preview:
-  `docs/.vitepress/theme/index.ts` imports directly from `../../../src/index` and
-  registers every exported component globally, so a new component can be seen in a
-  real VitePress site (`npm run docs:dev` from `docs/`) without publishing or
+  `docs/.vitepress/theme/index.ts` imports directly from `../../../src/vitepress` (the
+  VitePress-entry *source*, not the built/published package — see the two bullets
+  above) and registers every exported component globally, so a new component can be
+  seen in a real VitePress site (`npm run docs:dev` from `docs/`) without publishing or
   `npm link`.
 - `docs/components/` — the hand-written API reference (props table + usage example per
   component), linked from the sidebar in `docs/.vitepress/config.mts`. Every new
@@ -115,7 +152,7 @@ as finished:
 - **Tests exist for anything with real logic, written alongside the code** — not
   after being asked. Extract logic worth testing into plain, testable functions
   rather than mounting a component to cover it (see `src/platform.ts` next to
-  `DownloadButton.vue`).
+  `BVPlatformButton.vue`).
 - **Docs exist alongside the code, not as a follow-up:** every prop's default and
   whether it's required, every field of any data schema and why it's shaped that way,
   what a user actually experiences in each failure/edge case (not just that a

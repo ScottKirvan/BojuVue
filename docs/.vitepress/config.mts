@@ -60,8 +60,7 @@ export default defineConfig({
           text: 'Components',
           items: [
             { text: 'Overview', link: '/components/' },
-            { text: 'HelloWorld', link: '/components/hello-world' },
-            { text: 'DownloadButton', link: '/components/download-button' },
+            { text: 'BVPlatformButton', link: '/components/platform-button' },
           ],
         },
       ],

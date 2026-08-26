@@ -1,14 +1,21 @@
 # Components
 
-Every component below is exported from `@scottkirvan/bojuvue`'s single entry point
-(`src/index.ts`). Install the package, then import whichever components you need:
+Install the package, then import whichever components you need:
 
 ```
 npm install @scottkirvan/bojuvue
 ```
 
+Some components have a VitePress-aware build, available from a second import path —
+see each component's own page for whether it does and what the difference is:
+
 ```ts
-import { HelloWorld, DownloadButton } from '@scottkirvan/bojuvue'
+// Generic Vue implementation — works in any Vue 3 app, no vitepress dependency
+import { BVPlatformButton } from '@scottkirvan/bojuvue'
+
+// VitePress-specific implementation — same component name, resolves
+// VitePress-specific details (like the site's base path) for you
+import { BVPlatformButton } from '@scottkirvan/bojuvue/vitepress'
 ```
 
 See each component's page for its props and a usage example. For how to register a
@@ -17,7 +24,6 @@ component in your own VitePress site (globally via `enhanceApp`, or per-page in 
 
 ## Available components
 
-| Component | Description |
-| --- | --- |
-| [HelloWorld](./hello-world) | A title above a bordered box with an icon and text. Minimal example component. |
-| [DownloadButton](./download-button) | Detects the visitor's platform and links to the matching download from a JSON manifest. |
+| Component | Import path(s) | Description |
+| --- | --- | --- |
+| [BVPlatformButton](./platform-button) | `@scottkirvan/bojuvue`, `@scottkirvan/bojuvue/vitepress` | Detects the visitor's platform and links to the matching download from a JSON manifest. |

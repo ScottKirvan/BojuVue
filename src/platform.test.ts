@@ -1,9 +1,22 @@
 import { describe, expect, it } from 'vitest'
-import { detectPlatform, resolveDownload, type NavigatorLike } from './platform'
+import { defaultLabels, detectPlatform, resolveDownload, resolveManifestUrl, type NavigatorLike } from './platform'
 
 function nav(overrides: Partial<NavigatorLike>): NavigatorLike {
   return { userAgent: '', platform: '', maxTouchPoints: 0, ...overrides }
 }
+
+describe('defaultLabels', () => {
+  it('has a label for every BVPlatformId, matching what resolveDownload falls back to', () => {
+    expect(defaultLabels).toEqual({
+      windows: 'Download for Windows',
+      macos: 'Download for macOS',
+      linux: 'Download for Linux',
+      android: 'Get for Android',
+      ios: 'Get for iOS',
+      chromeos: 'Get for ChromeOS',
+    })
+  })
+})
 
 describe('detectPlatform', () => {
   it('returns null when navigator is unavailable', () => {
@@ -46,6 +59,18 @@ describe('detectPlatform', () => {
     ).toBe('macos')
   })
 
+  it('does not mistake a single touch point for iPadOS support — the guard requires > 1, not > 0', () => {
+    expect(
+      detectPlatform(
+        nav({
+          userAgent: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_6)',
+          platform: 'MacIntel',
+          maxTouchPoints: 1,
+        })
+      )
+    ).toBe('macos')
+  })
+
   it('detects Android ahead of Linux, even though Android reports a Linux platform string', () => {
     expect(
       detectPlatform(
@@ -70,6 +95,34 @@ describe('detectPlatform', () => {
       'linux'
     )
   })
+
+  it('falls back to the user agent for Windows when navigator.platform is frozen/unavailable', () => {
+    expect(
+      detectPlatform(nav({ userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)', platform: '' }))
+    ).toBe('windows')
+  })
+
+  it('falls back to the user agent for macOS when navigator.platform is frozen/unavailable', () => {
+    expect(
+      detectPlatform(nav({ userAgent: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)', platform: '' }))
+    ).toBe('macos')
+  })
+
+  it('falls back to the user agent for Linux when navigator.platform is frozen/unavailable', () => {
+    expect(detectPlatform(nav({ userAgent: 'Mozilla/5.0 (X11; Linux x86_64)', platform: '' }))).toBe('linux')
+  })
+
+  it('still detects Android via user agent ahead of the Linux user-agent fallback', () => {
+    expect(
+      detectPlatform(nav({ userAgent: 'Mozilla/5.0 (Linux; Android 14; Pixel 8)', platform: '' }))
+    ).toBe('android')
+  })
+
+  it('still detects ChromeOS via user agent ahead of the Linux user-agent fallback', () => {
+    expect(
+      detectPlatform(nav({ userAgent: 'Mozilla/5.0 (X11; CrOS x86_64 15633.69.0)', platform: '' }))
+    ).toBe('chromeos')
+  })
 })
 
 describe('resolveDownload', () => {
@@ -91,6 +144,13 @@ describe('resolveDownload', () => {
 
   it('falls back with a neutral label when the manifest has no entry for the detected platform', () => {
     expect(resolveDownload('linux', { windows: { href: 'https://example.com/win.msi' } }, options)).toEqual({
+      href: 'https://example.com/releases',
+      label: 'View Downloads',
+    })
+  })
+
+  it("defaults fallbackLabel to 'View Downloads' when the caller doesn't provide one", () => {
+    expect(resolveDownload(null, null, { fallbackHref: 'https://example.com/releases' })).toEqual({
       href: 'https://example.com/releases',
       label: 'View Downloads',
     })
@@ -131,6 +191,15 @@ describe('resolveDownload', () => {
     })
   })
 
+  it('falls back to fallbackHref for ChromeOS when the manifest has neither a chromeos nor an android entry', () => {
+    expect(
+      resolveDownload('chromeos', { windows: { href: 'https://example.com/win.msi' } }, options)
+    ).toEqual({
+      href: 'https://example.com/releases',
+      label: 'View Downloads',
+    })
+  })
+
   it("honors a manifest entry's label override for the matched platform", () => {
     expect(
       resolveDownload(
@@ -139,5 +208,39 @@ describe('resolveDownload', () => {
         options
       )
     ).toEqual({ href: 'https://example.com/win.msi', label: 'Get the app' })
+  })
+})
+
+describe('resolveManifestUrl', () => {
+  it('prefixes a site-relative manifestUrl with the site base', () => {
+    expect(resolveManifestUrl('/docs/', 'platformButton.json')).toBe('/docs/platformButton.json')
+  })
+
+  it('prefixes a site-relative manifestUrl even when the base is empty', () => {
+    expect(resolveManifestUrl('', 'platformButton.json')).toBe('platformButton.json')
+  })
+
+  it('leaves an absolute https manifestUrl untouched, ignoring the site base', () => {
+    expect(resolveManifestUrl('/docs/', 'https://cdn.example.com/platformButton.json')).toBe(
+      'https://cdn.example.com/platformButton.json'
+    )
+  })
+
+  it('leaves an absolute http manifestUrl untouched, ignoring the site base', () => {
+    expect(resolveManifestUrl('/docs/', 'http://cdn.example.com/platformButton.json')).toBe(
+      'http://cdn.example.com/platformButton.json'
+    )
+  })
+
+  it('treats the scheme check as case-insensitive', () => {
+    expect(resolveManifestUrl('/docs/', 'HTTPS://cdn.example.com/platformButton.json')).toBe(
+      'HTTPS://cdn.example.com/platformButton.json'
+    )
+  })
+
+  it('does not treat a protocol-relative URL as absolute, since it still needs a scheme to be fetchable', () => {
+    expect(resolveManifestUrl('/docs/', '//cdn.example.com/platformButton.json')).toBe(
+      '/docs///cdn.example.com/platformButton.json'
+    )
   })
 })
