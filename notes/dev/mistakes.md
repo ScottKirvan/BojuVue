@@ -19,6 +19,11 @@ branch, run `git fetch --prune` and confirm the remote ref still exists. Treat a
 branch as provisional once its PR has been opened — it may be gone by the next session,
 or even later in the same one. Codified in [CLAUDE.md](../../CLAUDE.md).
 
+**Reusable phrase:** "Treat any branch as provisional once its PR is opened — the
+owner may merge and delete it quickly, even within the same session. Before pushing
+to, or building new commits on, a previously-used branch, run `git fetch --prune` and
+confirm its remote ref still exists; if it's gone, start fresh off updated `main`."
+
 ---
 
 ## 2026-08-24 — Shipped `DownloadButton` under-designed, then fixed it one review comment at a time
@@ -43,6 +48,12 @@ checklist in [CLAUDE.md](../../CLAUDE.md) under "Definition of Done for a New
 Component" — data shapes must be justified per-field rather than copied, every
 failure/edge path needs a deliberate documented behavior, and tests/docs ship with the
 code, not after.
+
+**Reusable phrase:** "A component isn't done when it builds and the happy path works.
+Every field of a data shape must be justified for this use case, not copied from a
+reference — reject unused fields and naming-convention-only relationships between
+fields. Every failure and edge path needs a deliberate, documented user-visible
+behavior. Tests and docs ship alongside the code, not as follow-up work once asked."
 
 ---
 
@@ -76,3 +87,15 @@ models favor longer output, so the policy over-produces).
 Communication sections — flag invented structure as a proposal, not a decision; wait
 for explicit authorization when a message separates what from when; default to the
 shortest answer that actually answers the question.
+
+**Reusable phrases:**
+- "A structural choice made while implementing a functional request — naming, module
+  boundaries, a relationship between two pieces — is yours to propose, but must be
+  flagged as a proposal, not written into a spec, a policy file, or code comments with
+  the same authority as something the user actually decided."
+- "A description of a desired change is not, by itself, authorization to execute it.
+  If a message separates *what* to do from *when*, wait for the explicit go-ahead
+  before acting — even on a fully-specified, low-risk change."
+- "Default to the shortest response that actually answers what was asked. Expand only
+  when the question's actual complexity requires it, never because the topic could
+  support more."
