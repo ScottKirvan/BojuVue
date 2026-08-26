@@ -113,6 +113,30 @@ section:
 
 ---
 
+## 2026-08-26 — Dependency table tracked file conflicts but not decision survival
+
+**What happened:** The 7-PR dependency table for `PlatformButtonSpec.md` correctly
+tracked which PRs would touch the same files (soft dependencies) and which PRs
+required another's code to exist first (hard dependencies) — but never tracked which
+of section 2's explicit decisions PR 5 (the architectural split) was obligated to
+preserve. Nothing in PR 5's brief said "this must still satisfy the `VPButton`
+decision from section 2," so neither the implementing agent nor the reviewing pass
+checked for it. The table's own structure had no place to record that kind of
+dependency, so it went untracked rather than being deliberately excluded.
+
+**Fix going forward:** When building a dependency table for a multi-PR plan, track
+decision survival alongside file conflicts — which binding decisions made earlier in
+the spec must still hold after each later PR lands — and carry that forward explicitly
+into each PR's brief, not just its file/branch dependencies.
+
+**Reusable phrase:** "When building a dependency table for a multi-PR plan, track
+which binding decisions made earlier must still hold after each later PR — not just
+which files or branches it depends on. State those decisions explicitly in each PR's
+brief, so an implementer (human or agent) can't silently override one while satisfying
+a different requirement."
+
+---
+
 ## 2026-08-26 — Implementation detail written in decision-grade language silently overrode an earlier, clearer decision
 
 **What happened:** `PlatformButtonSpec.md` section 2 was an explicit, dedicated

@@ -256,6 +256,16 @@ When using sub-agents for implementation:
 
 - Brief sub-agents on **what** to build, not **how** — implementation decisions belong
   to the sub-agent, which serves as an independent second opinion on the approach.
+- Not every implementation choice is "how." A choice is **load-bearing** — and belongs
+  in the brief as a stated constraint, not left implicit — if getting it wrong would
+  foreclose a decision already made elsewhere, or if fixing it later would cascade
+  into sibling components rather than staying local to the one being built. The test:
+  would changing this later touch only this component, or would it touch others or
+  contradict something already decided? Local and reversible → genuinely "how,"
+  delegate freely. Cascading or hard to reverse → state it explicitly in the brief.
+  (Architecture — how two components relate, e.g. whether one delegates to the other —
+  is the case that's easy to misclassify as "how" when it's actually load-bearing; see
+  `notes/dev/mistakes.md`, 2026-08-25/26.)
 - Sub-agents follow all conventions in this file except they do not create PRs.
 - After a sub-agent completes, review its diff and tests before creating the PR.
   This review is a genuine code review, not a compliance check — evaluate correctness,
