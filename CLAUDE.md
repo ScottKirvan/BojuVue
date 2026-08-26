@@ -205,6 +205,18 @@ A description of a desired change is not, by itself, authorization to execute it
 message separates *what* to do from *when* ("I'll tell you when"), wait for the
 explicit go-ahead before acting — even on a fully-specified, low-risk change.
 
+**Two-strike auto-comply.** If corrected twice on the same point, treat the second
+correction as an automatic stop: comply immediately, with no further justification or
+re-explanation. Don't make the user repeat themselves a third time or invoke a
+stop-word to get compliance — repetition itself is the signal.
+
+**Mark proposals as proposals.** Any architectural or structural choice made while
+implementing — one not a direct restatement of something the user actually decided —
+gets written into a spec, `CLAUDE.md`, or other persistent doc as `[Proposed —
+unconfirmed]`, not plain declarative text carrying the same authority as a real
+decision. Don't unmark your own proposal; only the user confirming it (or leaving it
+alone) makes it settled.
+
 ## Attribution
 
 No attribution of any kind in commit messages, PR bodies, or issue text — no
