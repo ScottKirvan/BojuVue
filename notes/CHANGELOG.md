@@ -1,5 +1,29 @@
 # Changelog
 
+## [0.1.0](https://github.com/ScottKirvan/BojuVue/compare/v0.0.4...v0.1.0) (2026-08-26)
+
+
+### Features
+
+* add platform-aware DownloadButton component ([2154a00](https://github.com/ScottKirvan/BojuVue/commit/2154a000ea273a5380cee783a239d0b2c65603ca))
+* PlatformButton rework — naming, VPButton integration, core/VitePress split ([da0dfdf](https://github.com/ScottKirvan/BojuVue/commit/da0dfdfb2a4021941bc2ec9a62a9b05c48895fae))
+* render BVPlatformButton through VPButton, add theme/size/target/rel/icon props ([98d1fd1](https://github.com/ScottKirvan/BojuVue/commit/98d1fd1567faeb5e75fe2d0dffafb271a088aa10))
+* split BVPlatformButton into a core component and a VitePress adapter ([f6a3312](https://github.com/ScottKirvan/BojuVue/commit/f6a3312a2b0d993d6ab26674077e6c26b5c14af8))
+
+
+### Bug Fixes
+
+* add horizontal spacing between adjacent DownloadButton instances ([ceca365](https://github.com/ScottKirvan/BojuVue/commit/ceca3657adffc65daefb43b64af2d3211de0f435))
+* add spacing above DownloadButton when used after the hero actions row ([e979f8d](https://github.com/ScottKirvan/BojuVue/commit/e979f8d47d892ad9195dcd0104e139bd7ae5c41e))
+* add UA fallback for desktop detection and fix absolute manifestUrl handling ([012c881](https://github.com/ScottKirvan/BojuVue/commit/012c8815baeb397797ff7870325dad7e55b1ff17))
+* add UA fallback for desktop detection and fix absolute manifestUrl handling ([56f0dab](https://github.com/ScottKirvan/BojuVue/commit/56f0dab37c842f32a9536febc7a6fd6116c63e20))
+* add vitepress as a devDependency alongside the optional peer dependency ([e18bda4](https://github.com/ScottKirvan/BojuVue/commit/e18bda465f60bc02c597e99996bd81e41ba553af))
+* decouple BVPlatformButton's generic and VitePress implementations ([f15043e](https://github.com/ScottKirvan/BojuVue/commit/f15043e8e0952f617dafa6c1ee206ca04d9331d3))
+* give the core component its own styling instead of borrowing VPButton's class name ([5f73071](https://github.com/ScottKirvan/BojuVue/commit/5f73071237c449a4a168941c4d8396f417b85792))
+* restructure manifest schema so labels are nested, not conventional ([f62aae0](https://github.com/ScottKirvan/BojuVue/commit/f62aae0e32f1b79b3d0c6e02347c6dac6ca5148e))
+* rework DownloadButton per PR review feedback ([0a1148a](https://github.com/ScottKirvan/BojuVue/commit/0a1148a10d67d2678681687826182762d82d7838))
+* trigger docs deploy on src/ changes too ([ad8cfd5](https://github.com/ScottKirvan/BojuVue/commit/ad8cfd5646f16a6fbb82562bb505d2265d095b85))
+
 ## [0.0.4](https://github.com/ScottKirvan/BojuVue/compare/v0.0.3...v0.0.4) (2026-08-24)
 
 
