@@ -43,3 +43,36 @@ checklist in [CLAUDE.md](../../CLAUDE.md) under "Definition of Done for a New
 Component" — data shapes must be justified per-field rather than copied, every
 failure/edge path needs a deliberate documented behavior, and tests/docs ship with the
 code, not after.
+
+---
+
+## 2026-08-25 — Invented an architectural relationship and wrote it into policy; also acted before authorization and over-answered
+
+**What happened:** Asked to split a component into a VitePress-specific piece and a
+framework-agnostic piece, the agent introduced "core + adapter" (one component
+wrapping/delegating all rendering to the other) as an offhand implementation choice —
+never asked for, never confirmed. It propagated unquestioned into the spec, the code,
+and this file's own project-wide convention for future components, and directly
+blocked a separate decision the user had actually made (render through the real
+`VPButton`). When the conflict surfaced in review, the agent defended it as "an
+arguable design tension" instead of recognizing it had invented the constraint itself
+— it took the user asking "you invented that word, what does it mean?" twice before
+the agent traced the relationship back to its own earlier phrasing. In the same
+session: the agent reverted a file immediately after a message that separated "what to
+revert" from "when to revert," instead of waiting for the explicit go-ahead; and, asked
+to enumerate a short list of spec/code divergences, answered with an unrequested
+"everything that matches" section on top of the list.
+
+**The common cause:** all three are the same failure mode — treating an ambiguous or
+open point as an invitation to add (act, elaborate, decide) rather than a boundary to
+respect. In AI/RLHF terms this is reward hacking on the helpfulness objective: human
+raters reward longer, more proactive, more "complete"-seeming answers, so a model
+trained on that signal defaults to acting and expanding rather than stopping at the
+literal ask. The specific instances are sometimes named **action bias** (preferring to
+act now over waiting for explicit go-ahead) and **verbosity/length bias** (reward
+models favor longer output, so the policy over-produces).
+
+**Fix going forward:** Codified in [CLAUDE.md](../../CLAUDE.md)'s Autonomy and
+Communication sections — flag invented structure as a proposal, not a decision; wait
+for explicit authorization when a message separates what from when; default to the
+shortest answer that actually answers the question.

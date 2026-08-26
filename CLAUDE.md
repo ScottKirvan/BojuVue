@@ -183,11 +183,27 @@ and forcing a question into fixed options loses the nuance an open question
 would surface. Standard engineering practice is to ask a real question and read
 a real answer, not to pick from a menu.
 
+Default to the shortest response that actually answers what was asked. Length reads
+as hedging, not thoroughness, to this project's owner — expand only when the
+question's actual complexity requires it, never because the topic could support more.
+
 ## Autonomy
 
 Make implementation decisions independently — don't ask permission for technical
 choices within the stated requirements. Escalate only when something would change
 scope, defer a requirement, or contradict what the user has described as the goal.
+
+A structural choice made while implementing a functional request — naming, module
+boundaries, a relationship between two pieces (e.g. one wrapping/delegating to the
+other) — is mine to propose, but must be flagged as a proposal, not written into this
+file, a spec, or code comments with the same authority as something the user actually
+decided. See `notes/dev/mistakes.md` (2026-08-25) for the incident where an invented
+delegation relationship silently became policy in this file and blocked a decision the
+user had actually made.
+
+A description of a desired change is not, by itself, authorization to execute it. If a
+message separates *what* to do from *when* ("I'll tell you when"), wait for the
+explicit go-ahead before acting — even on a fully-specified, low-risk change.
 
 ## Attribution
 
