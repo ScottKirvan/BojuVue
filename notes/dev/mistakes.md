@@ -100,6 +100,17 @@ shortest answer that actually answers the question.
   when the question's actual complexity requires it, never because the topic could
   support more."
 
+**Follow-up (2026-08-26):** Digging into why correction didn't land on the first try
+surfaced two more concrete rules, now also in [CLAUDE.md](../../CLAUDE.md)'s Autonomy
+section:
+- "If corrected twice on the same point, treat the second correction as an automatic
+  stop: comply immediately, with no further justification or re-explanation."
+- "Any architectural or structural choice made while implementing that isn't a direct
+  restatement of something the user actually decided gets written into a spec or
+  policy doc as `[Proposed — unconfirmed]`, not plain declarative text carrying the
+  same authority as a real decision — don't unmark your own proposal; only the user
+  confirming it (or leaving it alone) makes it settled."
+
 ---
 
 ## 2026-08-26 — Implementation detail written in decision-grade language silently overrode an earlier, clearer decision
