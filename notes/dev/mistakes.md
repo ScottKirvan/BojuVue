@@ -99,3 +99,36 @@ shortest answer that actually answers the question.
 - "Default to the shortest response that actually answers what was asked. Expand only
   when the question's actual complexity requires it, never because the topic could
   support more."
+
+---
+
+## 2026-08-26 — Implementation detail written in decision-grade language silently overrode an earlier, clearer decision
+
+**What happened:** `PlatformButtonSpec.md` section 2 was an explicit, dedicated
+decision — its own section, with reasoning, prop-by-prop justification: "The
+VitePress-aware component should render through `VPButton` internally instead of
+hand-copying its CSS variables." Section 3, added later to solve a different problem
+(packaging two components without forcing a `vitepress` dependency on non-VitePress
+consumers), included a two-line implementation sketch in the same flat, declarative
+voice: "A thin VitePress adapter... hands it to the core component. A few lines, no
+real logic of its own beyond that." Nothing marked that line as illustrative rather
+than binding, and nothing cross-checked it against section 2. When section 3 was
+implemented, its concrete, directly-actionable phrasing won over section 2's decision
+— not because it was stronger, but because it was newer, more specific, and easier to
+translate straight into code. The user's own read of the natural-language decision in
+section 2 was unambiguous; the technical line in section 3 read, to them, as a
+same-word implementation detail compatible with either design ("core" meaning "the
+component, however it renders" rather than "the non-VitePress-only file") — the
+conflict was genuinely hidden, not just missed.
+
+**Fix going forward:** Before adding implementation-level detail to a spec, check it
+against every decision already in the document and resolve or flag any conflict
+explicitly. When reviewing an implementation against a spec, verify it against every
+decision in the document, not only the section nearest to what's being built.
+
+**Reusable phrase:** "Before adding implementation-level detail to a spec, check it
+against every decision already in the document and resolve or flag any conflict
+explicitly — don't let a technical sketch silently outrank an earlier decision just
+because it's newer or more specific. When reviewing an implementation against a spec,
+verify it against every decision in the document, not only the section nearest to
+what's being built."
