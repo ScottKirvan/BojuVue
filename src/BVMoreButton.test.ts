@@ -154,6 +154,25 @@ describe('BVMoreButton', () => {
     })
   })
 
+  describe('placement', () => {
+    it('recomputes panel position on scroll, not just resize (position: fixed follows the viewport, not the trigger)', async () => {
+      const wrapper = mountButton()
+      const button = wrapper.find('button').element as HTMLButtonElement
+
+      await wrapper.find('button').trigger('click')
+      const panel = wrapper.find('[role="menu"]').element as HTMLElement
+      panel.getBoundingClientRect = () => ({ width: 200 }) as DOMRect
+
+      // Simulate the page scrolling the trigger to a new viewport position —
+      // a fixed-position panel has no reason to follow this on its own.
+      button.getBoundingClientRect = () => ({ left: 300, right: 340 }) as DOMRect
+      window.dispatchEvent(new Event('scroll'))
+      await wrapper.vm.$nextTick()
+
+      expect(panel.style.left).toBe('140px')
+    })
+  })
+
   describe('keyboard navigation', () => {
     it('opens and focuses the first item on ArrowDown at the trigger', async () => {
       const wrapper = mountButton()

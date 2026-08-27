@@ -122,13 +122,20 @@ function onDocumentPointerDown(event: PointerEvent) {
   }
 }
 
+// The panel is `position: fixed` (viewport coordinates), so scrolling the
+// page moves the trigger without moving the panel unless this recomputes it
+// too — not just `resize`. `capture: true` catches scrolling on any nested
+// scroll container between the trigger and the document, not only
+// window-level scroll.
 watch(open, (isOpen) => {
   if (typeof window === 'undefined') return
   if (isOpen) {
     window.addEventListener('resize', updatePlacement)
+    window.addEventListener('scroll', updatePlacement, { capture: true, passive: true })
     document.addEventListener('pointerdown', onDocumentPointerDown)
   } else {
     window.removeEventListener('resize', updatePlacement)
+    window.removeEventListener('scroll', updatePlacement, { capture: true })
     document.removeEventListener('pointerdown', onDocumentPointerDown)
   }
 })
@@ -136,6 +143,7 @@ watch(open, (isOpen) => {
 onBeforeUnmount(() => {
   if (typeof window === 'undefined') return
   window.removeEventListener('resize', updatePlacement)
+  window.removeEventListener('scroll', updatePlacement, { capture: true })
   document.removeEventListener('pointerdown', onDocumentPointerDown)
 })
 

@@ -100,8 +100,12 @@ feature — see the two reference screenshots attached to the originating conver
      `panelLeft + panelWidth <= viewportWidth` (doesn't clip past the right edge).
   3. Otherwise (panel wider than the space available in either direction — a very
      narrow viewport) clamp: `panelLeft = max(0, viewportWidth - panelWidth)`.
-  Recomputed every time the menu opens, and on window resize while it's open
-  (viewport rotation/reflow while the menu happens to be open).
+  Recomputed every time the menu opens, and on window resize **and scroll** while
+  it's open. Scroll matters as much as resize here: the panel is rendered
+  `position: fixed` (viewport coordinates, the simplest way to satisfy this
+  algorithm without offset-parent/scroll-position math), so without recomputing on
+  scroll it would stay fixed in place while the trigger scrolled out from under it —
+  caught in review after the initial implementation only handled resize.
 - **Logic extraction, per this repo's testing convention**: the placement algorithm
   above and the keyboard index-stepping (`ArrowDown`/`ArrowUp`/`Home`/`End` →
   next-focused-index, given the current index and item count) must each be a pure,
