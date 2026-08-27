@@ -7,6 +7,7 @@ import {
   type BVPlatformId,
 } from './platform'
 import { useManifestFetch } from './useManifestFetch'
+import { isExternalUrl } from './url'
 
 // The prop type is written out inline here (matching `BVPlatformButtonProps`
 // in ./BVPlatformButton.types.ts, which is exported for public/programmatic
@@ -65,15 +66,11 @@ const download = computed(() =>
   })
 )
 
-// Reimplements VPButton's own external-link detection (`EXTERNAL_URL_RE` in
-// vitepress's client/shared.js) so a resolved download href gets the same
-// smart target/rel defaults a VitePress visitor would see from the real
-// VPButton. Reimplemented rather than imported so this module stays free of
-// any dependency on the `vitepress` package — see the class names below for
-// the same reasoning applied to styling.
-const EXTERNAL_URL_RE = /^(?:[a-z]+:|\/\/)/i
-
-const isExternal = computed(() => !!download.value && EXTERNAL_URL_RE.test(download.value.href))
+// isExternalUrl reimplements VPButton's own external-link detection so a
+// resolved download href gets the same smart target/rel defaults a
+// VitePress visitor would see from the real VPButton — see ./url.ts for why
+// it's reimplemented rather than imported from `vitepress` itself.
+const isExternal = computed(() => !!download.value && isExternalUrl(download.value.href))
 const resolvedTarget = computed(() => props.target ?? (isExternal.value ? '_blank' : undefined))
 const resolvedRel = computed(() => props.rel ?? (isExternal.value ? 'noreferrer' : undefined))
 </script>

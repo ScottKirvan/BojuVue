@@ -12,3 +12,9 @@ export { detectPlatform, resolveDownload, resolveManifestUrl, defaultLabels } fr
 export type { BVPlatformManifest, BVPlatformEntry, BVPlatformId } from './platform'
 export type { BVPlatformButtonProps } from './BVPlatformButton.types'
 export { default as BVPlatformButton } from './vitepress/BVPlatformButton.vue'
+
+// BVMoreButton has no VitePress-specific needs (no useData(), no router) —
+// it only ever renders the `items` it's given — so unlike BVPlatformButton
+// it has a single implementation, re-exported here rather than reimplemented.
+export { default as BVMoreButton } from './BVMoreButton.vue'
+export type { BVMoreButtonItem, BVMoreButtonProps } from './BVMoreButton.types'
