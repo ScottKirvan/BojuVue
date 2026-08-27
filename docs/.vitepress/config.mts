@@ -61,6 +61,7 @@ export default defineConfig({
           items: [
             { text: 'Overview', link: '/components/' },
             { text: 'BVPlatformButton', link: '/components/platform-button' },
+            { text: 'BVMoreButton', link: '/components/more-button' },
           ],
         },
       ],

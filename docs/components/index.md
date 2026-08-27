@@ -27,3 +27,4 @@ component in your own VitePress site (globally via `enhanceApp`, or per-page in 
 | Component | Import path(s) | Description |
 | --- | --- | --- |
 | [BVPlatformButton](./platform-button) | `@scottkirvan/bojuvue`, `@scottkirvan/bojuvue/vitepress` | Detects the visitor's platform and links to the matching download from a JSON manifest. |
+| [BVMoreButton](./more-button) | `@scottkirvan/bojuvue`, `@scottkirvan/bojuvue/vitepress` | A "···" trigger that opens a dropdown menu of secondary outbound links next to a primary CTA. |
