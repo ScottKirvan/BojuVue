@@ -96,7 +96,9 @@ outbound links). Nothing was asked for there, so nothing was invented.
 
 The panel's preferred alignment is **trailing-edge** — its right edge flush with the
 trigger's right edge. It's still clamped to stay on screen at any viewport width,
-computed at open time (and recomputed on window resize while open) via a three-step
+computed at open time and recomputed on window resize *and scroll* while open (the
+panel is `position: fixed` in viewport coordinates, so without recomputing on scroll
+it would stay put while the trigger scrolled away underneath it) via a three-step
 algorithm:
 
 1. Try trailing-edge (`panelLeft = triggerRight - panelWidth`). Use it if it doesn't
