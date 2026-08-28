@@ -65,11 +65,11 @@ between items (wrapping at both ends), `Home`/`End` to jump to the first/last it
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
 | `items` | `BVMoreButtonItem[]` | *(required)* | The menu's contents, in order. See below for the item shape. |
-| `text` | `string` | *(none)* | Visible trigger text. Unset by default (icon-only trigger, fixed circular size). Given, the trigger switches to an auto-width layout — same padding/sizing as `BVPlatformButton` — showing `icon` (if also given) next to this text instead of the three-dot default. |
-| `icon` | `string` | *(none)* | Raw SVG markup rendered via `v-html`. With no `text`, replaces the built-in three-dot icon. With `text`, only rendered if you explicitly set this — otherwise the trigger shows text alone, no icon. Same trust model as `BVPlatformButton.icon`: caller-supplied only, never fed anything dynamic/untrusted. |
+| `text` | `string` | *(none)* | Visible trigger text. Unset by default (icon-only trigger, fixed circular size). Given, the trigger switches to an auto-width pill layout, showing `icon` (if also given) next to this text instead of the three-dot default. |
+| `icon` | `string` | *(none)* | Raw SVG markup rendered via `v-html`. With no `text`, replaces the built-in three-dot icon. With `text`, only rendered if you explicitly set this — otherwise the trigger shows text alone, no icon. Rendered unescaped — caller-supplied only, never fed anything dynamic/untrusted; see the warning below. |
 | `label` | `string` | `'More options'` | Sets the trigger's `aria-label`. Only applied when there's no `text` — with visible text, the accessible name comes from that text content instead, so this prop is ignored rather than layered on top. |
-| `size` | `'medium' \| 'big'` | `'medium'` | Same meaning and default as `BVPlatformButton.size`, so the two sit naturally side by side in an actions row. |
-| `theme` | `'brand' \| 'alt' \| 'sponsor'` | `'brand'` | Same meaning and default as `BVPlatformButton.theme`. |
+| `size` | `'medium' \| 'big'` | `'medium'` | Sets the trigger's dimensions: `'medium'` is a 38px circle (icon-only) or a 38px-tall pill (with `text`); `'big'` is 46px either way. Same scale as `BVPlatformButton`'s `size`, so the two sit naturally side by side in an actions row. |
+| `theme` | `'brand' \| 'alt' \| 'sponsor'` | `'brand'` | Sets the trigger's color scheme via a modifier class: `'brand'` is a solid accent color, `'alt'` is neutral/muted, `'sponsor'` is a pink accent — reading the same `--vp-button-*` CSS custom properties `BVPlatformButton`'s generic build reads (see [Styling](#styling) below), so the two match visually. |
 
 `BVMoreButtonItem`:
 
@@ -83,9 +83,9 @@ between items (wrapping at both ends), `Home`/`End` to jump to the first/last it
 
 ::: warning `icon` is rendered unescaped
 Both the trigger's `icon` and each item's `icon` go through `v-html` with no
-sanitization — same trust model as `BVPlatformButton`'s icon. `items` is something you
-write yourself, not fetched or user-supplied, so this is safe as long as it stays that
-way. Never wire `items` up to anything dynamic without escaping it first.
+sanitization. `items` is something you write yourself, not fetched or user-supplied,
+so this is safe as long as it stays that way. Never wire `items` up to anything
+dynamic without escaping it first.
 :::
 
 The trigger renders as a real `<button>` (not an `<a>`) since it has no `href` of its
