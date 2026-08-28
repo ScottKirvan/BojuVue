@@ -132,16 +132,13 @@ screen at any viewport width, computed at open time and recomputed on window res
 without recomputing on scroll it would stay put while the button scrolled away
 underneath it) via a three-step algorithm:
 
-1. Try leading-edge (`panelLeft = triggerLeft`, the button's own left edge). Use it if
-   it doesn't clip past the right edge of the viewport.
-2. Otherwise flip to trailing-edge (`panelLeft = triggerRight - panelWidth`) — this is
-   what kicks in when the button sits close to the right edge of the viewport. Use it
-   if it doesn't clip past the left edge.
+1. Try leading-edge — the panel's left edge flush with the button's left edge. Use it
+   if it doesn't clip past the right edge of the viewport.
+2. Otherwise flip to trailing-edge — the panel's right edge flush with the button's
+   right edge — which kicks in when the button sits close to the right edge of the
+   viewport. Use it if it doesn't clip past the left edge.
 3. Otherwise (the viewport is narrower than the panel) clamp the panel inside the
    viewport as a last resort.
-
-The logic behind this lives in the plain (non-Vue) `computeMenuPanelLeft` function, in
-`src/moreButtonMenu.ts` if you want to read it directly.
 
 ## Spacing
 
