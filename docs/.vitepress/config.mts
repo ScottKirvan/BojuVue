@@ -56,6 +56,7 @@ export default defineConfig({
         text: 'Components',
         items: [
           { text: 'Overview', link: '/components/' },
+          { text: 'BVButton', link: '/components/button' },
           { text: 'BVMoreButton', link: '/components/more-button' },
           { text: 'BVPlatformButton', link: '/components/platform-button' },
         ],
@@ -80,6 +81,7 @@ export default defineConfig({
         text: 'Components',
         items: [
           { text: 'Overview', link: '/components/' },
+          { text: 'BVButton', link: '/components/button' },
           { text: 'BVMoreButton', link: '/components/more-button' },
           { text: 'BVPlatformButton', link: '/components/platform-button' },
         ],
