@@ -87,17 +87,23 @@ feature — see the two reference screenshots attached to the originating conver
     handling when a menu item is activated (normal browser navigation is enough for
     outbound links) — not asked for, and inventing state for it would be undecided
     behavior no one asked to see.
-- **Placement/alignment algorithm.** This is the part the two reference screenshots
-  pin down precisely, so it's specified exactly rather than left to "make it look
-  right": the panel's **preferred alignment is trailing-edge** — its right edge flush
-  with the trigger button's right edge — matching both screenshots (desktop and
-  mobile alike; the rule is "match the desktop version," not "different behavior per
-  breakpoint"). Content still has to stay on screen at any viewport width, so the
-  chosen alignment is computed at open time, not hardcoded as pure CSS:
-  1. Try trailing-edge: `panelLeft = triggerRight - panelWidth`. Use it if
-     `panelLeft >= 0` (doesn't clip past the left edge of the viewport).
-  2. Otherwise flip to leading-edge: `panelLeft = triggerLeft`. Use it if
+- **Placement/alignment algorithm.** Corrected after seeing it live (2026-08-28):
+  the panel's **preferred alignment is leading-edge** — its left edge flush with the
+  trigger button's left edge, opening "below and to the right," the conventional
+  menu-button direction. `[Previously specified as trailing-edge-preferred, based on
+  the two Obsidian reference screenshots — those showed the trigger sitting close to
+  the right edge of its container, which is exactly the "flip" case below, not the
+  general rule. On the actual homepage demo, where the trigger sits to the right of
+  a primary CTA in the middle of the row, trailing-edge-preferred instead pulled the
+  panel backward over the primary button. Corrected to leading-edge-preferred, with
+  trailing-edge as the flip case for when the trigger is genuinely close to the right
+  edge of the viewport — which is what the reference screenshots actually were.]`
+  Content still has to stay on screen at any viewport width, so the chosen alignment
+  is computed at open time, not hardcoded as pure CSS:
+  1. Try leading-edge: `panelLeft = triggerLeft`. Use it if
      `panelLeft + panelWidth <= viewportWidth` (doesn't clip past the right edge).
+  2. Otherwise flip to trailing-edge: `panelLeft = triggerRight - panelWidth`. Use it
+     if `panelLeft >= 0` (doesn't clip past the left edge of the viewport).
   3. Otherwise (panel wider than the space available in either direction — a very
      narrow viewport) clamp: `panelLeft = max(0, viewportWidth - panelWidth)`.
   Recomputed every time the menu opens, and on window resize **and scroll** while

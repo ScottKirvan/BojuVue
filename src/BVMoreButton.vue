@@ -52,19 +52,37 @@ function focusItem(index: number) {
   itemEls[index]?.focus()
 }
 
+// A `zoom` CSS property on an ancestor (non-standard but shipped in every
+// major engine, and something this very repo's own docs/ site applies to
+// <html> — see docs/.vitepress/theme/custom.css) rescales what
+// getBoundingClientRect() reports for any descendant, but does NOT rescale
+// an inline `top`/`left` pixel value assigned to a `position: fixed`
+// descendant — that value is interpreted in the same unzoomed frame as
+// window.innerWidth/offsetLeft. Feeding a zoomed measurement straight into
+// the panel's inline style double-applies the zoom and misplaces it.
+// Dividing every getBoundingClientRect() measurement by the ancestor zoom
+// factor converts it back into that unzoomed frame before it's used; this
+// is a no-op (division by 1) on the overwhelmingly common case of no zoom.
+function getAncestorZoom(): number {
+  if (typeof document === 'undefined') return 1
+  const zoom = parseFloat(getComputedStyle(document.documentElement).zoom)
+  return Number.isFinite(zoom) && zoom > 0 ? zoom : 1
+}
+
 function updatePlacement() {
   const trigger = triggerEl.value
   const panel = panelEl.value
   if (!trigger || !panel || typeof window === 'undefined') return
+  const zoom = getAncestorZoom()
   const triggerRect = trigger.getBoundingClientRect()
-  const panelWidth = panel.getBoundingClientRect().width
+  const panelWidth = panel.getBoundingClientRect().width / zoom
   panelLeft.value = computeMenuPanelLeft({
-    triggerLeft: triggerRect.left,
-    triggerRight: triggerRect.right,
+    triggerLeft: triggerRect.left / zoom,
+    triggerRight: triggerRect.right / zoom,
     panelWidth,
     viewportWidth: window.innerWidth,
   })
-  panelTop.value = triggerRect.bottom
+  panelTop.value = triggerRect.bottom / zoom
 }
 
 async function openMenu(focusIndex = -1) {

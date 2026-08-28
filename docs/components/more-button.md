@@ -94,17 +94,18 @@ outbound links). Nothing was asked for there, so nothing was invented.
 
 ## Placement
 
-The panel's preferred alignment is **trailing-edge** — its right edge flush with the
-trigger's right edge. It's still clamped to stay on screen at any viewport width,
-computed at open time and recomputed on window resize *and scroll* while open (the
-panel is `position: fixed` in viewport coordinates, so without recomputing on scroll
-it would stay put while the trigger scrolled away underneath it) via a three-step
-algorithm:
+The panel's preferred alignment is **leading-edge** — its left edge flush with the
+trigger's left edge, opening below and to the right. It's still clamped to stay on
+screen at any viewport width, computed at open time and recomputed on window resize
+*and scroll* while open (the panel is `position: fixed` in viewport coordinates, so
+without recomputing on scroll it would stay put while the trigger scrolled away
+underneath it) via a three-step algorithm:
 
-1. Try trailing-edge (`panelLeft = triggerRight - panelWidth`). Use it if it doesn't
-   clip past the left edge of the viewport.
-2. Otherwise flip to leading-edge (`panelLeft = triggerLeft`). Use it if it doesn't
-   clip past the right edge.
+1. Try leading-edge (`panelLeft = triggerLeft`). Use it if it doesn't clip past the
+   right edge of the viewport.
+2. Otherwise flip to trailing-edge (`panelLeft = triggerRight - panelWidth`) — this is
+   what kicks in when the trigger sits close to the right edge of the viewport. Use it
+   if it doesn't clip past the left edge.
 3. Otherwise (the viewport is narrower than the panel) clamp the panel inside the
    viewport as a last resort.
 
