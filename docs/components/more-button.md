@@ -9,17 +9,28 @@ By default the button is icon-only — no visible text, shown as three dots (⋯
 as a small fixed circle. Pass the `text` prop for an ordinary labeled button instead
 (auto-width, same padding/sizing as `BVPlatformButton`); see [Props](#props) below.
 
-Single implementation — `BVMoreButton` has no VitePress-specific needs (it only ever
-renders the `items` you give it, no `useData()`, no site data), so unlike
-`BVPlatformButton` it isn't split into two builds. Import it from either path; the
-`/vitepress` path is just a re-export of the same component, kept there so importing
-everything from `@scottkirvan/bojuvue/vitepress` alone is always enough:
+## Two import paths
+
+Like `BVPlatformButton`, `BVMoreButton` ships as two separate builds, exposed as two
+separate import paths from the same package — pick whichever matches your site:
 
 ```ts
+// Generic Vue implementation. Works in any Vue 3 app. Hand-rolled markup and
+// CSS throughout, since it can't depend on `vitepress` at all.
 import { BVMoreButton } from '@scottkirvan/bojuvue'
-// or, equivalently:
+
+// VitePress-specific implementation. Same component name and props. In text
+// mode (see below), renders through VitePress's own real `VPButton`, so it
+// gets VitePress's real theme styling for free.
 import { BVMoreButton } from '@scottkirvan/bojuvue/vitepress'
 ```
+
+The difference only shows up in **text mode** (the `text` prop is set — see
+[Props](#props)): the bare package always hand-rolls the button; the `/vitepress`
+build renders it through VitePress's real `VPButton`. **Icon-only mode (the default)
+is hand-rolled on both paths** — `VPButton` has no concept of an icon-only button (its
+`text` prop is required, and it has no icon prop or slot), so there's nothing to gain
+by wrapping it there; see [Styling](#styling) for why.
 
 ## Demo
 
@@ -93,13 +104,24 @@ own — it only ever toggles the menu.
 
 ## Styling
 
-Unlike the menu items (real links you author yourself), the button reads the same
-public `--vp-button-*` CSS custom properties VitePress itself exposes for theming,
-each with a fallback value so the button still looks like a clickable button outside a
-VitePress site (where those variables are undefined) — the same tokens
-`BVPlatformButton`'s generic build also reads. The dropdown panel reads VitePress's
-public `--vp-c-*` design tokens (also with fallback values) for its background,
-border, and text color.
+- **Icon-only mode (both import paths)** hand-rolls its own markup, reading the same
+  public `--vp-button-*` CSS custom properties VitePress itself exposes for theming.
+  The bare package's version has a fallback value for each, so the button still looks
+  like a clickable button outside a VitePress site (where those variables are
+  undefined); the `/vitepress` build's version has none, since it only ever runs
+  inside a real VitePress site where they're always defined.
+- **Text mode, bare package (`@scottkirvan/bojuvue`)** hand-rolls its own markup the
+  same way, for the same reason — it can't depend on `vitepress` at all.
+- **Text mode, `/vitepress` build** renders through VitePress's own real `VPButton`
+  component (`vitepress/theme`'s public export) — real theme styling for free, and it
+  automatically tracks any future `VPButton` style change. `VPButton` has no icon prop
+  or slot of its own (only ever rendering its `text` prop), so `icon` — if also given
+  in text mode — renders as a sibling before it, not inside it; same workaround
+  `BVPlatformButton`'s `/vitepress` build already uses for the same reason.
+
+The dropdown panel reads VitePress's public `--vp-c-*` design tokens for its
+background, border, and text color — with fallback values on the bare package,
+without on `/vitepress`, same reasoning as the button skin above.
 
 ## Keyboard behavior
 
@@ -158,8 +180,23 @@ and a neighboring primary CTA is a caller/layout concern. Use a flex container w
 
 ## Usage
 
-`BVMoreButton` works the same from either import path — this example uses the bare
-package, so it's just as valid in a non-VitePress Vue 3 app:
+In a VitePress site (the common case — text mode renders through the real
+`VPButton`):
+
+```vue
+<script setup>
+import { BVMoreButton, BVPlatformButton } from '@scottkirvan/bojuvue/vitepress'
+</script>
+
+<template>
+  <div style="display: flex; gap: 12px; align-items: center;">
+    <BVPlatformButton fallback-href="https://github.com/your-org/your-repo/releases" />
+    <BVMoreButton text="More" :items="items" />
+  </div>
+</template>
+```
+
+In any other Vue 3 app (no `vitepress` install required):
 
 ```vue
 <script setup>

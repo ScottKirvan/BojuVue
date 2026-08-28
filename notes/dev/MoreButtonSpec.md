@@ -21,17 +21,33 @@ feature — see the two reference screenshots attached to the originating conver
 ## Decided
 
 - **Name: `BVMoreButton`.**
-- **Single implementation, no VitePress-specific variant.** Lives at
-  `src/BVMoreButton.vue`, exported from `src/index.ts`, and re-exported (not
-  reimplemented) from `src/vitepress.ts` — the same way `detectPlatform`/
-  `resolveDownload`/etc. are today. `[Proposed — unconfirmed as an architectural
-  pattern, though the "don't add VitePress-sourced convenience" half is confirmed]`:
-  the component doesn't need `useData()` or any other VitePress API — it only ever
-  renders the `items` it's given. An earlier idea floated in discussion — auto-sourcing
-  menu items from the site's own `themeConfig.socialLinks` when no `items` prop is
-  given, which would have justified a real second VitePress-aware implementation —
-  was explicitly rejected ("good idea, but wrong tone"). Items are always passed in
-  explicitly.
+- **Two implementations, matching `BVPlatformButton`'s split — superseding the
+  original single-implementation decision below.** `src/BVMoreButton.vue` (generic,
+  exported from `src/index.ts`) stays fully hand-rolled, zero `vitepress` dependency.
+  `src/vitepress/BVMoreButton.vue` (exported from `src/vitepress.ts`) renders its
+  **text-mode** trigger through VitePress's real `VPButton` — same reasoning as
+  `BVPlatformButton`: real theme styling for free, and it tracks any future `VPButton`
+  style change automatically. **Icon-only mode keeps the hand-rolled circular button
+  on both paths**, deliberately not forced through `VPButton`: `VPButton` has no
+  concept of an icon-only button (`text` is a required prop, no icon prop, no slot),
+  so wrapping it there would mean overriding its box model with CSS rather than
+  actually using it — no real "tracks `VPButton`" benefit, since the overridden
+  properties are exactly the ones `VPButton` controls. `icon` (in text mode, when also
+  given) renders as a sibling before `VPButton`, the same workaround
+  `BVPlatformButton` already uses for the same reason.
+
+  ~~Original decision, kept for the trail: single implementation, no VitePress-specific
+  variant, re-exported (not reimplemented) from `src/vitepress.ts` the same way
+  `detectPlatform`/`resolveDownload`/etc. are — on the reasoning that the component
+  needs no `useData()` or other VitePress API. True at the time (no `text` mode yet,
+  so no case where wrapping `VPButton` would have been genuinely useful); revisited
+  once `text` mode existed as a real reason to want `VPButton`'s real theme styling.~~
+
+  The "no VitePress-sourced convenience" decision below is unaffected by this — an
+  earlier idea floated in discussion, auto-sourcing menu items from the site's own
+  `themeConfig.socialLinks` when no `items` prop is given, was explicitly rejected
+  ("good idea, but wrong tone"). Items are always passed in explicitly, on both
+  implementations.
 - **No manifest fetch, no async state, no platform detection.** Unlike
   `BVPlatformButton`, `items` is a plain synchronous prop. No loading state to design
   for.
