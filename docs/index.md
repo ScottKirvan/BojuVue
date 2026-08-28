@@ -3,8 +3,8 @@ layout: home
 
 hero:
   name: "BojuVue"
-  text: "One component library, every VitePress site"
-  tagline: Shared landing-page and UX components for a fleet of VitePress sites — update once, publish, and every consumer pulls the change with npm update.
+  text: "Shared Vue 3 components for VitePress sites"
+  tagline: A component library published to npm — install it, register the components you need, and update later with npm update.
   actions:
     - theme: brand
       text: Get Started
@@ -23,7 +23,7 @@ features:
 
   - icon: 📦
     title: vitepress is optional
-    details: Installing the package alone never pulls in vitepress. Only importing from the /vitepress subpath does — the generic build has zero vitepress in its module graph, verified against the built output on every change.
+    details: Installing the package alone never pulls in vitepress. Only importing from the /vitepress subpath does — the generic build has zero vitepress in its module graph.
 
   - icon: ⚡
     title: Live preview, no publish step
