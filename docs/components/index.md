@@ -35,5 +35,6 @@ component's own reference page includes that usage too.
 | Component | Description |
 | --- | --- |
 | [BVButton](./button) | The minimal button primitive — exactly VitePress's own `VPButton` prop shape, working outside VitePress too. |
+| [BVIconButton](./icon-button) | `BVButton` plus an optional icon, either alongside its label or as a fixed-size icon-only trigger. |
 | [BVMoreButton](./more-button) | A small button that opens a dropdown menu of secondary outbound links next to a primary CTA. |
 | [BVPlatformButton](./platform-button) | Detects the visitor's platform and links to the matching download from a JSON manifest. |
