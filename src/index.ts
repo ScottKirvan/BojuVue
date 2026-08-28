@@ -1,5 +1,7 @@
 export { default as BVButton } from './BVButton.vue'
 export type { BVButtonProps } from './BVButton.types'
+export { default as BVIconButton } from './BVIconButton.vue'
+export type { BVIconButtonProps } from './BVIconButton.types'
 export { default as BVPlatformButton } from './BVPlatformButton.vue'
 export { detectPlatform, resolveDownload, resolveManifestUrl, defaultLabels } from './platform'
 export type { BVPlatformManifest, BVPlatformEntry, BVPlatformId } from './platform'

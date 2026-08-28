@@ -20,6 +20,13 @@ export { default as BVPlatformButton } from './vitepress/BVPlatformButton.vue'
 export type { BVButtonProps } from './BVButton.types'
 export { default as BVButton } from './vitepress/BVButton.vue'
 
+// BVIconButton also has real VitePress-specific needs (its icon+text mode
+// renders through the real VPButton via ./vitepress/BVButton.vue) — same
+// shape as BVButton above, a fully independent implementation, not a
+// re-export of the generic one.
+export type { BVIconButtonProps } from './BVIconButton.types'
+export { default as BVIconButton } from './vitepress/BVIconButton.vue'
+
 // BVMoreButton has no VitePress-specific needs (no useData(), no router) —
 // it only ever renders the `items` it's given — so unlike BVPlatformButton
 // it has a single implementation, re-exported here rather than reimplemented.
