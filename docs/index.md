@@ -25,9 +25,9 @@ features:
     title: vitepress is optional
     details: Installing the package alone never pulls in vitepress. Only importing from the /vitepress subpath does — the generic build has zero vitepress in its module graph.
 
-  - icon: ⚡
-    title: Live preview, no publish step
-    details: This site's own theme imports straight from src/vitepress, not the published package, so a component under active development shows up in a real VitePress site immediately — no npm publish, no npm link.
+  - icon: 🔗
+    title: vue is a peer dependency
+    details: A consuming site uses its own Vue instance — no duplicate copy of Vue in the bundle, no broken reactivity across component boundaries.
 ---
 
 <!-- Begin Sponsors -->
