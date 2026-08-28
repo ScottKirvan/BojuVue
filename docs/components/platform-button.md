@@ -101,8 +101,9 @@ the bare package's own markup is always an `<a>` regardless.
 from both import paths if you're generating a manifest programmatically and want the
 types. `detectPlatform`, `resolveDownload`, `resolveManifestUrl`, and `defaultLabels`
 — the primitives this component is built from — are exported too, from both paths,
-in case you want to build your own platform-branching UI (see "Other use cases" in
-`notes/dev/PlatformButtonSpec.md`) without using `BVPlatformButton` itself.
+in case you want to build your own platform-branching UI (a keyboard-shortcut hint
+that shows `⌘K` vs `Ctrl+K`, OS-specific install instructions, browser-extension-store
+links, etc.) without using `BVPlatformButton` itself.
 
 ## The manifest file
 
