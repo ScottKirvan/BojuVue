@@ -28,30 +28,46 @@ const props = withDefaults(
 // Icon-only mode is "no text at all", including an explicitly empty string
 // — same rule BVMoreButton already established for its own `text` prop.
 const isIconOnly = computed(() => !props.text)
+
+// See the identical note in ../BVIconButton.vue: a caller-supplied non-prop
+// attr belongs on the real interactive control (GenericBVButton/VPBVButton
+// below), not this component's own wrapping `<span>` — the default
+// single-root fallthrough would otherwise strand it there.
+defineOptions({ inheritAttrs: false })
 </script>
 
 <template>
-  <!--
-    Text mode renders through the real VPButton (via ./BVButton.vue) — same
-    reasoning as BVPlatformButton: real theme styling for free, tracking any
-    future VPButton style change automatically. `icon` (if given) renders as
-    a sibling before it, not inside it — VPButton has no icon prop or slot.
-
-    Icon-only mode intentionally does NOT use VPButton: a fixed-size box is
-    not a shape VPButton has any concept of (`text` is required, no icon
-    prop/slot), so forcing it in would mean fighting VPButton's own layout
-    with CSS overrides rather than using it. It reuses the *generic*,
-    hand-rolled ../BVButton.vue instead — deliberate, one-directional
-    exception to "the VitePress entry can depend on vitepress, the bare
-    entry never does": a VitePress-specific file importing a generic file is
-    always fine, since the generic file still has zero vitepress dependency
-    of its own. Reuses the exact same icon-only sizing CSS as the generic
-    BVIconButton implementation rather than re-deriving it, because both
-    render through that same hand-rolled BVButton for this mode.
-  -->
   <span class="bv-icon-button" :class="{ 'icon-only': isIconOnly, 'has-text': !isIconOnly }">
+    <!--
+      Every doc comment in this template lives *inside* this root `<span>`,
+      never before it — a comment at the template's top level, outside the
+      single element root, makes Vue treat this component as an implicit
+      multi-root fragment (Vue's non-production compiler keeps template
+      comments as real DOM nodes rather than stripping them, so this isn't
+      just theoretical), and a fragment's `$el`/template-ref value is its
+      anchor node, not the intended `<span>` — exactly what BVMoreButton's
+      own template ref on `<BVIconButton>` needs to be the real thing.
+
+      Text mode renders through the real VPButton (via ./BVButton.vue) — same
+      reasoning as BVPlatformButton: real theme styling for free, tracking any
+      future VPButton style change automatically. `icon` (if given) renders as
+      a sibling before it, not inside it — VPButton has no icon prop or slot.
+
+      Icon-only mode intentionally does NOT use VPButton: a fixed-size box is
+      not a shape VPButton has any concept of (`text` is required, no icon
+      prop/slot), so forcing it in would mean fighting VPButton's own layout
+      with CSS overrides rather than using it. It reuses the *generic*,
+      hand-rolled ../BVButton.vue instead — deliberate, one-directional
+      exception to "the VitePress entry can depend on vitepress, the bare
+      entry never does": a VitePress-specific file importing a generic file is
+      always fine, since the generic file still has zero vitepress dependency
+      of its own. Reuses the exact same icon-only sizing CSS as the generic
+      BVIconButton implementation rather than re-deriving it, because both
+      render through that same hand-rolled BVButton for this mode.
+    -->
     <template v-if="isIconOnly">
       <GenericBVButton
+        v-bind="$attrs"
         class="bv-icon-button-target icon-only"
         text=""
         :href="href"
@@ -67,6 +83,7 @@ const isIconOnly = computed(() => !props.text)
     <template v-else>
       <span v-if="icon" class="bv-icon-button-icon" v-html="icon"></span>
       <VPBVButton
+        v-bind="$attrs"
         class="bv-icon-button-target"
         :text="text ?? ''"
         :href="href"
