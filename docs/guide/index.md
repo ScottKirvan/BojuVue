@@ -10,7 +10,7 @@ update`.
 ## What you get
 
 - **Every component is exported from one entry point.** Consuming a new component is a
-  one-line import change in a site's `.vitepress/theme/index.ts`.
+  one-line import change wherever you register components in your app.
 - **`vue` is a peer dependency.** A consuming site uses its own Vue instance — no
   duplicate copy of Vue in the bundle, no broken reactivity across component
   boundaries.

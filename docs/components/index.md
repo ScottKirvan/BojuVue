@@ -19,9 +19,8 @@ import { BVPlatformButton } from '@scottkirvan/bojuvue/vitepress'
 ```
 
 See each component's page for its props, a usage example, and which import path(s) it's
-available from. For how to register a component in your own VitePress site (globally
-via `enhanceApp`, or per-page in a `.md` file's markdown body), see the root
-[README](https://github.com/ScottKirvan/BojuVue#usage).
+available from. For how to register a component in your own app — a plain Vue 3 app or
+a VitePress site — see [Installation & Setup](/guide/installation).
 
 ::: info About the examples on this site
 This site is itself a VitePress site, so every live Demo and the first code sample on
