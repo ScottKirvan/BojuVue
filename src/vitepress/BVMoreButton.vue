@@ -1,13 +1,14 @@
 <script setup lang="ts">
 import { computed, ref, type ComponentPublicInstance } from 'vue'
-import { isExternalUrl } from './url'
-import { useMoreButtonMenu } from './useMoreButtonMenu'
+import { isExternalUrl } from '../url'
+import { useMoreButtonMenu } from '../useMoreButtonMenu'
 import BVIconButton from './BVIconButton.vue'
 
 // The prop type is written out inline here (matching `BVMoreButtonProps` /
-// `BVMoreButtonItem` in ./BVMoreButton.types.ts, which are exported for
-// public/programmatic use) rather than imported into this macro — see the
-// identical note in ./BVPlatformButton.vue for why.
+// `BVMoreButtonItem` in ../BVMoreButton.types.ts, and the identical prop
+// type in the generic implementation at ../BVMoreButton.vue) rather than
+// imported into this macro — see the identical note in ../BVButton.vue for
+// why.
 const props = withDefaults(
   defineProps<{
     items: { label: string; href: string; icon?: string; target?: string; rel?: string }[]
@@ -46,6 +47,13 @@ const DEFAULT_ICON =
 // any ordinary text button.
 const resolvedIcon = computed(() => props.icon ?? (props.text ? null : DEFAULT_ICON))
 
+// Same shared open/close/keyboard/placement wiring the generic
+// implementation uses — see ../useMoreButtonMenu.ts. This is a fully
+// independent implementation delegating to a shared utility, not one
+// BVMoreButton wrapping the other: rendering the trigger through this
+// entry's own ./BVIconButton.vue (the VitePress-specific one) is the only
+// thing that differs, which is why it gets real VPButton styling in text
+// mode automatically.
 const rootEl = ref<HTMLElement | null>(null)
 const iconButtonEl = ref<ComponentPublicInstance | null>(null)
 const panelEl = ref<HTMLDivElement | null>(null)
@@ -58,7 +66,7 @@ const { open, panelLeft, panelTop, setItemRef, toggleMenu, onTriggerKeydown, onM
 })
 
 // Reuses the identical smart external-link target/rel default
-// BVPlatformButton applies — see ./url.ts.
+// BVPlatformButton applies — see ../url.ts.
 function resolvedTarget(item: { href: string; target?: string }): string | undefined {
   return item.target ?? (isExternalUrl(item.href) ? '_blank' : undefined)
 }
@@ -123,10 +131,10 @@ function resolvedRel(item: { href: string; rel?: string }): string | undefined {
   flex-direction: column;
   min-width: 180px;
   padding: 4px;
-  border: 1px solid var(--vp-c-divider, #e2e2e3);
+  border: 1px solid var(--vp-c-divider);
   border-radius: 8px;
-  background-color: var(--vp-c-bg-elv, #fff);
-  box-shadow: var(--vp-shadow-3, 0 12px 32px rgba(0, 0, 0, 0.18));
+  background-color: var(--vp-c-bg-elv);
+  box-shadow: var(--vp-shadow-3);
 }
 
 .bv-more-button-item {
@@ -135,7 +143,7 @@ function resolvedRel(item: { href: string; rel?: string }): string | undefined {
   gap: 8px;
   padding: 8px 12px;
   border-radius: 6px;
-  color: var(--vp-c-text-1, #3c3c43);
+  color: var(--vp-c-text-1);
   font-size: 14px;
   text-decoration: none;
   white-space: nowrap;
@@ -143,7 +151,7 @@ function resolvedRel(item: { href: string; rel?: string }): string | undefined {
 
 .bv-more-button-item:hover,
 .bv-more-button-item:focus-visible {
-  background-color: var(--vp-c-default-soft, #f2f2f3);
+  background-color: var(--vp-c-default-soft);
   outline: none;
 }
 
