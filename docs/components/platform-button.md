@@ -6,9 +6,9 @@ given, it hides itself entirely when there's nothing to link to — no promising
 download that doesn't exist for this visitor's platform.
 
 Internally, both import paths render their resolved link/label through `BVIconButton`
-(passing its own icon as a sibling) rather than owning link markup or button-skin CSS
-themselves — this is an implementation detail, not a change to any prop or documented
-behavior below.
+(passing its own `icon` straight through) rather than owning link markup or
+button-skin CSS themselves — this is an implementation detail, not a change to any
+prop or documented behavior below.
 
 ## Two import paths
 
@@ -95,7 +95,7 @@ The two import paths style themselves differently:
 | `theme` | `'brand' \| 'alt' \| 'sponsor'` | `'brand'` | On `/vitepress`, passed straight through to `VPButton`'s own `theme` prop. On the bare package, applied as the equivalent modifier class on this component's own markup. |
 | `target` | `string` | *(none)* | Left unset by default so a smart default applies: `target="_blank"` when the resolved link is external (via `VPButton`'s own detection on `/vitepress`, or an equivalent check on the bare package). Set it explicitly only to override that. |
 | `rel` | `string` | *(none)* | Left unset by default so a smart default applies: `rel="noreferrer"` when the resolved link is external (via `VPButton`'s own detection on `/vitepress`, or an equivalent check on the bare package). Set it explicitly only to override that. |
-| `icon` | `string` | *(none)* | Raw SVG markup rendered next to the label via `v-html`. `VPButton` has no icon support of its own (no prop, no slot), so on both import paths this renders as a sibling of the button element, not inside it. Same trust model as VitePress's own home-page `features[].icon`: it's rendered unescaped, so only ever pass something a site author wrote, never anything sourced from the fetched manifest. |
+| `icon` | `string` | *(none)* | Raw SVG markup rendered via `v-html`, via `BVIconButton`. `VPButton` has no icon support of its own (no prop, no slot), so on both import paths this is a sibling element in the DOM, but positioned on the button itself, not beside it — see `BVIconButton`'s own docs for how. Same trust model as VitePress's own home-page `features[].icon`: it's rendered unescaped, so only ever pass something a site author wrote, never anything sourced from the fetched manifest. |
 
 ::: warning `icon` is rendered unescaped
 `icon` goes through `v-html` with no sanitization — same trust model as VitePress's
@@ -286,7 +286,7 @@ import { BVPlatformButton } from '@scottkirvan/bojuvue/vitepress'
     fallback-href="https://github.com/your-org/your-repo/releases"
   />
 
-  <!-- theme/size mirror VPButton; icon renders raw SVG next to the label -->
+  <!-- theme/size mirror VPButton; icon renders raw SVG on the button itself -->
   <BVPlatformButton
     manifest-url="platformButton.json"
     fallback-href="https://github.com/your-org/your-repo/releases"

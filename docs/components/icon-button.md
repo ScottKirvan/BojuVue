@@ -22,10 +22,10 @@ the same package — pick whichever matches your site:
 import { BVIconButton } from '@scottkirvan/bojuvue'
 
 // VitePress-specific implementation. Same component name and props.
-// Icon+text mode wraps VitePress's own real VPButton, with the icon as a
-// sibling. Icon-only mode reuses the *generic* hand-rolled BVButton
-// instead, since VPButton has no icon-only concept (its `text` prop is
-// required, no icon prop or slot).
+// Icon+text mode wraps VitePress's own real VPButton, with the icon
+// overlaid on it. Icon-only mode reuses the *generic* hand-rolled
+// BVButton instead, since VPButton has no icon-only concept (its `text`
+// prop is required, no icon prop or slot).
 import { BVIconButton } from '@scottkirvan/bojuvue/vitepress'
 ```
 
@@ -43,24 +43,25 @@ Only importing from `@scottkirvan/bojuvue/vitepress` does.
 
 <BVIconButton text="Settings" :icon="GEAR_ICON" href="/components/" />
 <BVIconButton text="Download" theme="alt" size="big" :icon="DOWNLOAD_ICON" href="/components/" />
-<BVIconButton :icon="GEAR_ICON" label="Settings" />
-<BVIconButton :icon="DOWNLOAD_ICON" label="Download" theme="sponsor" size="big" />
-<BVIconButton label="No icon given" />
+<BVIconButton :icon="GEAR_ICON" label="Settings" href="/components/" />
+<BVIconButton :icon="DOWNLOAD_ICON" label="Download" theme="sponsor" size="big" href="/components/" />
+<BVIconButton label="No icon given" href="/components/" />
 
 </div>
 
-The first two are icon+text mode — the icon renders as a sibling before the button,
-not inside it. The next two are icon-only mode (no `text`) — a fixed-size box, sized
-by `size` the same way regardless of theme. The last has no `icon` at all, so it's an
-empty fixed-size box; icon-only mode still needs an `icon` (or at minimum a `label`
-for screen readers) to be useful on its own.
+The first two are icon+text mode — the icon renders on the button itself, not beside
+it. The next two are icon-only mode (no `text`) — a fixed-size box, sized by `size`
+the same way regardless of theme. The last has no `icon` at all, so it's an empty
+fixed-size box; icon-only mode still needs an `icon` (or at minimum a `label` for
+screen readers) to be useful on its own. All five link to this same page here in the
+demo, so every one of them is a real, clickable link.
 
 ## Props
 
 | Prop | Type | Required | Default | Description |
 | --- | --- | --- | --- | --- |
 | `text` | `string` | no | *(none)* | Visible button label. Unlike `BVButton` (where this is required), leaving it unset — or passing an empty string (`text=""`) — switches to icon-only mode instead. |
-| `icon` | `string` | no | *(none)* | Raw SVG markup rendered via `v-html`. With `text`, renders as a sibling before the button. Without `text` (icon-only mode), renders centered on top of the fixed-size button. Caller-supplied only — see the warning below. |
+| `icon` | `string` | no | *(none)* | Raw SVG markup rendered via `v-html`. Always rendered on the button itself, not beside it: with `text`, it's overlaid on the button's left edge and the button's own left padding widens to make room for it; without `text` (icon-only mode), it's centered on top of the fixed-size button. Caller-supplied only — see the warning below. |
 | `label` | `string` | no | *(none)* | Sets the button's `aria-label`. Only applied in icon-only mode (no `text`) — with visible text, the accessible name comes from that text content instead, so this prop is ignored rather than layered on top. Same meaning as `BVMoreButton.label`. |
 | `href` | `string` | no | *(none)* | When given, renders as an `<a>`; when omitted, renders as a `<button>` — same auto-detection as `BVButton`. |
 | `size` | `'medium' \| 'big'` | no | `'medium'` | Matches `BVButton`'s own `size` prop and defaults. In icon-only mode, also sets the fixed box's pixel dimensions: `'medium'` is 38×38px, `'big'` is 46×46px. |

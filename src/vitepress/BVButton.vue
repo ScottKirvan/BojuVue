@@ -28,3 +28,15 @@ defineProps<{
     :theme="theme"
   />
 </template>
+
+<style scoped>
+/* VitePress's own `.vp-doc a { text-decoration: underline }` (its default
+   theme's prose-link styling) cascades onto this button whenever it's placed
+   inline in markdown body content, since that's exactly where a real
+   VPButton normally never appears (VPHero's actions row sits outside
+   `.vp-doc`). Vue's scoped-CSS attribute selector gives this rule higher
+   specificity than that one, so it wins without `!important`. */
+.VPButton {
+  text-decoration: none;
+}
+</style>

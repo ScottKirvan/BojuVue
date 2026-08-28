@@ -59,11 +59,12 @@ describe('BVIconButton (VitePress-specific implementation)', () => {
       expect(wrapper.find('.bv-button').exists()).toBe(false)
     })
 
-    it('renders the icon as a sibling before VPButton, not inside it', () => {
+    it('overlays the icon on VPButton rather than rendering it as a preceding flex sibling', () => {
       const wrapper = mount(BVIconButton, { props: { text: 'Go', icon: '<svg data-testid="my-icon"></svg>' } })
       const icon = wrapper.find('[data-testid="my-icon"]')
       expect(icon.exists()).toBe(true)
       expect(wrapper.find('button.VPButton [data-testid="my-icon"]').exists()).toBe(false)
+      expect(wrapper.find('button.VPButton').classes()).toContain('has-icon')
     })
 
     it('renders no icon when icon is unset', () => {

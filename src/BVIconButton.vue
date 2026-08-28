@@ -39,7 +39,7 @@ defineOptions({ inheritAttrs: false })
 </script>
 
 <template>
-  <span class="bv-icon-button" :class="{ 'icon-only': isIconOnly, 'has-text': !isIconOnly }">
+  <span class="bv-icon-button" :class="[size, { 'icon-only': isIconOnly, 'has-icon': !!icon && !isIconOnly }]">
     <!--
       Every doc comment in this template lives *inside* this root `<span>`,
       never before it — a comment at the template's top level, outside the
@@ -52,19 +52,22 @@ defineOptions({ inheritAttrs: false })
 
       Both modes render through the same hand-rolled BVButton — no VPButton-
       vs-hand-rolled conflict to navigate here (that's the VitePress-specific
-      implementation's problem). Icon-only sizing is just another modifier
-      class layered on top of BVButton's own skin via :deep(), and the icon
-      itself can't go *inside* BVButton (it has no slot, only its own `text`
-      interpolation), so it's always a sibling `<span>` — positioned inline
-      before the button when there's visible text, or absolutely centered on
-      top of it when there isn't (BVButton renders text="" in that case, i.e.
-      an empty box of the right fixed size for the icon to sit on).
+      implementation's problem). The icon itself can't go *inside* BVButton
+      (it has no slot, only its own `text` interpolation), so it's always a
+      sibling `<span>` in the DOM — but positioned with CSS to sit visually
+      on top of the button in both modes: absolutely centered over the whole
+      box in icon-only mode (BVButton renders text="" there, i.e. an empty
+      box of the right fixed size for the icon to sit on), or absolutely
+      pinned to the button's left edge in icon+text mode, with the button's
+      own left padding widened below to reserve room so it never overlaps
+      the text. It's placed after BVButton in markup (not before) so it
+      paints on top; `pointer-events: none` keeps it from intercepting
+      clicks meant for the button underneath.
     -->
-    <span v-if="icon && !isIconOnly" class="bv-icon-button-icon" v-html="icon"></span>
     <BVButton
       v-bind="$attrs"
       class="bv-icon-button-target"
-      :class="{ 'icon-only': isIconOnly }"
+      :class="{ 'icon-only': isIconOnly, 'has-icon': !!icon && !isIconOnly }"
       :text="text ?? ''"
       :href="href"
       :target="target"
@@ -74,7 +77,7 @@ defineOptions({ inheritAttrs: false })
       :tag="tag"
       :aria-label="isIconOnly ? label : undefined"
     />
-    <span v-if="icon && isIconOnly" class="bv-icon-button-icon overlay" v-html="icon"></span>
+    <span v-if="icon" class="bv-icon-button-icon" v-html="icon"></span>
   </span>
 </template>
 
@@ -85,18 +88,15 @@ defineOptions({ inheritAttrs: false })
      BVMoreButton both follow. See #32. */
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-}
-
-.bv-icon-button.icon-only {
   position: relative;
-  gap: 0;
 }
 
 .bv-icon-button-icon {
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  position: absolute;
+  pointer-events: none;
 }
 
 .bv-icon-button-icon :deep(svg) {
@@ -104,13 +104,30 @@ defineOptions({ inheritAttrs: false })
   height: 1em;
 }
 
-/* Icon-only mode's icon sits on top of the (visually empty) button rather
-   than affecting layout size — pointer-events: none so clicks/taps land on
-   the actual interactive element underneath, not this decorative overlay. */
-.bv-icon-button-icon.overlay {
-  position: absolute;
+/* Icon-only mode's icon sits centered on top of the (visually empty)
+   button. */
+.bv-icon-button.icon-only .bv-icon-button-icon {
   inset: 0;
-  pointer-events: none;
+}
+
+/* Icon+text mode's icon sits on the button's left edge. Its font-size is
+   pinned to match .bv-button's own font-size for this size class (rather
+   than inheriting ambient page font-size) so its 1em width below lines up
+   exactly with the padding-left reservation further down, which is also
+   sized in .bv-button's own em units. */
+.bv-icon-button.has-icon .bv-icon-button-icon {
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.bv-icon-button.has-icon.medium .bv-icon-button-icon {
+  left: 20px;
+  font-size: 14px;
+}
+
+.bv-icon-button.has-icon.big .bv-icon-button-icon {
+  left: 24px;
+  font-size: 16px;
 }
 
 /* Fixed equal-width/height box, same pixel dimensions BVMoreButton's own
@@ -130,5 +147,19 @@ defineOptions({ inheritAttrs: false })
 :deep(.bv-button.icon-only.big) {
   width: 46px;
   height: 46px;
+}
+
+/* Reserves room on the button's left for the overlaid icon plus a gap
+   before the text, on top of the button's own normal left padding (20px/
+   24px). The `1em` here is relative to .bv-button's own font-size
+   (14px/16px for medium/big) — the same 14px/16px the icon span above is
+   pinned to, so the two stay in sync even though they're set on different
+   elements. */
+:deep(.bv-button.has-icon.medium) {
+  padding-left: calc(20px + 1em + 6px);
+}
+
+:deep(.bv-button.has-icon.big) {
+  padding-left: calc(24px + 1em + 6px);
 }
 </style>
