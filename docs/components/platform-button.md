@@ -262,7 +262,7 @@ first-/last-child exceptions to look right.
 
 ## Usage
 
-In a VitePress site (the common case — resolves `base` for you):
+In a VitePress site (resolves `base` for you):
 
 ```vue
 <script setup>

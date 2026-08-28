@@ -3,7 +3,7 @@
 
   <img src="assets/media/logo.jpg" alt="logo" width="200" height="auto" />
     <h1><a href="https://github.com/ScottKirvan/BojuVue">ScottKirvan/BojuVue</a></h1>
-  <h3>A shared Vue 3 component library for ScottKirvan's VitePress sites</h3>
+  <h3>Shared Vue 3 components, with VitePress-aware builds where it helps</h3>
   
   
 <!-- Badges -->
@@ -172,9 +172,24 @@ npm install @scottkirvan/bojuvue
 
 Usage
 -----
-Import and register components in a consuming VitePress site's `.vitepress/theme/index.ts`.
-For a component with a VitePress-aware build (see Features above), prefer importing it
-from `@scottkirvan/bojuvue/vitepress` when your site is a VitePress site:
+Register components however you already register components in your app:
+
+```ts
+// main.ts (or wherever you create your Vue app)
+import { createApp } from 'vue'
+import { BVPlatformButton, SomeComponent } from '@scottkirvan/bojuvue'
+import App from './App.vue'
+
+const app = createApp(App)
+app.component('BVPlatformButton', BVPlatformButton)
+app.component('SomeComponent', SomeComponent)
+app.mount('#app')
+```
+
+Building a VitePress site? Register the same way from `enhanceApp` in
+`.vitepress/theme/index.ts` instead of `main.ts`, and prefer importing from
+`@scottkirvan/bojuvue/vitepress` for any component with a VitePress-aware build (see
+Features above):
 
 ```ts
 import DefaultTheme from 'vitepress/theme'
@@ -189,9 +204,6 @@ export default {
   },
 }
 ```
-
-In a non-VitePress Vue 3 app, only the bare `@scottkirvan/bojuvue` path is available —
-components without a VitePress-specific build work exactly the same way there.
 
 Then use it in any `.md` page. Update later with `npm update`.
 
