@@ -2,25 +2,31 @@ import { describe, expect, it } from 'vitest'
 import { computeMenuPanelLeft, stepMenuIndex } from './moreButtonMenu'
 
 describe('computeMenuPanelLeft', () => {
-  it('uses trailing-edge alignment when it fits', () => {
+  it('uses leading-edge alignment when it fits', () => {
     expect(
-      computeMenuPanelLeft({ triggerLeft: 300, triggerRight: 340, panelWidth: 200, viewportWidth: 1024 })
-    ).toBe(140)
+      computeMenuPanelLeft({ triggerLeft: 100, triggerRight: 140, panelWidth: 200, viewportWidth: 1024 })
+    ).toBe(100)
   })
 
-  it('flips to leading-edge alignment when trailing-edge would clip past the left edge', () => {
+  it('flips to trailing-edge alignment when leading-edge would clip past the right edge', () => {
     expect(
-      computeMenuPanelLeft({ triggerLeft: 10, triggerRight: 50, panelWidth: 200, viewportWidth: 1024 })
-    ).toBe(10)
+      computeMenuPanelLeft({ triggerLeft: 900, triggerRight: 940, panelWidth: 200, viewportWidth: 1024 })
+    ).toBe(740)
   })
 
-  it('treats an exact trailing-edge fit (panelLeft === 0) as fitting, not clipping', () => {
+  it('treats an exact leading-edge fit (panelLeft + panelWidth === viewportWidth) as fitting, not clipping', () => {
     expect(
-      computeMenuPanelLeft({ triggerLeft: 160, triggerRight: 200, panelWidth: 200, viewportWidth: 1024 })
+      computeMenuPanelLeft({ triggerLeft: 824, triggerRight: 864, panelWidth: 200, viewportWidth: 1024 })
+    ).toBe(824)
+  })
+
+  it('treats an exact trailing-edge fit (panelLeft === 0) as fitting once flipped', () => {
+    expect(
+      computeMenuPanelLeft({ triggerLeft: 150, triggerRight: 200, panelWidth: 200, viewportWidth: 300 })
     ).toBe(0)
   })
 
-  it('clamps inside the viewport when neither trailing- nor leading-edge alignment fits', () => {
+  it('clamps inside the viewport when neither leading- nor trailing-edge alignment fits', () => {
     expect(
       computeMenuPanelLeft({ triggerLeft: 10, triggerRight: 50, panelWidth: 900, viewportWidth: 320 })
     ).toBe(0)
@@ -28,17 +34,8 @@ describe('computeMenuPanelLeft', () => {
 
   it('clamps to the largest left value that keeps the panel on screen, not always to 0', () => {
     expect(
-      computeMenuPanelLeft({ triggerLeft: 700, triggerRight: 780, panelWidth: 900, viewportWidth: 800 })
-    ).toBe(0)
-    expect(
-      computeMenuPanelLeft({ triggerLeft: 150, triggerRight: 190, panelWidth: 300, viewportWidth: 400 })
-    ).toBe(100)
-  })
-
-  it('treats an exact leading-edge fit (panelLeft + panelWidth === viewportWidth) as fitting', () => {
-    expect(
-      computeMenuPanelLeft({ triggerLeft: 10, triggerRight: 50, panelWidth: 200, viewportWidth: 210 })
-    ).toBe(10)
+      computeMenuPanelLeft({ triggerLeft: 100, triggerRight: 140, panelWidth: 350, viewportWidth: 400 })
+    ).toBe(50)
   })
 })
 

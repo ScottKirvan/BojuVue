@@ -7,10 +7,13 @@ export interface MenuPlacementInput {
 
 // Three-step algorithm, in this exact order — see
 // notes/dev/MoreButtonSpec.md's "Placement/alignment algorithm":
-// 1. Trailing edge (panel's right edge flush with the trigger's right edge)
-//    is preferred, matching the reference screenshots at any viewport width.
-// 2. If that would clip past the left edge of the viewport, flip to leading
-//    edge (panel's left edge flush with the trigger's left edge).
+// 1. Leading edge (panel's left edge flush with the trigger's left edge) is
+//    preferred — the panel opens "below and to the right" of the trigger,
+//    the same way a menu button conventionally does.
+// 2. If that would clip past the right edge of the viewport (the trigger
+//    sits close enough to the right edge that the panel has nowhere to
+//    extend), flip to trailing edge (panel's right edge flush with the
+//    trigger's right edge) instead.
 // 3. If neither fits (the viewport is narrower than the panel itself), clamp
 //    the panel inside the viewport as a last resort.
 export function computeMenuPanelLeft({
@@ -19,11 +22,11 @@ export function computeMenuPanelLeft({
   panelWidth,
   viewportWidth,
 }: MenuPlacementInput): number {
-  const trailing = triggerRight - panelWidth
-  if (trailing >= 0) return trailing
-
   const leading = triggerLeft
   if (leading + panelWidth <= viewportWidth) return leading
+
+  const trailing = triggerRight - panelWidth
+  if (trailing >= 0) return trailing
 
   return Math.max(0, viewportWidth - panelWidth)
 }

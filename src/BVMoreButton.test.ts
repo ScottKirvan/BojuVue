@@ -169,7 +169,32 @@ describe('BVMoreButton', () => {
       window.dispatchEvent(new Event('scroll'))
       await wrapper.vm.$nextTick()
 
-      expect(panel.style.left).toBe('140px')
+      expect(panel.style.left).toBe('300px')
+    })
+
+    it('corrects for an ancestor `zoom` style so getBoundingClientRect measurements land in the unzoomed inline-style frame', async () => {
+      document.documentElement.style.zoom = '0.875'
+      try {
+        const wrapper = mountButton()
+        const button = wrapper.find('button').element as HTMLButtonElement
+
+        await wrapper.find('button').trigger('click')
+        const panel = wrapper.find('[role="menu"]').element as HTMLElement
+        button.getBoundingClientRect = () => ({ left: 350, right: 385 }) as DOMRect
+        panel.getBoundingClientRect = () => ({ width: 175 }) as DOMRect
+
+        // A zoomed getBoundingClientRect() (350) fed straight into the panel's
+        // inline `left` would land at 350 in the unzoomed frame the browser
+        // actually renders that style in — visually 350 * 0.875 = 306.25 once
+        // the ancestor zoom re-applies, not the intended 350. Dividing by the
+        // zoom factor first (350 / 0.875 = 400) is what makes the two match.
+        window.dispatchEvent(new Event('resize'))
+        await wrapper.vm.$nextTick()
+
+        expect(panel.style.left).toBe('400px')
+      } finally {
+        document.documentElement.style.zoom = ''
+      }
     })
   })
 
