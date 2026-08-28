@@ -35,5 +35,5 @@ component's own reference page includes that usage too.
 
 | Component | Description |
 | --- | --- |
-| [BVMoreButton](./more-button) | A "···" trigger that opens a dropdown menu of secondary outbound links next to a primary CTA. |
+| [BVMoreButton](./more-button) | A small button that opens a dropdown menu of secondary outbound links next to a primary CTA. |
 | [BVPlatformButton](./platform-button) | Detects the visitor's platform and links to the matching download from a JSON manifest. |
