@@ -21,8 +21,9 @@ Building `BVMoreButton`'s VitePress-specific implementation (see
    needs to be a real `VPButton` (when it has visible text — `VPButton` has a
    real, useful theming/behavior contract there) and sometimes can't be (an
    icon-only button — `VPButton`'s `text` prop is required and it has no icon prop
-   or slot, so forcing it into a fixed circular shape means fighting its box model
-   with CSS overrides, not actually using it) isn't specific to a dropdown trigger.
+   or slot, so forcing it into an icon-only fixed-size box means fighting its box
+   model with CSS overrides, not actually using it) isn't specific to a dropdown
+   trigger.
    It's the same shape `BVPlatformButton` would want too, if it ever needed an
    icon-only mode.
 
@@ -87,8 +88,12 @@ scratch.
   unconditionally rather than branching between two different child components
   depending on whether a particular instance happens to have an icon.
 - **Icon-only vs. icon+text, same rule `BVMoreButton` already established**: with
-  no `text`, renders icon-only at a fixed circular size (`size` still selects
-  medium/big, same pixel dimensions `BVMoreButton` uses today); with `text`, the
+  no `text`, renders icon-only at a fixed, equal-width/height size (`size` still
+  selects medium/big, same pixel dimensions `BVMoreButton` uses today) — currently
+  rendered as a circle by the button skin's `border-radius`, but that's an outcome
+  of today's styling, not something "icon-only mode" itself means or guarantees;
+  if the skin's `border-radius` ever changes, the shape changes with it, and
+  nothing here should be read as requiring it stay a circle. With `text`, the
   icon (if given) renders as a sibling before the button, not inside it — same
   workaround `BVPlatformButton` already uses for its own `icon` prop, for the same
   reason (`VPButton`, when the underlying `BVButton` is the VitePress-specific one,
@@ -106,8 +111,9 @@ scratch.
   - `src/BVIconButton.vue` (generic) — wraps the generic `BVButton` for both
     icon-only and icon+text modes. No `VPButton`-vs-hand-rolled conflict here at
     all: both modes render through the same hand-rolled `BVButton`, which is CSS
-    this codebase owns outright, so an icon-only circular variant is just another
-    modifier class on top of it — nothing to fight.
+    this codebase owns outright, so an icon-only sizing variant is just another
+    modifier class on top of it — nothing to fight, and its shape (circular today)
+    changes freely with whatever that CSS says, the same as the rest of the skin.
   - `src/vitepress/BVIconButton.vue` (VitePress-specific) — for **icon+text**
     mode, wraps `src/vitepress/BVButton.vue` (real `VPButton`) with the icon as a
     sibling, same as `BVPlatformButton`'s VitePress build does today. For
