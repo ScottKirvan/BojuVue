@@ -57,9 +57,9 @@ matter which platform gets detected:
 </div>
 
 To see the "no matching platform" case — the second button above hiding itself
-instead of showing a link — remove a platform's entry from
-`docs/public/platformButton.json` locally and reload, or see the `resolveDownload`
-tests in `src/platform.test.ts`, which cover it directly.
+instead of showing a link — remove the entry for whichever platform you're testing
+from out of your own manifest, then reload. Or read the `resolveDownload` tests in
+`src/platform.test.ts`, which cover it directly.
 
 ## Props
 
@@ -115,8 +115,8 @@ links, etc.) without using `BVPlatformButton` itself.
 ## The manifest file
 
 A plain JSON file, publicly reachable at `manifestUrl` (typically something your
-release process writes into `docs/public/` on each release, independent of the docs
-site's own build).
+release process writes to your site's public directory on each release, independent
+of your site's own build).
 
 `manifestUrl` accepts either a site-relative path (the default,
 `'platformButton.json'`, resolved against the site's VitePress `base`) or a full
