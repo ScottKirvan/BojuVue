@@ -68,8 +68,8 @@ item, and `Escape` to close and return focus to the button.
 | `text` | `string` | *(none)* | Visible button text. Unset by default (icon-only button, fixed circular size). Given, the button switches to an auto-width pill layout, showing `icon` (if also given) next to this text instead of the three-dot default. |
 | `icon` | `string` | *(none)* | Raw SVG markup rendered via `v-html`. With no `text`, replaces the built-in three-dot icon. With `text`, only rendered if you explicitly set this — otherwise the button shows text alone, no icon. Rendered unescaped — caller-supplied only, never fed anything dynamic/untrusted; see the warning below. |
 | `label` | `string` | `'More options'` | Sets the button's `aria-label`. Only applied when there's no `text` — with visible text, the accessible name comes from that text content instead, so this prop is ignored rather than layered on top. |
-| `size` | `'medium' \| 'big'` | `'medium'` | Sets the button's dimensions: `'medium'` is a 38px circle (icon-only) or a 38px-tall pill (with `text`); `'big'` is 46px either way. Same scale as `BVPlatformButton`'s `size`, so the two sit naturally side by side in an actions row. |
-| `theme` | `'brand' \| 'alt' \| 'sponsor'` | `'brand'` | Sets the button's color scheme via a modifier class: `'brand'` is a solid accent color, `'alt'` is neutral/muted, `'sponsor'` is a pink accent — reading the same `--vp-button-*` CSS custom properties `BVPlatformButton`'s generic build reads (see [Styling](#styling) below), so the two match visually. |
+| `size` | `'medium' \| 'big'` | `'medium'` | Sets the button's dimensions: `'medium'` is a 38px circle (icon-only) or a 38px-tall pill (with `text`); `'big'` is 46px either way. |
+| `theme` | `'brand' \| 'alt' \| 'sponsor'` | `'brand'` | Sets the button's color scheme via a modifier class: `'brand'` is a solid accent color, `'alt'` is neutral/muted, `'sponsor'` is a pink accent. See [Styling](#styling) below for where these colors come from. |
 
 `BVMoreButtonItem`:
 
@@ -94,11 +94,12 @@ own — it only ever toggles the menu.
 ## Styling
 
 Unlike the menu items (real links you author yourself), the button reads the same
-public `--vp-button-*` CSS custom properties `BVPlatformButton`'s generic build already
-reads, with the same fallback values, so the two look like natural siblings in the same
-actions row even outside a VitePress site. The dropdown panel reads VitePress's public
-`--vp-c-*` design tokens (also with fallback values) for its background, border, and
-text color.
+public `--vp-button-*` CSS custom properties VitePress itself exposes for theming,
+each with a fallback value so the button still looks like a clickable button outside a
+VitePress site (where those variables are undefined) — the same tokens
+`BVPlatformButton`'s generic build also reads. The dropdown panel reads VitePress's
+public `--vp-c-*` design tokens (also with fallback values) for its background,
+border, and text color.
 
 ## Keyboard behavior
 
