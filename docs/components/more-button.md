@@ -95,8 +95,8 @@ Following the WAI-ARIA menu button pattern:
   focus, so nothing is intercepted.
 
 Deliberately not handled: no auto-close on window blur/tab switch, and no special
-handling when a menu item is activated (ordinary browser navigation is enough for
-outbound links). Nothing was asked for there, so nothing was invented.
+handling when a menu item is activated. Ordinary browser navigation already does the
+right thing for an outbound link, so there's nothing extra to add there.
 
 ## Placement
 
@@ -115,8 +115,8 @@ underneath it) via a three-step algorithm:
 3. Otherwise (the viewport is narrower than the panel) clamp the panel inside the
    viewport as a last resort.
 
-This is a pure, DOM-free function (`computeMenuPanelLeft` in `src/moreButtonMenu.ts`),
-unit-tested directly rather than only indirectly through the component.
+The logic behind this lives in the plain (non-Vue) `computeMenuPanelLeft` function, in
+`src/moreButtonMenu.ts` if you want to read it directly.
 
 ## Spacing
 
@@ -128,8 +128,8 @@ and a neighboring primary CTA is a caller/layout concern. Use a flex container w
 
 - **No VitePress-aware convenience.** `items` is always a plain prop you pass in
   explicitly — this component never reads `useData().themeConfig.socialLinks` or
-  anything else VitePress-specific for you. Considered and rejected: it would have
-  been a different tone than "you always say exactly what the menu contains."
+  anything else VitePress-specific for you. You always know exactly what's in the
+  menu, because you're the one who put it there.
 - **No nested/submenu items.** Every item is a flat, single-level link.
 - **No manifest/remote-fetched items.** `items` is always something the caller already
   has in hand — no async state, no loading state to design for.
