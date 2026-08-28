@@ -51,7 +51,18 @@ export default defineConfig({
   themeConfig: {
     nav: [
       { text: 'Home', link: '/' },
-      { text: 'Components', link: '/components/' },
+      {
+        text: 'Components',
+        // A real dropdown (VitePress renders `items` as a hover/click
+        // flyout), not a flat link straight to /components/ — lets a
+        // visitor jump directly to a specific component's reference page
+        // from anywhere on the site, same links the sidebar already has.
+        items: [
+          { text: 'Overview', link: '/components/' },
+          { text: 'BVPlatformButton', link: '/components/platform-button' },
+          { text: 'BVMoreButton', link: '/components/more-button' },
+        ],
+      },
       { text: 'GitHub', link: 'https://github.com/ScottKirvan/BojuVue' }
     ],
     sidebar: {

@@ -15,17 +15,33 @@ export default {
   extends: DefaultTheme,
   Layout() {
     return h(DefaultTheme.Layout, null, {
-      // BVPlatformButton no longer carries its own margin (#32) — this
-      // slot sits outside VPHero's `.actions` row (whose -6px/+6px gutter
-      // trick only applies to its own children), so the spacing above the
-      // button is this call site's responsibility, not the component's.
+      // Neither BVPlatformButton nor BVMoreButton carries its own margin
+      // (#32, and BVMoreButton follows the same rule) — this slot sits
+      // outside VPHero's `.actions` row (whose -6px/+6px gutter trick only
+      // applies to its own children), so the spacing above the row and the
+      // gap between the two buttons is this call site's responsibility.
       'home-hero-actions-after': () =>
         h(
           'div',
-          { style: { marginTop: '12px' } },
-          h(BojuVue.BVPlatformButton, {
-            fallbackHref: 'https://github.com/ScottKirvan/BojuVue/releases',
-          })
+          { style: { display: 'flex', gap: '12px', alignItems: 'center', marginTop: '12px' } },
+          [
+            h(BojuVue.BVPlatformButton, {
+              fallbackHref: 'https://github.com/ScottKirvan/BojuVue/releases',
+            }),
+            h(BojuVue.BVMoreButton, {
+              items: [
+                { label: 'GitHub repo', href: 'https://github.com/ScottKirvan/BojuVue' },
+                {
+                  label: 'Report a bug',
+                  href: 'https://github.com/ScottKirvan/BojuVue/issues/new?template=bug_report.md',
+                },
+                {
+                  label: 'Request a feature',
+                  href: 'https://github.com/ScottKirvan/BojuVue/issues/new?template=feature_request.md',
+                },
+              ],
+            }),
+          ]
         ),
     })
   },
