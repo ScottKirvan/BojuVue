@@ -119,8 +119,10 @@ Table of Contents
 - [Branches](#branches)
 - [Repo Layout](#repo-layout)
 - [Features](#features)
+- [Architecture](#architecture)
 - [Installation](#installation)
 - [Usage](#usage)
+- [Adding a new component](#adding-a-new-component)
 - [Contributions / Contact](#contributions--contact)
 - [Credits](#credits)
 
@@ -131,6 +133,74 @@ Features
 - Every component is exported from one entry point (`src/index.ts`), so consuming a new component is a one-line import change
 - The `docs/` VitePress site imports directly from `src/index.ts`/`src/vitepress.ts` and registers every exported component globally, so new components can be previewed live in a real VitePress site without publishing or `npm link`
 - Some components (currently `BVPlatformButton`) ship as **two fully independent builds behind two import paths**: a generic implementation at `@scottkirvan/bojuvue`, with zero dependency on `vitepress`, and a VitePress-specific implementation at `@scottkirvan/bojuvue/vitepress`, same component name, resolving anything VitePress-specific for you. Neither component imports or renders the other — the import path is what disambiguates them. `vitepress` is an *optional* peer dependency — installing the package alone never requires it; only importing from the `/vitepress` path does.
+
+Architecture
+------------
+The bit that shapes everything else in this repo: **the generic build must have zero
+dependency on `vitepress`, anywhere in its module graph.** Everything below exists to
+make that hold under a real bundler, not just in theory.
+
+**Two entry points, two physical files.** `vite.config.ts` builds library mode with two
+separate entries — `src/index.ts` → `dist/bojuvue.js` (published as `.`) and
+`src/vitepress.ts` → `dist/vitepress.js` (published as `./vitepress`). `src/vitepress.ts`
+re-exports everything `src/index.ts` has, plus its own VitePress-specific component
+implementations, under the same names. This has to be two genuinely separate output
+files, not two exports of one bundle — if both compiled into a single file, importing
+only the generic path would still execute a top-level `import 'vitepress'` somewhere in
+it. Verify this invariant after touching anything under `src/` by building and grepping
+the output:
+```sh
+npm run build
+grep -r vitepress dist/bojuvue.js   # should print nothing
+```
+
+**Two independent implementations per VitePress-aware component.** A component that
+needs anything VitePress-specific (site data, the router, VitePress's own `VPButton`)
+doesn't take a runtime "VitePress mode" flag — it gets two fully independent
+implementations sharing one exported name, disambiguated by import path:
+`src/ComponentName.vue` (plain props, no `vitepress` import, exported from
+`src/index.ts`) and `src/vitepress/ComponentName.vue` (calls whatever VitePress
+composables it needs itself, exported from `src/vitepress.ts`). Neither imports or
+renders the other. `BVPlatformButton` is the worked example — see
+`src/BVPlatformButton.vue` and `src/vitepress/BVPlatformButton.vue`. Logic genuinely
+shared between the two (e.g. manifest-fetch orchestration) lives in a plain utility
+module both call independently — see `src/useManifestFetch.ts` — not in one component
+owning the other's rendering.
+
+**Prop types stay inline in `defineProps<T>()`.** `@vue/compiler-sfc` resolving a
+`defineProps<T>()` type imported from another module needs the `typescript` package
+loadable from wherever the `.vue` file is compiled — which breaks under `docs/`'s
+cross-directory source build (next point) whenever the repo root's `node_modules` isn't
+present. Keep the type written out inline in the macro itself. A type used only for a
+public, non-macro export (`BVPlatformButtonProps` in `src/BVPlatformButton.types.ts`,
+for instance) is fine to keep in its own file — the constraint is specifically about the
+`defineProps<T>()` type position.
+
+**Real logic lives outside the `.vue` file.** Components with real logic — detection,
+data-shaping, anything beyond pure rendering — extract that logic into a plain `.ts`
+module (`src/platform.ts` next to `BVPlatformButton.vue`) rather than keeping it inline
+in `<script setup>`. Much easier to unit test a plain function than to mount a component
+or mock Vue-specific APIs to exercise the same branch.
+
+**`docs/` previews live source, not the published package.** `docs/` is a separate,
+independently-installed VitePress project. `docs/.vitepress/theme/index.ts` imports
+directly from `../../../src/vitepress` — this repo's own VitePress-entry *source* — and
+registers every export globally, so a new component shows up in a real VitePress site
+the moment you write it (`npm run docs:dev`), no publish or `npm link` needed. That
+import crosses a directory boundary `docs/`'s own dependency resolution doesn't know
+about: files under repo-root `src/` still `import 'vue'`/`import 'vitepress'`
+themselves, which would otherwise resolve relative to `src/`'s own location. A scoped
+Vite plugin in `docs/.vitepress/config.mts` fixes this by redirecting any such import,
+when the importing file is physically under repo-root `src/`, through Vite's normal
+resolver as if it came from inside `docs/` instead. Verify a change here by temporarily
+renaming the repo root's `node_modules` out of the way and confirming `npm run
+docs:build` (from `docs/`) still succeeds — `docs/`'s deploy job never installs the repo
+root's dependencies, so this has to work without them.
+
+**Typechecking and build.** `npm run build` runs `vue-tsc -b` (typecheck, via composite
+TypeScript project references) then `vite build` (emits `dist/`). There's no separate
+typecheck-only script — `vue-tsc -b --noEmit` isn't valid with composite project
+references, so `build` is the only way to typecheck the library.
 
 Installation
 ------------
@@ -167,12 +237,66 @@ See the **[component reference](https://scottkirvan.github.io/BojuVue/components
 for every available component's props and a usage example — including, per component,
 which import path(s) it's available from.
 
-### Adding a new component
+Adding a new component
+-----------------------
+Read [Architecture](#architecture) first if you haven't — the steps below assume you
+know why some components have two implementations and why prop types stay inline.
 
-See the **[Contributing guide](https://scottkirvan.github.io/BojuVue/guide/contributing)**
-for the full walkthrough — including the two-implementation pattern components with
-VitePress-specific needs (like `BVPlatformButton`) use instead of importing `vitepress`
-directly into a component every consumer gets.
+**A component with no VitePress-specific needs:**
+
+1. Write the `.vue` file under `src/` (e.g. `src/YourComponent.vue`) — standard SFC:
+   `<script setup lang="ts">` for props/logic, `<template>` for markup, `<style
+   scoped>` for CSS scoped to that component alone.
+2. Make configurable text/behavior actual props, not hardcoded strings —
+   `defineProps<{...}>()` with `withDefaults(...)` for sensible fallbacks. Keep the prop
+   type written inline in the macro.
+3. Extract any real logic (detection, data-shaping) into a plain `.ts` module next to
+   the component, and write unit tests for it (see `src/platform.ts` /
+   `src/platform.test.ts`).
+4. Add one line to `src/index.ts`: `export { default as YourComponent } from
+   './YourComponent.vue'`.
+5. Preview it: `npm run docs:dev` (from `docs/`), then use `<YourComponent />` anywhere
+   in a `.md` file — it's registered globally in this repo's own `docs/` theme, so no
+   import is needed there.
+6. Add a reference page at `docs/components/your-component.md` (props table + usage
+   example — copy the structure of an existing page) and link it from
+   `docs/components/index.md` and the sidebar in `docs/.vitepress/config.mts`.
+7. `npm run build` at the repo root to confirm the library itself still builds clean,
+   and `npm test` to run the unit suite.
+
+**A component that needs something VitePress-specific** (worked example:
+`BVPlatformButton`) gets two fully independent implementations instead of one file:
+
+1. The framework-agnostic logic and markup goes in `src/YourComponent.vue` — plain
+   props in (including anything the VitePress-specific implementation would otherwise
+   read from a VitePress composable — e.g. a `base` prop standing in for
+   `useData().site.value.base`, resolved by that other implementation itself, not read
+   directly here). No `vitepress` import anywhere in this file.
+2. `src/vitepress/YourComponent.vue` calls whatever VitePress composables it needs
+   itself and implements its own rendering. It does not import or render
+   `src/YourComponent.vue`. Any logic genuinely shared between the two (like fetch
+   orchestration — see `useManifestFetch`) lives in a plain utility module both call
+   independently, not in one component owning the other's rendering.
+3. `src/index.ts` exports the generic implementation; `src/vitepress.ts` re-exports
+   everything `src/index.ts` has, plus exports the VitePress-specific implementation —
+   both under the same name, `YourComponent`. The import path is what disambiguates
+   them.
+4. Preview via `docs/.vitepress/theme/index.ts`, which registers from `src/vitepress.ts`
+   (the superset) — this exercises both the VitePress-specific implementation and
+   everything re-exported from the generic one.
+5. `npm run build` must still produce two separate physical files (check
+   `vite.config.ts`'s `build.lib.entry`), and the generic build's output file must
+   contain zero reference to `vitepress` — grep for it directly after any build that
+   touches this component (see [Architecture](#architecture)).
+6. Add the reference page and sidebar entry as in step 6 above, and document both import
+   paths on that page — see `docs/components/platform-button.md` for the pattern.
+
+**Before opening a pull request:** `npm test` and `npm run build` both pass; tests exist
+for anything with real logic; every failure and edge path has a deliberate, documented
+user-visible behavior; the reference page documents every prop's default and whether
+it's required, and calls out anything deliberately not supported, with why. See
+`CLAUDE.md` for the full set of engineering conventions this project holds
+contributions to.
 
 Contributions / Contact
 -----------------------
