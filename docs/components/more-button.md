@@ -1,9 +1,10 @@
 # BVMoreButton
 
-A small "···" trigger button that opens a dropdown menu of secondary outbound links —
-GitHub repo, report a bug, request a feature, and the like — next to a primary call to
-action, without giving those links equal visual weight. Modeled on the pattern used by
-Obsidian's community-plugin pages.
+A small button — no visible text, shown as three dots (⋯) by default — that opens a
+dropdown menu of secondary outbound links: GitHub repo, report a bug, request a
+feature, and the like. It sits next to a primary call to action without giving those
+secondary links equal visual weight. Modeled on the pattern used by Obsidian's
+community-plugin pages.
 
 Single implementation — `BVMoreButton` has no VitePress-specific needs (it only ever
 renders the `items` you give it, no `useData()`, no site data), so unlike
@@ -39,7 +40,7 @@ const LIGHTBULB_ICON = '<svg viewBox="0 0 24 24" width="16" height="16" fill="no
 
 </div>
 
-Try it with a keyboard: focus the "···" button and press `ArrowDown` (jumps to the
+Try it with a keyboard: focus the trigger button and press `ArrowDown` (jumps to the
 first item) or `ArrowUp` (jumps to the last item), then `ArrowDown`/`ArrowUp` to move
 between items (wrapping at both ends), `Home`/`End` to jump to the first/last item, and
 `Escape` to close and return focus to the trigger.
