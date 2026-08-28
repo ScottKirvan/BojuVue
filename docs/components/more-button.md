@@ -66,7 +66,7 @@ item, and `Escape` to close and return focus to the button.
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
 | `items` | `BVMoreButtonItem[]` | *(required)* | The menu's contents, in order. See below for the item shape. |
-| `text` | `string` | `'More...'` | Visible button text. Pass an empty string (`text=""`) to switch to icon-only mode instead (fixed-size button, no visible text) — see [Props](#props) below. With any non-empty text, the button is an auto-width pill layout, showing `icon` (if also given) next to it. |
+| `text` | `string` | `'More...'` | Visible button text. Pass an empty string (`text=""`) to switch to icon-only mode instead (fixed-size button, no visible text). With any non-empty text, the button is an auto-width pill layout, showing `icon` (if also given) next to it. |
 | `icon` | `string` | *(none)* | Raw SVG markup rendered via `v-html`. In icon-only mode (`text=""`), replaces the built-in three-dot icon. With text, only rendered if you explicitly set this — otherwise the button shows text alone, no icon. Rendered unescaped — caller-supplied only, never fed anything dynamic/untrusted; see the warning below. |
 | `label` | `string` | `'More options'` | Sets the button's `aria-label`. Only applied in icon-only mode (`text=""`) — with visible text, the accessible name comes from that text content instead, so this prop is ignored rather than layered on top. |
 | `size` | `'medium' \| 'big'` | `'medium'` | Sets the button's dimensions: `'medium'` is a 38px fixed size (icon-only) or a 38px-tall pill (with text); `'big'` is 46px either way. |
