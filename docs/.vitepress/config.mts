@@ -57,6 +57,7 @@ export default defineConfig({
         items: [
           { text: 'Overview', link: '/components/' },
           { text: 'BVButton', link: '/components/button' },
+          { text: 'BVIconButton', link: '/components/icon-button' },
           { text: 'BVMoreButton', link: '/components/more-button' },
           { text: 'BVPlatformButton', link: '/components/platform-button' },
         ],
@@ -82,6 +83,7 @@ export default defineConfig({
         items: [
           { text: 'Overview', link: '/components/' },
           { text: 'BVButton', link: '/components/button' },
+          { text: 'BVIconButton', link: '/components/icon-button' },
           { text: 'BVMoreButton', link: '/components/more-button' },
           { text: 'BVPlatformButton', link: '/components/platform-button' },
         ],
