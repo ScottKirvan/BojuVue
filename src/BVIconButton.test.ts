@@ -29,11 +29,12 @@ describe('BVIconButton (generic Vue implementation)', () => {
   })
 
   describe('icon+text mode', () => {
-    it('renders the icon as a sibling before the button, not inside it', () => {
+    it('overlays the icon on the button rather than rendering it as a preceding flex sibling', () => {
       const wrapper = mount(BVIconButton, { props: { text: 'Go', icon: '<svg data-testid="my-icon"></svg>' } })
       const icon = wrapper.find('[data-testid="my-icon"]')
       expect(icon.exists()).toBe(true)
       expect(wrapper.find('button [data-testid="my-icon"]').exists()).toBe(false)
+      expect(wrapper.find('button').classes()).toContain('has-icon')
       expect(wrapper.find('button').text()).toBe('Go')
     })
 

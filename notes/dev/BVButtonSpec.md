@@ -33,6 +33,28 @@ written, both discovered during implementation rather than planned up front:
   with an empirical repro before being accepted, not just taken on the fix's own
   description.
 
+**Post-merge fixes (2026-08-28), found reviewing the live demo:** three more issues,
+none changing any prop or documented behavior, all superseding language elsewhere in
+this doc that described the pre-fix behavior:
+
+- **Icon+text mode now overlays the icon on the button, not beside it.** Everywhere
+  below that says the icon "renders as a sibling before the button" is describing the
+  original, now-replaced behavior. It's still a sibling `<span>` in the DOM (`VPButton`/
+  `BVButton` still have no slot to put it in), but it's now absolutely positioned on
+  the button's left edge, with the button's own left padding widened via `:deep()` +
+  `calc()` to reserve room for it — the same overlay technique icon-only mode already
+  used, extended to this mode too. Rendered after the button in markup (not before) so
+  it paints on top; `pointer-events: none` unchanged.
+- **`src/vitepress/BVButton.vue` was missing its own `<style>` block entirely**, so
+  when a `VPButton` it rendered ended up inside `.vp-doc` markdown prose content,
+  VitePress's own `.vp-doc a { text-decoration: underline }` cascaded onto it — a real
+  VitePress-site bug, not a "we're not really using VitePress styling" problem (the
+  generic implementation was never affected; it already had its own `text-decoration:
+  none`). Fixed with a scoped `.VPButton { text-decoration: none; }` override, which
+  wins on specificity without `!important`.
+- **`docs/components/icon-button.md`'s icon-only demo instances had no `href`**, so
+  clicking them did nothing — fixed by giving all five demo instances a real link.
+
 ## Origin
 
 Building `BVMoreButton`'s VitePress-specific implementation (see
