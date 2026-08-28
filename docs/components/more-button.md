@@ -64,6 +64,13 @@ between items (wrapping at both ends), `Home`/`End` to jump to the first/last it
 | `target` | `string` | *(none)* | Left unset by default so a smart default applies: `target="_blank"` when `href` looks external. Set it explicitly only to override that. |
 | `rel` | `string` | *(none)* | Left unset by default so a smart default applies: `rel="noreferrer"` when `href` looks external. Set it explicitly only to override that. |
 
+::: warning `icon` is rendered unescaped
+Both the trigger's `icon` and each item's `icon` go through `v-html` with no
+sanitization — same trust model as `BVPlatformButton`'s icon. `items` is something you
+write yourself, not fetched or user-supplied, so this is safe as long as it stays that
+way. Never wire `items` up to anything dynamic without escaping it first.
+:::
+
 The trigger renders as a real `<button>` (not an `<a>`) since it has no `href` of its
 own — it only ever toggles the menu.
 

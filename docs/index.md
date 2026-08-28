@@ -3,28 +3,31 @@ layout: home
 
 hero:
   name: "BojuVue"
-  text: "TODO - Short project headline"
-  tagline: TODO - Replace with your project tagline.
-  actionsx:
+  text: "One component library, every VitePress site"
+  tagline: Shared landing-page and UX components for a fleet of VitePress sites — update once, publish, and every consumer pulls the change with npm update.
+  actions:
     - theme: brand
+      text: Get Started
+      link: /guide/
+    - theme: alt
+      text: Components
+      link: /components/
+    - theme: alt
       text: View on GitHub
       link: https://github.com/ScottKirvan/BojuVue
-    - theme: alt
-      text: Discord
-      link: https://discord.gg/TN6XJSNK5Y
 
 features:
-  - icon: 🚀
-    title: Feature One
-    details: TODO - Describe your first key feature here.
+  - icon: 🔀
+    title: Two builds, one import surface
+    details: Every component is exported from @scottkirvan/bojuvue. Components with VitePress-specific needs ship a second, fully independent implementation under the same name at @scottkirvan/bojuvue/vitepress — the import path is what disambiguates them.
 
-  - icon: 🛠️
-    title: Feature Two
-    details: TODO - Describe your second key feature here.
+  - icon: 📦
+    title: vitepress is optional
+    details: Installing the package alone never pulls in vitepress. Only importing from the /vitepress subpath does — the generic build has zero vitepress in its module graph, verified against the built output on every change.
 
-  - icon: 📖
-    title: Feature Three
-    details: TODO - Describe your third key feature here.
+  - icon: ⚡
+    title: Live preview, no publish step
+    details: This site's own theme imports straight from src/vitepress, not the published package, so a component under active development shows up in a real VitePress site immediately — no npm publish, no npm link.
 ---
 
 <!-- Begin Sponsors -->

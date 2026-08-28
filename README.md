@@ -169,20 +169,10 @@ which import path(s) it's available from.
 
 ### Adding a new component
 
-1. Write the `.vue` file under `src/`
-2. Add one line to `src/index.ts`: `export { default as YourComponent } from './YourComponent.vue'`
-3. Run `npm run docs:dev` (from `docs/`) to preview it live in the VitePress site
-4. Add a reference page at `docs/components/your-component.md` (props table + usage
-   example — copy the structure of an existing page) and link it from
-   `docs/components/index.md` and the sidebar in `docs/.vitepress/config.mts`
-5. Bump the version and `npm publish` to ship it to every consuming site
-
-If the component needs to read anything VitePress-specific (site data, router, etc.),
-give it two fully independent implementations sharing one exported name the way
-`BVPlatformButton` does (see `src/BVPlatformButton.vue`, `src/vitepress/`,
-`src/vitepress.ts`, and `CLAUDE.md`'s Project Overview section) instead of importing
-`vitepress` directly into the component every consumer gets — that's what keeps the
-bare package usable in non-VitePress Vue apps.
+See the **[Contributing guide](https://scottkirvan.github.io/BojuVue/guide/contributing)**
+for the full walkthrough — including the two-implementation pattern components with
+VitePress-specific needs (like `BVPlatformButton`) use instead of importing `vitepress`
+directly into a component every consumer gets.
 
 Contributions / Contact
 -----------------------
