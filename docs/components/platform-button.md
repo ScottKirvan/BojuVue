@@ -25,11 +25,11 @@ import { BVPlatformButton } from '@scottkirvan/bojuvue'
 import { BVPlatformButton } from '@scottkirvan/bojuvue/vitepress'
 ```
 
-If you're building a VitePress site (which this component was originally designed
-for), use the `/vitepress` path — that's what this site's own demo below uses. Use
-the bare package path only if you're embedding `BVPlatformButton` in a plain Vue 3
-app with its own manifest-hosting setup, where there's no VitePress `useData()` to
-read a base path from.
+If you're building a VitePress site, use the `/vitepress` path — that's what this
+site's own demo below uses, and you get real VitePress theme styling for free. Use
+the bare package path when you're embedding `BVPlatformButton` in a plain Vue 3 app
+with its own manifest-hosting setup, where there's no VitePress `useData()` to read a
+base path from.
 
 `vitepress` is an *optional* peer dependency — installing `@scottkirvan/bojuvue`
 alone (importing only the bare package path) never requires `vitepress` to be
