@@ -6,6 +6,33 @@ button-shaped components to sit on top of them. Captures the design discussion
 aren't relying on chat scrollback. Update in place if anything here turns out to be
 wrong once real code exists.
 
+**Status: implemented (2026-08-28).** All four stages below landed, built via four
+sequenced sub-agent tasks (1 → 2 → 3+4 concurrently) on a shared integration branch,
+each reviewed and merged before the next started. Two deviations from the plan as
+written, both discovered during implementation rather than planned up front:
+
+- **`BVMoreButton` didn't already have a VitePress-specific implementation** by the
+  time stage 4 started — the earlier PR that would have given it one (#47, referenced
+  throughout this doc) was closed unmerged (see `notes/dev/MoreButtonSpec.md`).
+  Stage 4 therefore both split `BVMoreButton` into two implementations for the first
+  time *and* delegated both to `BVIconButton`, rather than just the delegation alone.
+  The open/close/keyboard/placement wiring shared between the two implementations
+  was extracted into `src/useMoreButtonMenu.ts` (matching the `useManifestFetch`
+  precedent), rather than duplicated.
+- **Two latent `BVIconButton` bugs surfaced during stage 4** — the first real caller
+  to pass a listener/ARIA attribute or take a template ref through it, which stages
+  1-3 never needed. Both are in `src/BVIconButton.vue` and `src/vitepress/BVIconButton.vue`:
+  (1) a non-prop attr (`aria-haspopup`, `@click`, etc.) fell through to the component's
+  own wrapping `<span>` by Vue's default single-root inheritance, not the real
+  interactive control inside it — fixed with `inheritAttrs: false` plus an explicit
+  `v-bind="$attrs"` on the inner button. (2) A leading template doc-comment sitting
+  outside the root `<span>` made the component an implicit multi-root fragment (this
+  project's non-production Vue build keeps template comments as real DOM nodes), so
+  `$el`/a template ref resolved to the fragment's anchor node instead of the intended
+  element — fixed by moving every such comment inside the root span. Both confirmed
+  with an empirical repro before being accepted, not just taken on the fix's own
+  description.
+
 ## Origin
 
 Building `BVMoreButton`'s VitePress-specific implementation (see
