@@ -5,9 +5,10 @@ bug, request a feature, and the like. It sits next to a primary call to action w
 giving those secondary links equal visual weight. Modeled on the pattern used by
 Obsidian's community-plugin pages.
 
-By default the button is icon-only — no visible text, shown as three dots (⋯) — sized
-as a small fixed circle. Pass the `text` prop for an ordinary labeled button instead
-(auto-width, same padding/sizing as `BVPlatformButton`); see [Props](#props) below.
+By default the button shows visible text reading "More..." (auto-width, same
+padding/sizing as `BVPlatformButton`). Pass your own `text` to change the label, or an
+empty string (`text=""`) to switch to the icon-only mode instead — three dots (⋯) at a
+small fixed size, no visible text; see [Props](#props) below.
 
 Single implementation — `BVMoreButton` has no VitePress-specific needs (it only ever
 renders the `items` you give it, no `useData()`, no site data), so unlike
@@ -42,7 +43,7 @@ const LIGHTBULB_ICON = '<svg viewBox="0 0 24 24" width="16" height="16" fill="no
 />
 
 <BVMoreButton
-  text="More"
+  text=""
   theme="alt"
   :items="[
     { label: 'GitHub repo', href: 'https://github.com/ScottKirvan/BojuVue', icon: GITHUB_ICON },
@@ -52,8 +53,8 @@ const LIGHTBULB_ICON = '<svg viewBox="0 0 24 24" width="16" height="16" fill="no
 
 </div>
 
-The second button above is the same component in text mode (`text="More"`) — an
-ordinary labeled button instead of the icon-only default.
+The first button above is the default — visible text reading "More...". The second is
+the same component with `text=""`, switching to the icon-only three-dot mode instead.
 
 Try it with a keyboard: focus one of the buttons above and press `ArrowDown` (jumps to
 the first item) or `ArrowUp` (jumps to the last item), then `ArrowDown`/`ArrowUp` to
@@ -65,10 +66,10 @@ item, and `Escape` to close and return focus to the button.
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
 | `items` | `BVMoreButtonItem[]` | *(required)* | The menu's contents, in order. See below for the item shape. |
-| `text` | `string` | *(none)* | Visible button text. Unset by default (icon-only button, fixed circular size). Given, the button switches to an auto-width pill layout, showing `icon` (if also given) next to this text instead of the three-dot default. |
-| `icon` | `string` | *(none)* | Raw SVG markup rendered via `v-html`. With no `text`, replaces the built-in three-dot icon. With `text`, only rendered if you explicitly set this — otherwise the button shows text alone, no icon. Rendered unescaped — caller-supplied only, never fed anything dynamic/untrusted; see the warning below. |
-| `label` | `string` | `'More options'` | Sets the button's `aria-label`. Only applied when there's no `text` — with visible text, the accessible name comes from that text content instead, so this prop is ignored rather than layered on top. |
-| `size` | `'medium' \| 'big'` | `'medium'` | Sets the button's dimensions: `'medium'` is a 38px circle (icon-only) or a 38px-tall pill (with `text`); `'big'` is 46px either way. |
+| `text` | `string` | `'More...'` | Visible button text. Pass an empty string (`text=""`) to switch to icon-only mode instead (fixed-size button, no visible text) — see [Props](#props) below. With any non-empty text, the button is an auto-width pill layout, showing `icon` (if also given) next to it. |
+| `icon` | `string` | *(none)* | Raw SVG markup rendered via `v-html`. In icon-only mode (`text=""`), replaces the built-in three-dot icon. With text, only rendered if you explicitly set this — otherwise the button shows text alone, no icon. Rendered unescaped — caller-supplied only, never fed anything dynamic/untrusted; see the warning below. |
+| `label` | `string` | `'More options'` | Sets the button's `aria-label`. Only applied in icon-only mode (`text=""`) — with visible text, the accessible name comes from that text content instead, so this prop is ignored rather than layered on top. |
+| `size` | `'medium' \| 'big'` | `'medium'` | Sets the button's dimensions: `'medium'` is a 38px fixed size (icon-only) or a 38px-tall pill (with text); `'big'` is 46px either way. |
 | `theme` | `'brand' \| 'alt' \| 'sponsor'` | `'brand'` | Sets the button's color scheme via a modifier class: `'brand'` is a solid accent color, `'alt'` is neutral/muted, `'sponsor'` is a pink accent. See [Styling](#styling) below for where these colors come from. |
 
 `BVMoreButtonItem`:
@@ -184,10 +185,11 @@ import { BVMoreButton, BVPlatformButton } from '@scottkirvan/bojuvue'
 </template>
 ```
 
-With a custom icon, label, theme, and size (icon-only mode):
+Icon-only mode, with a custom icon, label, theme, and size:
 
 ```vue
 <BVMoreButton
+  text=""
   label="Plugin options"
   theme="alt"
   size="big"
@@ -196,8 +198,8 @@ With a custom icon, label, theme, and size (icon-only mode):
 />
 ```
 
-With visible text instead of an icon (text mode):
+Overriding the default "More..." text:
 
 ```vue
-<BVMoreButton text="More" :items="items" />
+<BVMoreButton text="More options" :items="items" />
 ```
