@@ -160,9 +160,12 @@ and a neighboring primary CTA is a caller/layout concern. Use a flex container w
 
 ## Usage
 
+`BVMoreButton` works the same from either import path — this example uses the bare
+package, so it's just as valid in a non-VitePress Vue 3 app:
+
 ```vue
 <script setup>
-import { BVMoreButton, BVPlatformButton } from '@scottkirvan/bojuvue/vitepress'
+import { BVMoreButton, BVPlatformButton } from '@scottkirvan/bojuvue'
 </script>
 
 <template>

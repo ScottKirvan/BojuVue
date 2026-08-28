@@ -3,8 +3,8 @@ layout: home
 
 hero:
   name: "BojuVue"
-  text: "Shared Vue 3 components for VitePress sites"
-  tagline: A component library published to npm — install it, register the components you need, and update later with npm update.
+  text: "Shared Vue 3 components"
+  tagline: A component library published to npm, for any Vue 3 app — with VitePress-aware builds available where they help. Install it, register the components you need, and update later with npm update.
   actions:
     - theme: brand
       text: Get Started

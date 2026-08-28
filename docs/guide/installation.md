@@ -7,11 +7,43 @@ npm install @scottkirvan/bojuvue
 That's the only required install. `vitepress` is an *optional* peer dependency — you
 only need it if you're building a VitePress site and want the VitePress-aware
 component builds (see below). If you're embedding BojuVue components in a plain Vue 3
-app, skip it entirely.
+app, skip it entirely — everything below works the same either way.
 
 ## Registering components
 
-Import and register whatever you need in your site's `.vitepress/theme/index.ts`:
+Every component works as an ordinary Vue 3 component — register it however you
+already register components in your app:
+
+```ts
+// main.ts (or wherever you create your Vue app)
+import { createApp } from 'vue'
+import { BVPlatformButton, BVMoreButton } from '@scottkirvan/bojuvue'
+import App from './App.vue'
+
+const app = createApp(App)
+app.component('BVPlatformButton', BVPlatformButton)
+app.component('BVMoreButton', BVMoreButton)
+app.mount('#app')
+```
+
+Or register it only where it's used, no global registration needed:
+
+```vue
+<script setup>
+import { BVPlatformButton } from '@scottkirvan/bojuvue'
+</script>
+
+<template>
+  <BVPlatformButton fallback-href="https://github.com/your-org/your-repo/releases" />
+</template>
+```
+
+### In a VitePress site
+
+VitePress sites register global components in `.vitepress/theme/index.ts` instead of
+`main.ts` — same `app.component()` call, just made from VitePress's `enhanceApp` hook.
+Prefer importing from `@scottkirvan/bojuvue/vitepress` here (see
+[Choosing an import path](#choosing-an-import-path) below):
 
 ```ts
 import DefaultTheme from 'vitepress/theme'
@@ -36,9 +68,9 @@ registered globally:
 
 ::: tip Registering per-page instead
 If a component is only used on one page, skip global registration and import it
-directly in that page's markdown body — a `.md` file compiles as a Vue SFC, so a
-`<script setup>` block and component tags work exactly like they would in a `.vue`
-file:
+directly in that page's markdown body — a `.md` file compiles as a Vue SFC (VitePress-
+specific), so a `<script setup>` block and component tags work exactly like they would
+in a `.vue` file:
 
 ```md
 <script setup>
