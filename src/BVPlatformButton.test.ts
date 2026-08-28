@@ -26,11 +26,11 @@ describe('BVPlatformButton (generic Vue implementation)', () => {
     }) as unknown as typeof fetch
   })
 
-  it('renders as an anchor with no dependency on vitepress', async () => {
+  it('renders as an anchor with no dependency on vitepress, via BVIconButton', async () => {
     const wrapper = await mountButton()
     const anchor = wrapper.find('a')
     expect(anchor.exists()).toBe(true)
-    expect(anchor.classes()).toContain('bv-platform-button-link')
+    expect(anchor.classes()).toContain('bv-button')
     expect(anchor.attributes('href')).toBe(FALLBACK_HREF)
   })
 
@@ -79,12 +79,12 @@ describe('BVPlatformButton (generic Vue implementation)', () => {
 
     it('renders no icon markup when icon is unset', async () => {
       const wrapper = await mountButton()
-      expect(wrapper.find('.bv-platform-button-icon').exists()).toBe(false)
+      expect(wrapper.find('.bv-icon-button-icon').exists()).toBe(false)
     })
   })
 
   describe('target/rel', () => {
-    it("defaults to VPButton's smart external-link target/rel when unset", async () => {
+    it("defaults to BVButton's smart external-link target/rel when unset", async () => {
       const wrapper = await mountButton()
       const anchor = wrapper.find('a')
       expect(anchor.attributes('target')).toBe('_blank')
