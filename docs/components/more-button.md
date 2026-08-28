@@ -10,15 +10,21 @@ padding/sizing as `BVPlatformButton`). Pass your own `text` to change the label,
 empty string (`text=""`) to switch to the icon-only mode instead — three dots (⋯) at a
 small fixed size, no visible text; see [Props](#props) below.
 
-Single implementation — `BVMoreButton` has no VitePress-specific needs (it only ever
-renders the `items` you give it, no `useData()`, no site data), so unlike
-`BVPlatformButton` it isn't split into two builds. Import it from either path; the
-`/vitepress` path is just a re-export of the same component, kept there so importing
-everything from `@scottkirvan/bojuvue/vitepress` alone is always enough:
+`BVMoreButton` renders its trigger through `BVIconButton` internally rather than owning
+its own button markup/CSS — its own logic (the menu panel, keyboard handling, placement
+algorithm) is unchanged either way, but on the `/vitepress` import path, that means text
+mode (any non-empty `text`) now renders through VitePress's real `VPButton` and gets its
+theme styling automatically, same as `BVPlatformButton`. Icon-only mode (`text=""`)
+still renders through a hand-rolled button on both paths — `VPButton` has no concept of
+a fixed-size icon-only shape.
+
+Two independent implementations, same as `BVPlatformButton`. Import it from either
+path; the `/vitepress` path gets real `VPButton` styling for free, so prefer it inside
+a VitePress site:
 
 ```ts
 import { BVMoreButton } from '@scottkirvan/bojuvue'
-// or, equivalently:
+// or, inside a VitePress site, for real VPButton styling in text mode:
 import { BVMoreButton } from '@scottkirvan/bojuvue/vitepress'
 ```
 
@@ -94,13 +100,16 @@ own — it only ever toggles the menu.
 
 ## Styling
 
-Unlike the menu items (real links you author yourself), the button reads the same
-public `--vp-button-*` CSS custom properties VitePress itself exposes for theming,
-each with a fallback value so the button still looks like a clickable button outside a
-VitePress site (where those variables are undefined) — the same tokens
-`BVPlatformButton`'s generic build also reads. The dropdown panel reads VitePress's
-public `--vp-c-*` design tokens (also with fallback values) for its background,
-border, and text color.
+On the bare `@scottkirvan/bojuvue` import, the button (via `BVIconButton`/`BVButton`)
+reads the same public `--vp-button-*` CSS custom properties VitePress itself exposes
+for theming, each with a fallback value so it still looks like a clickable button
+outside a VitePress site (where those variables are undefined) — the same tokens
+`BVPlatformButton`'s generic build also reads. On the `/vitepress` import, text mode
+renders through VitePress's real `VPButton` instead (no fallback values needed — this
+build only ever runs inside a real VitePress site), while icon-only mode still reads
+those same custom properties directly. The dropdown panel reads VitePress's public
+`--vp-c-*` design tokens for its background, border, and text color — with fallback
+values on the bare import, without them on `/vitepress`.
 
 ## Keyboard behavior
 

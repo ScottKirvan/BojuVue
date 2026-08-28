@@ -1,6 +1,20 @@
-import { describe, it, expect } from 'vitest'
+import { describe, it, expect, vi } from 'vitest'
 import { mount } from '@vue/test-utils'
 import BVMoreButton from './BVMoreButton.vue'
+
+// BVMoreButton itself never calls useData(), but importing VPButton from
+// 'vitepress/theme' (via ./BVIconButton.vue -> ./BVButton.vue) pulls in that
+// entry's whole theme barrel (NavBar, NotFound, etc.), and NotFound.vue
+// calls useData() at module-eval time — so this mock is here purely to
+// satisfy that transitive import in tests, the same reason
+// ./BVIconButton.test.ts needs it. VPButton's own normalizeLink() (invoked
+// for a non-external href) also reads `site.value.cleanUrls` from useData()
+// and calls `withBase()`, both imported from the 'vitepress' package
+// itself, so the mock needs to cover both rather than just useData().
+vi.mock('vitepress', () => ({
+  useData: () => ({ site: { value: { base: '/', cleanUrls: false } } }),
+  withBase: (path: string) => path,
+}))
 
 const ITEMS = [
   { label: 'GitHub repo', href: 'https://github.com/example/example' },
@@ -22,42 +36,25 @@ function trigger(wrapper: ReturnType<typeof mountButton>) {
   return wrapper.find('.bv-icon-button-target')
 }
 
-describe('BVMoreButton', () => {
+describe('BVMoreButton (VitePress-specific implementation)', () => {
   it('renders its trigger through BVIconButton, not hand-rolled markup', () => {
     const wrapper = mountButton()
     expect(wrapper.find('.bv-more-button-trigger').exists()).toBe(false)
     expect(trigger(wrapper).exists()).toBe(true)
   })
 
-  it('defaults to a visible "More..." text trigger, not the icon-only three-dot button', () => {
-    const wrapper = mountButton()
-    const button = trigger(wrapper)
-    expect(button.exists()).toBe(true)
-    expect(button.text()).toBe('More...')
-    expect(wrapper.find('.icon-only').exists()).toBe(false)
-    expect(button.find('svg').exists()).toBe(false)
-    expect(button.attributes('aria-haspopup')).toBe('menu')
-    expect(button.attributes('aria-expanded')).toBe('false')
-  })
-
-  it('renders caller-supplied icon markup via v-html alongside the default text', () => {
-    const wrapper = mountButton({ icon: '<svg data-testid="my-icon"></svg>' })
-    expect(wrapper.find('[data-testid="my-icon"]').exists()).toBe(true)
-  })
-
-  describe('text mode', () => {
-    it('renders custom visible text', () => {
-      const wrapper = mountButton({ text: 'More' })
+  describe('text mode (default)', () => {
+    it('renders through the real VPButton, not the hand-rolled generic BVButton', () => {
+      const wrapper = mountButton()
       const button = trigger(wrapper)
-      expect(button.text()).toContain('More')
-      expect(wrapper.find('.icon-only').exists()).toBe(false)
-      expect(button.find('svg').exists()).toBe(false)
+      expect(button.classes()).toContain('VPButton')
+      expect(button.classes()).not.toContain('bv-button')
+      expect(button.text()).toBe('More...')
     })
 
     it('still renders an icon alongside text when icon is explicitly given', () => {
       const wrapper = mountButton({ text: 'More', icon: '<svg data-testid="my-icon"></svg>' })
-      const button = trigger(wrapper)
-      expect(button.text()).toContain('More')
+      expect(trigger(wrapper).text()).toContain('More')
       expect(wrapper.find('[data-testid="my-icon"]').exists()).toBe(true)
     })
 
@@ -65,13 +62,30 @@ describe('BVMoreButton', () => {
       const wrapper = mountButton({ text: 'More', label: 'Ignored' })
       expect(trigger(wrapper).attributes('aria-label')).toBeUndefined()
     })
+
+    it('sets aria-haspopup/aria-expanded on the real VPButton element', async () => {
+      const wrapper = mountButton()
+      const button = trigger(wrapper)
+      expect(button.attributes('aria-haspopup')).toBe('menu')
+      expect(button.attributes('aria-expanded')).toBe('false')
+
+      await button.trigger('click')
+      expect(trigger(wrapper).attributes('aria-expanded')).toBe('true')
+    })
   })
 
   describe('icon-only mode (text explicitly emptied out)', () => {
-    it('renders the default three-dot icon with the fixed-size icon-only layout, no visible text', () => {
+    it('renders through the hand-rolled generic BVButton, not VPButton', () => {
       const wrapper = mountButton({ text: '' })
-      expect(wrapper.find('.icon-only').exists()).toBe(true)
-      expect(trigger(wrapper).text()).toBe('')
+      const button = trigger(wrapper)
+      expect(button.classes()).toContain('bv-button')
+      expect(button.classes()).not.toContain('VPButton')
+      expect(button.classes()).toContain('icon-only')
+      expect(button.text()).toBe('')
+    })
+
+    it('renders the default three-dot icon', () => {
+      const wrapper = mountButton({ text: '' })
       expect(wrapper.find('svg').exists()).toBe(true)
     })
 
@@ -79,10 +93,8 @@ describe('BVMoreButton', () => {
       const wrapper = mountButton({ text: '', icon: '<svg data-testid="my-icon"></svg>' })
       expect(wrapper.find('[data-testid="my-icon"]').exists()).toBe(true)
     })
-  })
 
-  describe('aria attributes', () => {
-    it('defaults aria-label to "More options" in icon-only mode, alongside aria-haspopup/aria-expanded', () => {
+    it('defaults aria-label to "More options", alongside aria-haspopup/aria-expanded', () => {
       const wrapper = mountButton({ text: '' })
       const button = trigger(wrapper)
       expect(button.attributes('aria-label')).toBe('More options')
@@ -90,16 +102,9 @@ describe('BVMoreButton', () => {
       expect(button.attributes('aria-expanded')).toBe('false')
     })
 
-    it('uses a custom label prop for aria-label in icon-only mode', () => {
+    it('uses a custom label prop for aria-label', () => {
       const wrapper = mountButton({ text: '', label: 'Plugin options' })
       expect(trigger(wrapper).attributes('aria-label')).toBe('Plugin options')
-    })
-
-    it('sets aria-expanded to true once the menu is open', async () => {
-      const wrapper = mountButton()
-      await trigger(wrapper).trigger('click')
-      expect(trigger(wrapper).attributes('aria-expanded')).toBe('true')
-      expect(wrapper.find('[role="menu"]').exists()).toBe(true)
     })
   })
 
@@ -207,14 +212,12 @@ describe('BVMoreButton', () => {
   describe('placement', () => {
     it('recomputes panel position on scroll, not just resize (position: fixed follows the viewport, not the trigger)', async () => {
       const wrapper = mountButton()
-      const button = trigger(wrapper).element as HTMLButtonElement
+      const button = trigger(wrapper).element as HTMLElement
 
       await trigger(wrapper).trigger('click')
       const panel = wrapper.find('[role="menu"]').element as HTMLElement
       panel.getBoundingClientRect = () => ({ width: 200 }) as DOMRect
 
-      // Simulate the page scrolling the trigger to a new viewport position —
-      // a fixed-position panel has no reason to follow this on its own.
       button.getBoundingClientRect = () => ({ left: 300, right: 340 }) as DOMRect
       window.dispatchEvent(new Event('scroll'))
       await wrapper.vm.$nextTick()
@@ -226,18 +229,13 @@ describe('BVMoreButton', () => {
       document.documentElement.style.zoom = '0.875'
       try {
         const wrapper = mountButton()
-        const button = trigger(wrapper).element as HTMLButtonElement
+        const button = trigger(wrapper).element as HTMLElement
 
         await trigger(wrapper).trigger('click')
         const panel = wrapper.find('[role="menu"]').element as HTMLElement
         button.getBoundingClientRect = () => ({ left: 350, right: 385 }) as DOMRect
         panel.getBoundingClientRect = () => ({ width: 175 }) as DOMRect
 
-        // A zoomed getBoundingClientRect() (350) fed straight into the panel's
-        // inline `left` would land at 350 in the unzoomed frame the browser
-        // actually renders that style in — visually 350 * 0.875 = 306.25 once
-        // the ancestor zoom re-applies, not the intended 350. Dividing by the
-        // zoom factor first (350 / 0.875 = 400) is what makes the two match.
         window.dispatchEvent(new Event('resize'))
         await wrapper.vm.$nextTick()
 
