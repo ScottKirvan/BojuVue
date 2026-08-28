@@ -1,13 +1,10 @@
 # BVMoreButton
 
-A button that opens a dropdown menu of secondary outbound links: GitHub repo, report a
-bug, request a feature, and the like. It sits next to a primary call to action without
-giving those secondary links equal visual weight. Modeled on the pattern used by
-Obsidian's community-plugin pages.
-
-By default the trigger is icon-only — no visible text, shown as three dots (⋯) — sized
-as a small fixed circle. Pass the `text` prop for an ordinary labeled button instead
-(auto-width, same padding/sizing as `BVPlatformButton`); see [Props](#props) below.
+A small button — no visible text, shown as three dots (⋯) by default — that opens a
+dropdown menu of secondary outbound links: GitHub repo, report a bug, request a
+feature, and the like. It sits next to a primary call to action without giving those
+secondary links equal visual weight. Modeled on the pattern used by Obsidian's
+community-plugin pages.
 
 Single implementation — `BVMoreButton` has no VitePress-specific needs (it only ever
 renders the `items` you give it, no `useData()`, no site data), so unlike
@@ -41,21 +38,9 @@ const LIGHTBULB_ICON = '<svg viewBox="0 0 24 24" width="16" height="16" fill="no
   ]"
 />
 
-<BVMoreButton
-  text="More"
-  theme="alt"
-  :items="[
-    { label: 'GitHub repo', href: 'https://github.com/ScottKirvan/BojuVue', icon: GITHUB_ICON },
-    { label: 'Report a bug', href: 'https://github.com/ScottKirvan/BojuVue/issues/new?template=bug_report.md', icon: BUG_ICON },
-  ]"
-/>
-
 </div>
 
-The second button above is the same component in text mode (`text="More"`) — an
-ordinary labeled button instead of the icon-only default.
-
-Try it with a keyboard: focus a trigger button and press `ArrowDown` (jumps to the
+Try it with a keyboard: focus the trigger button and press `ArrowDown` (jumps to the
 first item) or `ArrowUp` (jumps to the last item), then `ArrowDown`/`ArrowUp` to move
 between items (wrapping at both ends), `Home`/`End` to jump to the first/last item, and
 `Escape` to close and return focus to the trigger.
@@ -65,9 +50,8 @@ between items (wrapping at both ends), `Home`/`End` to jump to the first/last it
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
 | `items` | `BVMoreButtonItem[]` | *(required)* | The menu's contents, in order. See below for the item shape. |
-| `text` | `string` | *(none)* | Visible trigger text. Unset by default (icon-only trigger, fixed circular size). Given, the trigger switches to an auto-width layout — same padding/sizing as `BVPlatformButton` — showing `icon` (if also given) next to this text instead of the three-dot default. |
-| `icon` | `string` | *(none)* | Raw SVG markup rendered via `v-html`. With no `text`, replaces the built-in three-dot icon. With `text`, only rendered if you explicitly set this — otherwise the trigger shows text alone, no icon. Same trust model as `BVPlatformButton.icon`: caller-supplied only, never fed anything dynamic/untrusted. |
-| `label` | `string` | `'More options'` | Sets the trigger's `aria-label`. Only applied when there's no `text` — with visible text, the accessible name comes from that text content instead, so this prop is ignored rather than layered on top. |
+| `icon` | `string` | *(none)* | Raw SVG markup rendered via `v-html` in place of the built-in three-dot icon. Same trust model as `BVPlatformButton.icon`: caller-supplied only, never fed anything dynamic/untrusted. |
+| `label` | `string` | `'More options'` | Sets the trigger's `aria-label`. The trigger has no visible text label either way (icon-only), so the accessible name always comes from this prop. |
 | `size` | `'medium' \| 'big'` | `'medium'` | Same meaning and default as `BVPlatformButton.size`, so the two sit naturally side by side in an actions row. |
 | `theme` | `'brand' \| 'alt' \| 'sponsor'` | `'brand'` | Same meaning and default as `BVPlatformButton.theme`. |
 
@@ -183,7 +167,7 @@ import { BVMoreButton, BVPlatformButton } from '@scottkirvan/bojuvue/vitepress'
 </template>
 ```
 
-With a custom icon, label, theme, and size (icon-only mode):
+With a custom icon, label, theme, and size:
 
 ```vue
 <BVMoreButton
@@ -193,10 +177,4 @@ With a custom icon, label, theme, and size (icon-only mode):
   icon="<svg viewBox='0 0 24 24' width='16' height='16'><path d='M12 2 2 22h20z'/></svg>"
   :items="items"
 />
-```
-
-With visible text instead of an icon (text mode):
-
-```vue
-<BVMoreButton text="More" :items="items" />
 ```

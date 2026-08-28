@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, nextTick, onBeforeUnmount, onBeforeUpdate, ref, watch, type ComponentPublicInstance } from 'vue'
+import { nextTick, onBeforeUnmount, onBeforeUpdate, ref, watch, type ComponentPublicInstance } from 'vue'
 import { isExternalUrl } from './url'
 import { computeMenuPanelLeft, stepMenuIndex, type MenuStepKey } from './moreButtonMenu'
 
@@ -11,18 +11,7 @@ const props = withDefaults(
   defineProps<{
     items: { label: string; href: string; icon?: string; target?: string; rel?: string }[]
     // Overrides the built-in three-dot icon via v-html. Caller-supplied only.
-    // Ignored (no icon rendered) when `text` is set and `icon` isn't also
-    // explicitly given — see `resolvedIcon` below.
     icon?: string
-    // Visible trigger text. Unset by default, which keeps the original
-    // icon-only trigger (fixed circular size, default three-dot icon).
-    // Given, the trigger switches to an auto-width layout — same padding/
-    // sizing pattern as BVPlatformButton's link — showing `icon` (if also
-    // given) next to this text instead of the three-dot default.
-    text?: string
-    // Sets the trigger's aria-label. Only applied in icon-only mode (no
-    // `text`) — with visible text, the accessible name comes from that text
-    // content instead, so this prop is ignored rather than layered on top.
     label?: string
     // Pass-through to the rendered trigger, left undefined so its own
     // defaults ('medium' / 'brand') apply when unset.
@@ -36,12 +25,6 @@ const props = withDefaults(
 
 const DEFAULT_ICON =
   '<svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true"><circle cx="5" cy="12" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="19" cy="12" r="2"/></svg>'
-
-// Icon-only mode (no `text`) always shows something — a caller-supplied
-// icon, or the three-dot default. Text mode shows an icon only if the
-// caller explicitly asked for one alongside the text; otherwise the visible
-// text alone is the trigger's content, same as any ordinary text button.
-const resolvedIcon = computed(() => props.icon ?? (props.text ? null : DEFAULT_ICON))
 
 const open = ref(false)
 const rootEl = ref<HTMLElement | null>(null)
@@ -199,15 +182,14 @@ function resolvedRel(item: { href: string; rel?: string }): string | undefined {
       ref="triggerEl"
       type="button"
       class="bv-more-button-trigger"
-      :class="[size ?? 'medium', theme ?? 'brand', text ? 'has-text' : 'icon-only']"
+      :class="[size ?? 'medium', theme ?? 'brand']"
       aria-haspopup="menu"
       :aria-expanded="open"
-      :aria-label="text ? undefined : label"
+      :aria-label="label"
       @click="toggleMenu"
       @keydown="onTriggerKeydown"
     >
-      <span v-if="resolvedIcon" class="bv-more-button-icon" v-html="resolvedIcon"></span>
-      <span v-if="text" class="bv-more-button-text">{{ text }}</span>
+      <span class="bv-more-button-icon" v-html="icon ?? DEFAULT_ICON"></span>
     </button>
     <div
       v-if="open"
@@ -247,11 +229,8 @@ function resolvedRel(item: { href: string; rel?: string }): string | undefined {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 6px;
   border: 1px solid transparent;
   cursor: pointer;
-  font-weight: 600;
-  white-space: nowrap;
   transition: color 0.25s, border-color 0.25s, background-color 0.25s;
 }
 
@@ -259,35 +238,16 @@ function resolvedRel(item: { href: string; rel?: string }): string | undefined {
   transition: color 0.1s, border-color 0.1s, background-color 0.1s;
 }
 
-/* Icon-only mode (no `text`): a fixed circular button sized for one small
-   icon glyph — the original trigger shape. */
-.bv-more-button-trigger.icon-only.medium {
+.bv-more-button-trigger.medium {
   border-radius: 20px;
   width: 38px;
   height: 38px;
 }
 
-.bv-more-button-trigger.icon-only.big {
+.bv-more-button-trigger.big {
   border-radius: 24px;
   width: 46px;
   height: 46px;
-}
-
-/* Text mode: auto-width pill, same padding/line-height/font-size pattern as
-   BVPlatformButton's link — so a labeled BVMoreButton sits naturally next
-   to one in the same actions row. */
-.bv-more-button-trigger.has-text.medium {
-  border-radius: 20px;
-  padding: 0 20px;
-  line-height: 38px;
-  font-size: 14px;
-}
-
-.bv-more-button-trigger.has-text.big {
-  border-radius: 24px;
-  padding: 0 24px;
-  line-height: 46px;
-  font-size: 16px;
 }
 
 .bv-more-button-icon :deep(svg) {

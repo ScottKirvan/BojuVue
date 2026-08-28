@@ -16,15 +16,9 @@ export interface BVMoreButtonItem {
 export interface BVMoreButtonProps {
   items: BVMoreButtonItem[]
   // Overrides the built-in three-dot icon via v-html. Caller-supplied only.
-  // Ignored (no icon rendered) when `text` is set without also setting this.
   icon?: string
-  // Visible trigger text. Unset by default (icon-only trigger, fixed
-  // circular size). Given, the trigger switches to an auto-width layout
-  // showing `icon` (if also given) next to this text.
-  text?: string
-  // Sets the trigger's aria-label. Only applied when there's no visible
-  // `text` — with visible text, the accessible name comes from that text
-  // content instead.
+  // Sets the trigger's aria-label. There is no visible text label either
+  // way, so the accessible name always comes from this prop.
   label?: string
   // Pass-through to the rendered trigger, left undefined so its own
   // defaults ('medium' / 'brand') apply when unset — same meaning as
