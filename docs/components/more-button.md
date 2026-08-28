@@ -5,7 +5,7 @@ bug, request a feature, and the like. It sits next to a primary call to action w
 giving those secondary links equal visual weight. Modeled on the pattern used by
 Obsidian's community-plugin pages.
 
-By default the trigger is icon-only — no visible text, shown as three dots (⋯) — sized
+By default the button is icon-only — no visible text, shown as three dots (⋯) — sized
 as a small fixed circle. Pass the `text` prop for an ordinary labeled button instead
 (auto-width, same padding/sizing as `BVPlatformButton`); see [Props](#props) below.
 
@@ -55,21 +55,21 @@ const LIGHTBULB_ICON = '<svg viewBox="0 0 24 24" width="16" height="16" fill="no
 The second button above is the same component in text mode (`text="More"`) — an
 ordinary labeled button instead of the icon-only default.
 
-Try it with a keyboard: focus a trigger button and press `ArrowDown` (jumps to the
-first item) or `ArrowUp` (jumps to the last item), then `ArrowDown`/`ArrowUp` to move
-between items (wrapping at both ends), `Home`/`End` to jump to the first/last item, and
-`Escape` to close and return focus to the trigger.
+Try it with a keyboard: focus one of the buttons above and press `ArrowDown` (jumps to
+the first item) or `ArrowUp` (jumps to the last item), then `ArrowDown`/`ArrowUp` to
+move between items (wrapping at both ends), `Home`/`End` to jump to the first/last
+item, and `Escape` to close and return focus to the button.
 
 ## Props
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
 | `items` | `BVMoreButtonItem[]` | *(required)* | The menu's contents, in order. See below for the item shape. |
-| `text` | `string` | *(none)* | Visible trigger text. Unset by default (icon-only trigger, fixed circular size). Given, the trigger switches to an auto-width pill layout, showing `icon` (if also given) next to this text instead of the three-dot default. |
-| `icon` | `string` | *(none)* | Raw SVG markup rendered via `v-html`. With no `text`, replaces the built-in three-dot icon. With `text`, only rendered if you explicitly set this — otherwise the trigger shows text alone, no icon. Rendered unescaped — caller-supplied only, never fed anything dynamic/untrusted; see the warning below. |
-| `label` | `string` | `'More options'` | Sets the trigger's `aria-label`. Only applied when there's no `text` — with visible text, the accessible name comes from that text content instead, so this prop is ignored rather than layered on top. |
-| `size` | `'medium' \| 'big'` | `'medium'` | Sets the trigger's dimensions: `'medium'` is a 38px circle (icon-only) or a 38px-tall pill (with `text`); `'big'` is 46px either way. Same scale as `BVPlatformButton`'s `size`, so the two sit naturally side by side in an actions row. |
-| `theme` | `'brand' \| 'alt' \| 'sponsor'` | `'brand'` | Sets the trigger's color scheme via a modifier class: `'brand'` is a solid accent color, `'alt'` is neutral/muted, `'sponsor'` is a pink accent — reading the same `--vp-button-*` CSS custom properties `BVPlatformButton`'s generic build reads (see [Styling](#styling) below), so the two match visually. |
+| `text` | `string` | *(none)* | Visible button text. Unset by default (icon-only button, fixed circular size). Given, the button switches to an auto-width pill layout, showing `icon` (if also given) next to this text instead of the three-dot default. |
+| `icon` | `string` | *(none)* | Raw SVG markup rendered via `v-html`. With no `text`, replaces the built-in three-dot icon. With `text`, only rendered if you explicitly set this — otherwise the button shows text alone, no icon. Rendered unescaped — caller-supplied only, never fed anything dynamic/untrusted; see the warning below. |
+| `label` | `string` | `'More options'` | Sets the button's `aria-label`. Only applied when there's no `text` — with visible text, the accessible name comes from that text content instead, so this prop is ignored rather than layered on top. |
+| `size` | `'medium' \| 'big'` | `'medium'` | Sets the button's dimensions: `'medium'` is a 38px circle (icon-only) or a 38px-tall pill (with `text`); `'big'` is 46px either way. Same scale as `BVPlatformButton`'s `size`, so the two sit naturally side by side in an actions row. |
+| `theme` | `'brand' \| 'alt' \| 'sponsor'` | `'brand'` | Sets the button's color scheme via a modifier class: `'brand'` is a solid accent color, `'alt'` is neutral/muted, `'sponsor'` is a pink accent — reading the same `--vp-button-*` CSS custom properties `BVPlatformButton`'s generic build reads (see [Styling](#styling) below), so the two match visually. |
 
 `BVMoreButtonItem`:
 
@@ -82,18 +82,18 @@ between items (wrapping at both ends), `Home`/`End` to jump to the first/last it
 | `rel` | `string` | *(none)* | Left unset by default so a smart default applies: `rel="noreferrer"` when `href` looks external. Set it explicitly only to override that. |
 
 ::: warning `icon` is rendered unescaped
-Both the trigger's `icon` and each item's `icon` go through `v-html` with no
+Both the button's `icon` and each item's `icon` go through `v-html` with no
 sanitization. `items` is something you write yourself, not fetched or user-supplied,
 so this is safe as long as it stays that way. Never wire `items` up to anything
 dynamic without escaping it first.
 :::
 
-The trigger renders as a real `<button>` (not an `<a>`) since it has no `href` of its
+It renders as a real `<button>` element (not an `<a>`) since it has no `href` of its
 own — it only ever toggles the menu.
 
 ## Styling
 
-Unlike the menu items (real links you author yourself), the trigger reads the same
+Unlike the menu items (real links you author yourself), the button reads the same
 public `--vp-button-*` CSS custom properties `BVPlatformButton`'s generic build already
 reads, with the same fallback values, so the two look like natural siblings in the same
 actions row even outside a VitePress site. The dropdown panel reads VitePress's public
@@ -104,16 +104,16 @@ text color.
 
 Following the WAI-ARIA menu button pattern:
 
-- **Enter/Space on the trigger** toggles the menu open/closed — native `<button>`
+- **Enter/Space on the button** toggles the menu open/closed — native `<button>`
   behavior, no custom handling needed.
-- **`ArrowDown` on the trigger while the menu is closed** opens it and moves focus to
+- **`ArrowDown` on the button while the menu is closed** opens it and moves focus to
   the *first* item. **`ArrowUp`** in the same state opens it and moves focus to the
   *last* item — lets a keyboard user jump straight to the last option without arrowing
   through everything.
 - **While the menu is open**, `ArrowDown`/`ArrowUp` move real DOM focus between items,
   wrapping at both ends. `Home`/`End` jump to the first/last item.
 - **`Escape`** closes the menu from anywhere inside it and returns focus to the
-  trigger.
+  button.
 - **Clicking outside** the component closes the menu, with no focus change.
 - **Enter on a focused item** navigates natively — it's a real anchor with real DOM
   focus, so nothing is intercepted.
@@ -125,16 +125,16 @@ right thing for an outbound link, so there's nothing extra to add there.
 ## Placement
 
 The panel's preferred alignment is **leading-edge** — its left edge flush with the
-trigger's left edge, opening below and to the right. It's still clamped to stay on
+button's left edge, opening below and to the right. It's still clamped to stay on
 screen at any viewport width, computed at open time and recomputed on window resize
 *and scroll* while open (the panel is `position: fixed` in viewport coordinates, so
-without recomputing on scroll it would stay put while the trigger scrolled away
+without recomputing on scroll it would stay put while the button scrolled away
 underneath it) via a three-step algorithm:
 
-1. Try leading-edge (`panelLeft = triggerLeft`). Use it if it doesn't clip past the
-   right edge of the viewport.
+1. Try leading-edge (`panelLeft = triggerLeft`, the button's own left edge). Use it if
+   it doesn't clip past the right edge of the viewport.
 2. Otherwise flip to trailing-edge (`panelLeft = triggerRight - panelWidth`) — this is
-   what kicks in when the trigger sits close to the right edge of the viewport. Use it
+   what kicks in when the button sits close to the right edge of the viewport. Use it
    if it doesn't clip past the left edge.
 3. Otherwise (the viewport is narrower than the panel) clamp the panel inside the
    viewport as a last resort.
