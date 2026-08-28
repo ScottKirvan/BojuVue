@@ -73,12 +73,6 @@ non-VitePress Vue 3 app, or using a component that has no VitePress-specific bui
 the first place (check the component's own reference page — see
 [Components](/components/)).
 
-::: info Why this isn't just one flag
-It's tempting to picture this as "one component with a VitePress flag." It isn't — see
-[Architecture](/guide/architecture) for why these are two independent implementations
-sharing a name, not one implementation branching on its environment.
-:::
-
 Everything that isn't a Vue component — plain functions and types, like
 `detectPlatform` or `BVPlatformManifest` — is reachable from *both* import paths, so
 you never need a second import purely to reach a helper.

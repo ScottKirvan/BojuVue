@@ -18,15 +18,11 @@ consuming site picks up the update with `npm update`.
   boundaries.
 - **VitePress-aware components get real VitePress styling for free.** A component that
   needs something VitePress-specific (site data, the router, VitePress's own `VPButton`)
-  has a second implementation built specifically for that context — see
-  [Architecture](/guide/architecture) for how that split works and why.
+  ships a build made specifically for that context, available from a second import
+  path — see [Installation & Setup](/guide/installation) for how to pick between them.
 
 ## Where to go next
 
 - [Installation & Setup](/guide/installation) — get a component running in your site.
-- [Architecture](/guide/architecture) — the two-entry-point build, the optional
-  `vitepress` peer dependency, and the pattern behind components that need
-  VitePress-specific behavior.
 - [Components](/components/) — the reference: every component's props, failure modes,
   and a usage example.
-- [Contributing](/guide/contributing) — add a new component to the library.

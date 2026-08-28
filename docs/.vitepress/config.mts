@@ -51,19 +51,7 @@ export default defineConfig({
   themeConfig: {
     nav: [
       { text: 'Home', link: '/' },
-      {
-        text: 'Guide',
-        // A real dropdown (VitePress renders `items` as a hover/click
-        // flyout), not a flat link straight to /guide/ — lets a visitor
-        // jump directly to a specific guide page from anywhere on the site,
-        // same links the sidebar already has.
-        items: [
-          { text: 'Introduction', link: '/guide/' },
-          { text: 'Installation & Setup', link: '/guide/installation' },
-          { text: 'Architecture', link: '/guide/architecture' },
-          { text: 'Contributing', link: '/guide/contributing' },
-        ],
-      },
+      { text: 'Guide', link: '/guide/' },
       {
         text: 'Components',
         items: [
@@ -81,8 +69,6 @@ export default defineConfig({
           items: [
             { text: 'Introduction', link: '/guide/' },
             { text: 'Installation & Setup', link: '/guide/installation' },
-            { text: 'Architecture', link: '/guide/architecture' },
-            { text: 'Contributing', link: '/guide/contributing' },
           ],
         },
       ],
