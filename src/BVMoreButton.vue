@@ -14,13 +14,13 @@ const props = withDefaults(
     // Ignored (no icon rendered) when `text` is set and `icon` isn't also
     // explicitly given — see `resolvedIcon` below.
     icon?: string
-    // Visible trigger text. Unset by default, which keeps the original
-    // icon-only trigger (fixed circular size, default three-dot icon).
-    // Given, the trigger switches to an auto-width layout — same padding/
-    // sizing pattern as BVPlatformButton's link — showing `icon` (if also
-    // given) next to this text instead of the three-dot default.
+    // Visible trigger text. Defaults to 'More...', an ordinary auto-width
+    // text button — same padding/sizing pattern as BVPlatformButton's link.
+    // `icon` (if also given) renders next to it. Pass an empty string to opt
+    // back into the icon-only trigger instead (fixed-size box, default
+    // three-dot icon unless `icon` overrides it) — see `resolvedIcon` below.
     text?: string
-    // Sets the trigger's aria-label. Only applied in icon-only mode (no
+    // Sets the trigger's aria-label. Only applied in icon-only mode (empty
     // `text`) — with visible text, the accessible name comes from that text
     // content instead, so this prop is ignored rather than layered on top.
     label?: string
@@ -30,6 +30,7 @@ const props = withDefaults(
     theme?: 'brand' | 'alt' | 'sponsor'
   }>(),
   {
+    text: 'More...',
     label: 'More options',
   }
 )
@@ -37,10 +38,11 @@ const props = withDefaults(
 const DEFAULT_ICON =
   '<svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true"><circle cx="5" cy="12" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="19" cy="12" r="2"/></svg>'
 
-// Icon-only mode (no `text`) always shows something — a caller-supplied
-// icon, or the three-dot default. Text mode shows an icon only if the
-// caller explicitly asked for one alongside the text; otherwise the visible
-// text alone is the trigger's content, same as any ordinary text button.
+// Icon-only mode (`text` empty, e.g. `text=""`) always shows something — a
+// caller-supplied icon, or the three-dot default. Text mode (the default)
+// shows an icon only if the caller explicitly asked for one alongside the
+// text; otherwise the visible text alone is the trigger's content, same as
+// any ordinary text button.
 const resolvedIcon = computed(() => props.icon ?? (props.text ? null : DEFAULT_ICON))
 
 const open = ref(false)

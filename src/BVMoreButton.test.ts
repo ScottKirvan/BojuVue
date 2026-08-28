@@ -19,20 +19,25 @@ function mountButton(props: Record<string, unknown> = {}) {
 }
 
 describe('BVMoreButton', () => {
-  it('renders the trigger as a real button with the default three-dot icon', () => {
+  it('defaults to a visible "More..." text trigger, not the icon-only three-dot button', () => {
     const wrapper = mountButton()
     const button = wrapper.find('button.bv-more-button-trigger')
     expect(button.exists()).toBe(true)
-    expect(button.find('svg').exists()).toBe(true)
+    expect(button.text()).toBe('More...')
+    expect(button.classes()).toContain('has-text')
+    expect(button.classes()).not.toContain('icon-only')
+    expect(button.find('svg').exists()).toBe(false)
+    expect(button.attributes('aria-haspopup')).toBe('menu')
+    expect(button.attributes('aria-expanded')).toBe('false')
   })
 
-  it('renders caller-supplied icon markup via v-html instead of the default icon', () => {
+  it('renders caller-supplied icon markup via v-html alongside the default text', () => {
     const wrapper = mountButton({ icon: '<svg data-testid="my-icon"></svg>' })
     expect(wrapper.find('[data-testid="my-icon"]').exists()).toBe(true)
   })
 
   describe('text mode', () => {
-    it('renders visible text and switches to the has-text layout class, dropping the default icon', () => {
+    it('renders custom visible text, switching the has-text layout class', () => {
       const wrapper = mountButton({ text: 'More' })
       const button = wrapper.find('button.bv-more-button-trigger')
       expect(button.text()).toContain('More')
@@ -52,27 +57,35 @@ describe('BVMoreButton', () => {
       const wrapper = mountButton({ text: 'More', label: 'Ignored' })
       expect(wrapper.find('button').attributes('aria-label')).toBeUndefined()
     })
+  })
 
-    it('defaults to icon-only mode with the fixed circular layout when text is unset', () => {
-      const wrapper = mountButton()
+  describe('icon-only mode (text explicitly emptied out)', () => {
+    it('renders the default three-dot icon with the fixed-size icon-only layout, no visible text', () => {
+      const wrapper = mountButton({ text: '' })
       const button = wrapper.find('button.bv-more-button-trigger')
       expect(button.classes()).toContain('icon-only')
       expect(button.classes()).not.toContain('has-text')
       expect(button.text()).toBe('')
+      expect(button.find('svg').exists()).toBe(true)
+    })
+
+    it('renders caller-supplied icon markup via v-html instead of the default icon', () => {
+      const wrapper = mountButton({ text: '', icon: '<svg data-testid="my-icon"></svg>' })
+      expect(wrapper.find('[data-testid="my-icon"]').exists()).toBe(true)
     })
   })
 
   describe('aria attributes', () => {
-    it('defaults aria-label to "More options" and sets aria-haspopup/aria-expanded', () => {
-      const wrapper = mountButton()
+    it('defaults aria-label to "More options" in icon-only mode, alongside aria-haspopup/aria-expanded', () => {
+      const wrapper = mountButton({ text: '' })
       const button = wrapper.find('button')
       expect(button.attributes('aria-label')).toBe('More options')
       expect(button.attributes('aria-haspopup')).toBe('menu')
       expect(button.attributes('aria-expanded')).toBe('false')
     })
 
-    it('uses a custom label prop for aria-label', () => {
-      const wrapper = mountButton({ label: 'Plugin options' })
+    it('uses a custom label prop for aria-label in icon-only mode', () => {
+      const wrapper = mountButton({ text: '', label: 'Plugin options' })
       expect(wrapper.find('button').attributes('aria-label')).toBe('Plugin options')
     })
 
