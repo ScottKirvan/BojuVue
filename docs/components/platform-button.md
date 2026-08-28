@@ -5,6 +5,11 @@ links to the matching download from a JSON manifest you host. With no `fallbackH
 given, it hides itself entirely when there's nothing to link to — no promising a
 download that doesn't exist for this visitor's platform.
 
+Internally, both import paths render their resolved link/label through `BVIconButton`
+(passing its own icon as a sibling) rather than owning link markup or button-skin CSS
+themselves — this is an implementation detail, not a change to any prop or documented
+behavior below.
+
 ## Two import paths
 
 `BVPlatformButton` ships as two separate builds, exposed as two separate import paths
@@ -65,14 +70,16 @@ from out of your own manifest, then reload. Or read the `resolveDownload` tests 
 
 The two import paths style themselves differently:
 
-- **`@scottkirvan/bojuvue/vitepress`** renders through VitePress's own real `VPButton`
-  component (`vitepress/theme`'s public export). `size`, `theme`, `target`, and `rel`
-  below are passed straight through to it, with the same meaning and defaults `VPButton`
-  itself gives them, and the button gets real VitePress theme styling for free — no CSS
-  of its own beyond positioning the icon.
+- **`@scottkirvan/bojuvue/vitepress`** delegates its rendering to `BVIconButton` (the
+  `/vitepress` implementation), which in icon+text mode wraps VitePress's own real
+  `VPButton` component (`vitepress/theme`'s public export). `size`, `theme`, `target`,
+  and `rel` below are passed straight through, with the same meaning and defaults
+  `VPButton` itself gives them, and the button gets real VitePress theme styling for
+  free — no CSS of its own beyond positioning the icon.
 - **`@scottkirvan/bojuvue`** can't depend on `vitepress` at all, so it can't use
-  `VPButton`. It has its own independent `<a>` markup and hand-rolled `<style scoped>`
-  CSS that approximates the same look by reading the same *public, documented*
+  `VPButton`. It delegates its rendering to the generic `BVIconButton`, which in turn
+  renders through the generic `BVButton` — hand-rolled markup and `<style scoped>` CSS
+  that approximates the same look by reading the same *public, documented*
   `--vp-button-*` CSS custom properties VitePress itself exposes for theming, each with
   a fallback value so the button still looks like a clickable button outside a VitePress
   site (where those variables are undefined). `size`/`theme` below apply the equivalent
@@ -99,9 +106,9 @@ Never pass anything sourced from the fetched manifest or any other runtime/user 
 
 The rendered element is always an anchor (`<a>`) — never a `<button>` — since `href`
 always comes from `resolveDownload`'s resolved logic (which never returns an
-empty-string `href`). On `/vitepress` this means hardcoding `VPButton`'s `tag="a"`, the
-same reasoning VitePress's own `VPHero.vue` uses when it already knows it has a link;
-the bare package's own markup is always an `<a>` regardless.
+empty-string `href`). Both import paths force `tag="a"` through to `BVIconButton`
+regardless, the same reasoning VitePress's own `VPHero.vue` uses when it already knows
+it has a link, rather than relying on `BVButton`'s own `href`-driven auto-detection.
 
 `BVPlatformId` is `'windows' \| 'macos' \| 'linux' \| 'android' \| 'ios' \| 'chromeos'`.
 `BVPlatformId`, `BVPlatformEntry`, and `BVPlatformManifest` (see below) are exported
