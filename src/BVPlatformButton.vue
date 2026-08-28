@@ -7,7 +7,7 @@ import {
   type BVPlatformId,
 } from './platform'
 import { useManifestFetch } from './useManifestFetch'
-import { isExternalUrl } from './url'
+import BVIconButton from './BVIconButton.vue'
 
 // The prop type is written out inline here (matching `BVPlatformButtonProps`
 // in ./BVPlatformButton.types.ts, which is exported for public/programmatic
@@ -65,137 +65,27 @@ const download = computed(() =>
     fallbackLabel: props.fallbackLabel,
   })
 )
-
-// isExternalUrl reimplements VPButton's own external-link detection so a
-// resolved download href gets the same smart target/rel defaults a
-// VitePress visitor would see from the real VPButton — see ./url.ts for why
-// it's reimplemented rather than imported from `vitepress` itself.
-const isExternal = computed(() => !!download.value && isExternalUrl(download.value.href))
-const resolvedTarget = computed(() => props.target ?? (isExternal.value ? '_blank' : undefined))
-const resolvedRel = computed(() => props.rel ?? (isExternal.value ? 'noreferrer' : undefined))
 </script>
 
 <template>
-  <span v-if="download" class="bv-platform-button">
-    <span v-if="icon" class="bv-platform-button-icon" v-html="icon"></span>
-    <!--
-      Own class name, not VPButton's — this generic Vue implementation has
-      zero vitepress dependency and shouldn't leak VitePress's private,
-      internal class name into a consumer's rendered DOM (confusing outside a
-      VitePress site, and not a stable contract to depend on). Instead it
-      consumes the same
-      *public, documented* --vp-button-* CSS custom properties VitePress
-      itself exposes for theming (see vars.css) — real design tokens meant
-      to be read by exactly this kind of external styling, not duplicated
-      private CSS. Each property has a fallback value so the button still
-      looks like a clickable button outside VitePress, where those
-      variables are simply undefined, rather than rendering bare.
-    -->
-    <a
-      class="bv-platform-button-link"
-      :class="[size ?? 'medium', theme ?? 'brand']"
-      :href="download.href"
-      :target="resolvedTarget"
-      :rel="resolvedRel"
-      >{{ download.label }}</a
-    >
-  </span>
+  <!--
+    download.href never comes back empty (resolveDownload always resolves to
+    either a real manifest/fallback href or no match at all), but tag="a" is
+    still forced through rather than left to BVButton's own
+    tag || (href ? 'a' : 'button') auto-detection — same defensive reasoning
+    the VitePress-specific implementation already needs (see the identical
+    comment there), kept here too so both implementations honor the same
+    documented "always an anchor, never a button" guarantee the same way.
+  -->
+  <BVIconButton
+    v-if="download"
+    tag="a"
+    :text="download.label"
+    :href="download.href"
+    :target="target"
+    :rel="rel"
+    :size="size"
+    :theme="theme"
+    :icon="icon"
+  />
 </template>
-
-<style scoped>
-.bv-platform-button {
-  /* No margin/positioning of its own — spacing between this button and its
-     neighbors (another instance, a hero actions row, etc.) is a caller/
-     layout concern (flex + gap, or a wrapper at the call site), not
-     something this component bakes into itself. See #32. */
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-}
-
-.bv-platform-button-icon {
-  display: inline-flex;
-  align-items: center;
-}
-
-.bv-platform-button-icon :deep(svg) {
-  width: 1em;
-  height: 1em;
-}
-
-.bv-platform-button-link {
-  display: inline-block;
-  border: 1px solid transparent;
-  text-align: center;
-  font-weight: 600;
-  white-space: nowrap;
-  text-decoration: none;
-  transition: color 0.25s, border-color 0.25s, background-color 0.25s;
-}
-
-.bv-platform-button-link:active {
-  transition: color 0.1s, border-color 0.1s, background-color 0.1s;
-}
-
-.bv-platform-button-link.medium {
-  border-radius: 20px;
-  padding: 0 20px;
-  line-height: 38px;
-  font-size: 14px;
-}
-
-.bv-platform-button-link.big {
-  border-radius: 24px;
-  padding: 0 24px;
-  line-height: 46px;
-  font-size: 16px;
-}
-
-.bv-platform-button-link.brand {
-  border-color: var(--vp-button-brand-border, #3c8772);
-  color: var(--vp-button-brand-text, #fff);
-  background-color: var(--vp-button-brand-bg, #3c8772);
-}
-.bv-platform-button-link.brand:hover {
-  border-color: var(--vp-button-brand-hover-border, #359469);
-  color: var(--vp-button-brand-hover-text, #fff);
-  background-color: var(--vp-button-brand-hover-bg, #359469);
-}
-.bv-platform-button-link.brand:active {
-  border-color: var(--vp-button-brand-active-border, #2b8760);
-  color: var(--vp-button-brand-active-text, #fff);
-  background-color: var(--vp-button-brand-active-bg, #2b8760);
-}
-
-.bv-platform-button-link.alt {
-  border-color: var(--vp-button-alt-border, transparent);
-  color: var(--vp-button-alt-text, #3c3c43);
-  background-color: var(--vp-button-alt-bg, #f2f2f3);
-}
-.bv-platform-button-link.alt:hover {
-  border-color: var(--vp-button-alt-hover-border, transparent);
-  color: var(--vp-button-alt-hover-text, #3c3c43);
-  background-color: var(--vp-button-alt-hover-bg, #e6e6e7);
-}
-.bv-platform-button-link.alt:active {
-  border-color: var(--vp-button-alt-active-border, transparent);
-  color: var(--vp-button-alt-active-text, #3c3c43);
-  background-color: var(--vp-button-alt-active-bg, #dcdcdd);
-}
-
-.bv-platform-button-link.sponsor {
-  border-color: var(--vp-button-sponsor-border, transparent);
-  color: var(--vp-button-sponsor-text, #d5389c);
-  background-color: var(--vp-button-sponsor-bg, transparent);
-}
-.bv-platform-button-link.sponsor:hover {
-  border-color: var(--vp-button-sponsor-hover-border, #d5389c);
-  color: var(--vp-button-sponsor-hover-text, #d5389c);
-  background-color: var(--vp-button-sponsor-hover-bg, transparent);
-}
-.bv-platform-button-link.sponsor:active {
-  border-color: var(--vp-button-sponsor-active-border, #d5389c);
-  color: var(--vp-button-sponsor-active-text, #d5389c);
-  background-color: var(--vp-button-sponsor-active-bg, transparent);
-}
-</style>

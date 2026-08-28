@@ -33,7 +33,7 @@ describe('BVPlatformButton (VitePress-specific implementation)', () => {
     }) as unknown as typeof fetch
   })
 
-  it("renders through VitePress's real VPButton, not a hand-rolled class name", async () => {
+  it("renders through VitePress's real VPButton (via BVIconButton), not a hand-rolled class name", async () => {
     const wrapper = await mountButton()
     const anchor = wrapper.find('a')
     expect(anchor.exists()).toBe(true)
@@ -81,7 +81,7 @@ describe('BVPlatformButton (VitePress-specific implementation)', () => {
 
     it('renders no icon markup when icon is unset', async () => {
       const wrapper = await mountButton()
-      expect(wrapper.find('.bv-platform-button-icon').exists()).toBe(false)
+      expect(wrapper.find('.bv-icon-button-icon').exists()).toBe(false)
     })
   })
 
