@@ -43,7 +43,7 @@ const redirectSharedDepsFromSrc: Plugin = {
 
 export default defineConfig({
   title: "BojuVue",
-  description: "TODO - Replace with your project description.",
+  description: "Shared Vue 3 component library for ScottKirvan's VitePress sites.",
   base: '/BojuVue/',
   vite: {
     plugins: [redirectSharedDepsFromSrc],
@@ -52,11 +52,20 @@ export default defineConfig({
     nav: [
       { text: 'Home', link: '/' },
       {
-        text: 'Components',
+        text: 'Guide',
         // A real dropdown (VitePress renders `items` as a hover/click
-        // flyout), not a flat link straight to /components/ — lets a
-        // visitor jump directly to a specific component's reference page
-        // from anywhere on the site, same links the sidebar already has.
+        // flyout), not a flat link straight to /guide/ — lets a visitor
+        // jump directly to a specific guide page from anywhere on the site,
+        // same links the sidebar already has.
+        items: [
+          { text: 'Introduction', link: '/guide/' },
+          { text: 'Installation & Setup', link: '/guide/installation' },
+          { text: 'Architecture', link: '/guide/architecture' },
+          { text: 'Contributing', link: '/guide/contributing' },
+        ],
+      },
+      {
+        text: 'Components',
         items: [
           { text: 'Overview', link: '/components/' },
           { text: 'BVPlatformButton', link: '/components/platform-button' },
@@ -66,6 +75,17 @@ export default defineConfig({
       { text: 'GitHub', link: 'https://github.com/ScottKirvan/BojuVue' }
     ],
     sidebar: {
+      '/guide/': [
+        {
+          text: 'Guide',
+          items: [
+            { text: 'Introduction', link: '/guide/' },
+            { text: 'Installation & Setup', link: '/guide/installation' },
+            { text: 'Architecture', link: '/guide/architecture' },
+            { text: 'Contributing', link: '/guide/contributing' },
+          ],
+        },
+      ],
       '/components/': [
         {
           text: 'Components',

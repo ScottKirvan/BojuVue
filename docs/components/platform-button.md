@@ -90,6 +90,13 @@ The two import paths style themselves differently:
 | `rel` | `string` | *(none)* | Left unset by default so a smart default applies: `rel="noreferrer"` when the resolved link is external (via `VPButton`'s own detection on `/vitepress`, or an equivalent check on the bare package). Set it explicitly only to override that. |
 | `icon` | `string` | *(none)* | Raw SVG markup rendered next to the label via `v-html`. `VPButton` has no icon support of its own (no prop, no slot), so on both import paths this renders as a sibling of the button element, not inside it. Same trust model as VitePress's own home-page `features[].icon`: it's rendered unescaped, so only ever pass something a site author wrote, never anything sourced from the fetched manifest. |
 
+::: warning `icon` is rendered unescaped
+`icon` goes through `v-html` with no sanitization — same trust model as VitePress's
+own home-page `features[].icon`. Only ever pass markup a site author wrote by hand.
+Never pass anything sourced from the fetched manifest or any other runtime/user input
+— that's an XSS vector, not a theoretical one.
+:::
+
 The rendered element is always an anchor (`<a>`) — never a `<button>` — since `href`
 always comes from `resolveDownload`'s resolved logic (which never returns an
 empty-string `href`). On `/vitepress` this means hardcoding `VPButton`'s `tag="a"`, the
@@ -116,6 +123,13 @@ site's own build).
 absolute URL. A value starting with `http://` or `https://` is fetched exactly as
 given — the site's `base` is never prepended to it, so pointing at a manifest hosted
 on a separate origin or CDN works without the `base` path mangling the URL:
+
+::: tip Hosting the manifest off-origin
+Point `manifestUrl` at a full URL (CDN, separate release-artifacts host, whatever)
+when you want to update download links without touching the docs site's own deploy —
+the absolute-URL path skips `base` resolution entirely, so it works identically in
+local dev and production.
+:::
 
 ```vue
 <!-- Site-relative: resolved against the site's base -->
@@ -211,8 +225,9 @@ no `fallbackHref`, or `fallbackHref` shown if one was given.
 
 ## Limitations
 
-CPU architecture (x64 vs. ARM64/Apple Silicon, Windows on ARM, etc.) is **not**
-detected, and can't be reliably detected client-side across browsers today:
+::: info CPU architecture is not detected
+x64 vs. ARM64/Apple Silicon, Windows on ARM, etc. is **not** detected, and can't be
+reliably detected client-side across browsers today:
 
 - `navigator.platform` doesn't expose it, and on Apple Silicon Macs it has
   historically still reported `"MacIntel"` for legacy compatibility.
@@ -221,6 +236,7 @@ detected, and can't be reliably detected client-side across browsers today:
   Chromium-only. Safari and Firefox don't implement it at all, as a deliberate
   anti-fingerprinting stance, so even a correct implementation would silently fail to
   detect architecture for a large share of visitors.
+:::
 
 If you ship separate builds per architecture, this component can only get someone to
 the right OS, not the right binary — offer an explicit architecture choice on the
