@@ -278,7 +278,8 @@ Contributions / Contact
 
 Credits
 -------
-**BojuVue** — Copyright (c) 2026 [Scott Kirvan](https://github.com/ScottKirvan). [MIT License](LICENSE.md).
+**BojuVue** — Copyright (c) 2026 [Scott Kirvan](https://github.com/ScottKirvan) - All rights reserved.
+*BojuVue is licensed under the [MIT License](LICENSE.md).*
 
 Scaffolded from [ScooterGitTemplate](https://github.com/ScottKirvan/ScooterGitTemplate).
 
