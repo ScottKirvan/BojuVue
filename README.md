@@ -33,9 +33,7 @@
 </p>
    
 <h4>
-    <a href="https://tinyurl.com/3vf7whyd">View Demo</a>
-  <span> · </span>
-    <a href="https://github.com/ScottKirvan/BojuVue/blob/main/README.md">Documentation</a>
+    <a href="https://scottkirvan.github.io/BojuVue/">Documentation</a>
   <span> · </span>
     <a href="https://github.com/ScottKirvan/BojuVue/issues/new?template=bug_report.md">Report Bug</a>
   <span> · </span>
@@ -280,7 +278,7 @@ Contributions / Contact
 
 Credits
 -------
-**[ScooterGitTemplate](https://github.com/ScottKirvan/ScooterGitTemplate) Copyright (c) (2025):** [Scott Kirvan](https://github.com/ScottKirvan)  - All rights reserved
+**[ScooterGitTemplate](https://github.com/ScottKirvan/ScooterGitTemplate) Copyright (c) (2026):** [Scott Kirvan](https://github.com/ScottKirvan)  - All rights reserved
 *ScooterGitTemplate is licensed under the [MIT License](LICENSE.md).*
 
 Project Link:  [BojuVue](https://github.com/ScottKirvan/BojuVue)  
