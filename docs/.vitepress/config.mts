@@ -41,12 +41,41 @@ const redirectSharedDepsFromSrc: Plugin = {
   },
 }
 
+// docs/examples/*.vue files (the live-example snippets shown and rendered on
+// the Live Examples page) import this package the same way a real consumer
+// would — the bare specifiers `@scottkirvan/bojuvue` and
+// `@scottkirvan/bojuvue/vitepress` — so the code displayed on that page is
+// exactly what a reader would type themselves, not an internal relative path.
+// Those specifiers aren't installed under docs/node_modules (the package
+// isn't published here), so redirect them straight to this repo's own entry
+// sources instead. Once resolution lands inside src/, redirectSharedDepsFromSrc
+// above takes over for src/index.ts's and src/vitepress.ts's own `vue`/
+// `vitepress` imports — the two plugins compose rather than overlap.
+const examplesDir = fileURLToPath(new URL('../examples/', import.meta.url)).replace(/\\/g, '/')
+
+const resolvePackageSpecifiersFromExamples: Plugin = {
+  name: 'bojuvue-resolve-package-specifiers-from-examples',
+  enforce: 'pre',
+  resolveId(source, importer) {
+    if (!importer) return null
+    const normalizedImporter = importer.replace(/\\/g, '/')
+    if (!normalizedImporter.startsWith(examplesDir)) return null
+    if (source === '@scottkirvan/bojuvue') {
+      return this.resolve(`${srcDir}index.ts`, configFilePath, { skipSelf: true })
+    }
+    if (source === '@scottkirvan/bojuvue/vitepress') {
+      return this.resolve(`${srcDir}vitepress.ts`, configFilePath, { skipSelf: true })
+    }
+    return null
+  },
+}
+
 export default defineConfig({
   title: "BojuVue",
   description: "Shared Vue 3 component library for ScottKirvan's VitePress sites.",
   base: '/BojuVue/',
   vite: {
-    plugins: [redirectSharedDepsFromSrc],
+    plugins: [redirectSharedDepsFromSrc, resolvePackageSpecifiersFromExamples],
   },
   themeConfig: {
     nav: [
@@ -60,6 +89,7 @@ export default defineConfig({
           { text: 'BVIconButton', link: '/components/icon-button' },
           { text: 'BVMoreButton', link: '/components/more-button' },
           { text: 'BVPlatformButton', link: '/components/platform-button' },
+          { text: 'Live Examples', link: '/components/examples' },
         ],
       },
       { text: 'GitHub', link: 'https://github.com/ScottKirvan/BojuVue' }
@@ -86,6 +116,7 @@ export default defineConfig({
           { text: 'BVIconButton', link: '/components/icon-button' },
           { text: 'BVMoreButton', link: '/components/more-button' },
           { text: 'BVPlatformButton', link: '/components/platform-button' },
+          { text: 'Live Examples', link: '/components/examples' },
         ],
       },
     ],
