@@ -20,12 +20,11 @@ jobs:
     with:
       tag_name: ${{ inputs.tag_name }}
       project_name: ${{ github.event.repository.name }}
-      # TODO: Replace with a one-sentence description of what this project does
-      project_context: "${{ github.event.repository.name }} is a project by ${{ github.repository_owner }}."
+      project_context: "BojuVue is a shared Vue 3 component library published to npm as @scottkirvan/bojuvue. It lets ScottKirvan's VitePress documentation sites share landing-page and UI components — update the library once, pull the change everywhere with npm update."
       header: |
-        ## ${{ github.event.repository.name }}
+        ## BojuVue
 
-        > TODO: Replace with your project tagline.
+        > Shared Vue 3 components for ScottKirvan's VitePress sites — update once, ship everywhere.
 
         ---
       footer: |
