@@ -5,11 +5,11 @@ const DOWNLOAD_ICON = '<svg viewBox="0 0 24 24" width="16" height="16" fill="non
 
 # BVIconButton
 
-`BVButton` plus an optional icon. Composes `BVButton` internally rather than
-reimplementing its skin — with no `icon` given, `BVIconButton` behaves exactly like a
-plain `BVButton`. Reach for this instead of `BVButton` whenever a button needs an icon,
-either alongside its label or, with no label at all, as a small fixed-size icon-only
-trigger.
+[`BVButton`](./button) plus an optional icon. Composes `BVButton` internally rather
+than reimplementing its skin — with no `icon` given, `BVIconButton` behaves exactly
+like a plain `BVButton`. Reach for this instead of `BVButton` whenever a button needs
+an icon, either alongside its label or, with no label at all, as a small fixed-size
+icon-only trigger.
 
 ## Two import paths
 
@@ -84,8 +84,9 @@ outcome of the underlying button skin's `border-radius`, not something icon-only
 itself requires — it changes freely if that CSS ever changes.
 
 Icon-only mode has no default icon or label of its own; both are left to the caller
-(see `BVMoreButton`'s built-in three-dot icon and `'More options'` default for an
-example of a component that layers its own defaults on top of `BVIconButton`).
+(see [`BVMoreButton`](./more-button)'s built-in three-dot icon and `'More options'`
+default for an example of a component that layers its own defaults on top of
+`BVIconButton`).
 
 ## Usage
 

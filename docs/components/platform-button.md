@@ -5,10 +5,10 @@ links to the matching download from a JSON manifest you host. With no `fallbackH
 given, it hides itself entirely when there's nothing to link to — no promising a
 download that doesn't exist for this visitor's platform.
 
-Internally, both import paths render their resolved link/label through `BVIconButton`
-(passing its own `icon` straight through) rather than owning link markup or
-button-skin CSS themselves — this is an implementation detail, not a change to any
-prop or documented behavior below.
+Internally, both import paths render their resolved link/label through
+[`BVIconButton`](./icon-button) (passing its own `icon` straight through) rather than
+owning link markup or button-skin CSS themselves — this is an implementation detail,
+not a change to any prop or documented behavior below.
 
 ## Two import paths
 
@@ -78,12 +78,13 @@ The two import paths style themselves differently:
   free — no CSS of its own beyond positioning the icon.
 - **`@scottkirvan/bojuvue`** can't depend on `vitepress` at all, so it can't use
   `VPButton`. It delegates its rendering to the generic `BVIconButton`, which in turn
-  renders through the generic `BVButton` — hand-rolled markup and `<style scoped>` CSS
-  that approximates the same look by reading the same *public, documented*
-  `--vp-button-*` CSS custom properties VitePress itself exposes for theming, each with
-  a fallback value so the button still looks like a clickable button outside a VitePress
-  site (where those variables are undefined). `size`/`theme` below apply the equivalent
-  modifier classes to that markup rather than to a real `VPButton`.
+  renders through the generic [`BVButton`](./button) — hand-rolled markup and
+  `<style scoped>` CSS that approximates the same look by reading the same *public,
+  documented* `--vp-button-*` CSS custom properties VitePress itself exposes for
+  theming, each with a fallback value so the button still looks like a clickable
+  button outside a VitePress site (where those variables are undefined). `size`/
+  `theme` below apply the equivalent modifier classes to that markup rather than to a
+  real `VPButton`.
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
@@ -95,7 +96,7 @@ The two import paths style themselves differently:
 | `theme` | `'brand' \| 'alt' \| 'sponsor'` | `'brand'` | On `/vitepress`, passed straight through to `VPButton`'s own `theme` prop. On the bare package, applied as the equivalent modifier class on this component's own markup. |
 | `target` | `string` | *(none)* | Left unset by default so a smart default applies: `target="_blank"` when the resolved link is external (via `VPButton`'s own detection on `/vitepress`, or an equivalent check on the bare package). Set it explicitly only to override that. |
 | `rel` | `string` | *(none)* | Left unset by default so a smart default applies: `rel="noreferrer"` when the resolved link is external (via `VPButton`'s own detection on `/vitepress`, or an equivalent check on the bare package). Set it explicitly only to override that. |
-| `icon` | `string` | *(none)* | Raw SVG markup rendered via `v-html`, via `BVIconButton`. `VPButton` has no icon support of its own (no prop, no slot), so on both import paths this is a sibling element in the DOM, but positioned on the button itself, not beside it — see `BVIconButton`'s own docs for how. Same trust model as VitePress's own home-page `features[].icon`: it's rendered unescaped, so only ever pass something a site author wrote, never anything sourced from the fetched manifest. |
+| `icon` | `string` | *(none)* | Raw SVG markup rendered via `v-html`, via `BVIconButton`. `VPButton` has no icon support of its own (no prop, no slot), so on both import paths this is a sibling element in the DOM, but positioned on the button itself, not beside it — see [`BVIconButton`'s own docs](./icon-button) for how. Same trust model as VitePress's own home-page `features[].icon`: it's rendered unescaped, so only ever pass something a site author wrote, never anything sourced from the fetched manifest. |
 
 ::: warning `icon` is rendered unescaped
 `icon` goes through `v-html` with no sanitization — same trust model as VitePress's

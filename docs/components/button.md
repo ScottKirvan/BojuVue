@@ -4,8 +4,9 @@ The minimal button primitive this package builds everything button-shaped on top
 — exactly [VitePress's own `VPButton`](https://vitepress.dev/reference/default-theme-home-page)
 prop shape, so it works as a drop-in `VPButton`-equivalent outside VitePress too. No
 icon support, no platform detection, no dropdown menu — just a label, an optional
-link, and a size/theme. Reach for `BVPlatformButton` or `BVMoreButton` instead if you
-need those; this is the plain building block.
+link, and a size/theme. Reach for [`BVPlatformButton`](./platform-button) or
+[`BVMoreButton`](./more-button) instead if you need those; this is the plain building
+block.
 
 ## Two import paths
 
