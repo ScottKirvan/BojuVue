@@ -103,7 +103,7 @@ jobs:
     with:
       tag_name: ${{ needs.release-please.outputs.tag_name }}
       project_name: ${{ github.event.repository.name }}
-      project_context: "BojuVue is a shared Vue 3 component library published to npm as @scottkirvan/bojuvue. It lets ScottKirvan's VitePress documentation sites share landing-page and UI components — update the library once, pull the change everywhere with npm update."
+      project_context: "BojuVue is a Vue 3 component library published to npm as @scottkirvan/bojuvue. It provides shared UI components — including VitePress-aware builds — for use in any Vue 3 or VitePress project. Update the package once and every consuming project picks up the change with npm update."
       header: |
         ## BojuVue
 
