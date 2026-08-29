@@ -24,7 +24,7 @@ jobs:
       header: |
         ## BojuVue
 
-        > Shared Vue 3 components, with VitePress-aware builds
+        > A Vue3/VitePress component library, available on npm as @scottkirvan/bojuvue
 
         ---
       footer: |
