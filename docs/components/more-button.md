@@ -10,17 +10,17 @@ padding/sizing as `BVPlatformButton`). Pass your own `text` to change the label,
 empty string (`text=""`) to switch to the icon-only mode instead — three dots (⋯) at a
 small fixed size, no visible text; see [Props](#props) below.
 
-`BVMoreButton` renders its trigger through `BVIconButton` internally rather than owning
-its own button markup/CSS — its own logic (the menu panel, keyboard handling, placement
-algorithm) is unchanged either way, but on the `/vitepress` import path, that means text
-mode (any non-empty `text`) now renders through VitePress's real `VPButton` and gets its
-theme styling automatically, same as `BVPlatformButton`. Icon-only mode (`text=""`)
-still renders through a hand-rolled button on both paths — `VPButton` has no concept of
-a fixed-size icon-only shape.
+`BVMoreButton` renders its trigger through [`BVIconButton`](./icon-button) internally
+rather than owning its own button markup/CSS — its own logic (the menu panel, keyboard
+handling, placement algorithm) is unchanged either way, but on the `/vitepress` import
+path, that means text mode (any non-empty `text`) now renders through VitePress's real
+`VPButton` and gets its theme styling automatically, same as `BVPlatformButton`.
+Icon-only mode (`text=""`) still renders through a hand-rolled button on both paths —
+`VPButton` has no concept of a fixed-size icon-only shape.
 
-Two independent implementations, same as `BVPlatformButton`. Import it from either
-path; the `/vitepress` path gets real `VPButton` styling for free, so prefer it inside
-a VitePress site:
+Two independent implementations, same as [`BVPlatformButton`](./platform-button).
+Import it from either path; the `/vitepress` path gets real `VPButton` styling for
+free, so prefer it inside a VitePress site:
 
 ```ts
 import { BVMoreButton } from '@scottkirvan/bojuvue'
