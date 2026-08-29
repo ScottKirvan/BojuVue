@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue'
+import { withBase } from 'vitepress'
 import VPBVButton from './BVButton.vue'
 import GenericBVButton from '../BVButton.vue'
 
@@ -70,13 +71,24 @@ defineOptions({ inheritAttrs: false })
       render through that same hand-rolled BVButton for this mode. Its icon is
       likewise rendered after the button (not before) for the same on-top
       paint-order reason.
+
+      `href` is run through `withBase()` here because GenericBVButton has no
+      idea it's running inside VitePress and renders whatever `href` it's
+      given verbatim — whereas in the v-else branch below, VPBVButton's real
+      VPButton already base-prefixes internally (its own normalizeLink()
+      calls withBase() on any non-external href). Without this, the exact
+      same site-relative `href` value would need to differ depending on
+      which mode a given BVIconButton instance happened to be in, which is
+      not a contract callers should have to think about. withBase() is a
+      no-op for an external URL or a path that isn't root-relative, so this
+      is safe to apply unconditionally.
     -->
     <template v-if="isIconOnly">
       <GenericBVButton
         v-bind="$attrs"
         class="bv-icon-button-target icon-only"
         text=""
-        :href="href"
+        :href="href ? withBase(href) : undefined"
         :target="target"
         :rel="rel"
         :size="size"

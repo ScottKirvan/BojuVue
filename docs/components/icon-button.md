@@ -1,6 +1,14 @@
 <script setup>
 const GEAR_ICON = '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>'
 const DOWNLOAD_ICON = '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>'
+
+// A plain site-relative path — both modes below correctly base-prefix this
+// themselves (icon+text mode via the real VPButton it wraps, icon-only mode
+// via BVIconButton's own internal withBase() call), so this must stay a
+// bare path, not something pre-prefixed with this site's own base — see
+// notes/dev/BVButtonSpec.md for the double-prefixing bug that happens if
+// you do that.
+const COMPONENTS_HREF = '/components/'
 </script>
 
 # BVIconButton
@@ -41,11 +49,11 @@ Only importing from `@scottkirvan/bojuvue/vitepress` does.
 
 <div style="display: flex; flex-wrap: wrap; gap: 12px; align-items: center;">
 
-<BVIconButton text="Settings" :icon="GEAR_ICON" href="/components/" />
-<BVIconButton text="Download" theme="alt" size="big" :icon="DOWNLOAD_ICON" href="/components/" />
-<BVIconButton :icon="GEAR_ICON" label="Settings" href="/components/" />
-<BVIconButton :icon="DOWNLOAD_ICON" label="Download" theme="sponsor" size="big" href="/components/" />
-<BVIconButton label="No icon given" href="/components/" />
+<BVIconButton text="Settings" :icon="GEAR_ICON" :href="COMPONENTS_HREF" />
+<BVIconButton text="Download" theme="alt" size="big" :icon="DOWNLOAD_ICON" :href="COMPONENTS_HREF" />
+<BVIconButton :icon="GEAR_ICON" label="Settings" :href="COMPONENTS_HREF" />
+<BVIconButton :icon="DOWNLOAD_ICON" label="Download" theme="sponsor" size="big" :href="COMPONENTS_HREF" />
+<BVIconButton label="No icon given" :href="COMPONENTS_HREF" />
 
 </div>
 
