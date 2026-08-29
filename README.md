@@ -3,7 +3,7 @@
 
   <img src="assets/media/logo.jpg" alt="logo" width="200" height="auto" />
     <h1><a href="https://github.com/ScottKirvan/BojuVue">ScottKirvan/BojuVue</a></h1>
-  <h3>Shared Vue 3 components, with VitePress-aware builds where it helps</h3>
+  <h3>Shared Vue 3 components, with VitePress-aware builds</h3>
   
   
 <!-- Badges -->
