@@ -29,6 +29,8 @@
 * turn Components nav link into a real dropdown, demo BVMoreButton on homepage ([8bce949](https://github.com/ScottKirvan/BojuVue/commit/8bce949df52d597e13425df26d98262ab651e276))
 * update release header tagline ([41715b1](https://github.com/ScottKirvan/BojuVue/commit/41715b16124fa1d17bcb321bff0412472de685e9))
 
+Includes PRs: [#39](https://github.com/ScottKirvan/BojuVue/pull/39), [#40](https://github.com/ScottKirvan/BojuVue/pull/40), [#41](https://github.com/ScottKirvan/BojuVue/pull/41), [#44](https://github.com/ScottKirvan/BojuVue/pull/44), [#45](https://github.com/ScottKirvan/BojuVue/pull/45), [#48](https://github.com/ScottKirvan/BojuVue/pull/48), [#49](https://github.com/ScottKirvan/BojuVue/pull/49), [#50](https://github.com/ScottKirvan/BojuVue/pull/50), [#51](https://github.com/ScottKirvan/BojuVue/pull/51), [#52](https://github.com/ScottKirvan/BojuVue/pull/52)
+
 ## [0.1.0](https://github.com/ScottKirvan/BojuVue/compare/v0.0.4...v0.1.0) (2026-08-26)
 
 
@@ -52,6 +54,8 @@
 * restructure manifest schema so labels are nested, not conventional ([f62aae0](https://github.com/ScottKirvan/BojuVue/commit/f62aae0e32f1b79b3d0c6e02347c6dac6ca5148e))
 * rework DownloadButton per PR review feedback ([0a1148a](https://github.com/ScottKirvan/BojuVue/commit/0a1148a10d67d2678681687826182762d82d7838))
 * trigger docs deploy on src/ changes too ([ad8cfd5](https://github.com/ScottKirvan/BojuVue/commit/ad8cfd5646f16a6fbb82562bb505d2265d095b85))
+
+Includes PRs: [#18](https://github.com/ScottKirvan/BojuVue/pull/18), [#29](https://github.com/ScottKirvan/BojuVue/pull/29), [#30](https://github.com/ScottKirvan/BojuVue/pull/30), [#31](https://github.com/ScottKirvan/BojuVue/pull/31), [#33](https://github.com/ScottKirvan/BojuVue/pull/33), [#34](https://github.com/ScottKirvan/BojuVue/pull/34), [#35](https://github.com/ScottKirvan/BojuVue/pull/35), [#36](https://github.com/ScottKirvan/BojuVue/pull/36), [#37](https://github.com/ScottKirvan/BojuVue/pull/37), [#38](https://github.com/ScottKirvan/BojuVue/pull/38)
 
 ## [0.0.4](https://github.com/ScottKirvan/BojuVue/compare/v0.0.3...v0.0.4) (2026-08-24)
 
