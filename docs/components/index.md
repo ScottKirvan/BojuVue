@@ -20,7 +20,8 @@ import { BVPlatformButton } from '@scottkirvan/bojuvue/vitepress'
 
 See each component's page for its props, a usage example, and which import path(s) it's
 available from. For how to register a component in your own app — a plain Vue 3 app or
-a VitePress site — see [Installation & Setup](/guide/installation).
+a VitePress site — see [Installation & Setup](/guide/installation). For every component
+rendered live from both import paths side by side, see [Live Examples](./examples).
 
 ::: info About the examples on this site
 This site is itself a VitePress site, so every live Demo and the first code sample on
@@ -38,3 +39,6 @@ component's own reference page includes that usage too.
 | [BVIconButton](./icon-button) | `BVButton` plus an optional icon, either alongside its label or as a fixed-size icon-only trigger. |
 | [BVMoreButton](./more-button) | A small button that opens a dropdown menu of secondary outbound links next to a primary CTA. |
 | [BVPlatformButton](./platform-button) | Detects the visitor's platform and links to the matching download from a JSON manifest. |
+
+See also: [Live Examples](./examples) — every component above, rendered from both import
+paths, with the exact source that's rendering it shown alongside.
