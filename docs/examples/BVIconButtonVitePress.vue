@@ -7,8 +7,8 @@ const SETTINGS_ICON =
 
 <template>
   <div style="display: flex; flex-wrap: wrap; gap: 12px; align-items: center;">
-    <BVIconButton text="Settings" :icon="SETTINGS_ICON" href="/components/" />
-    <BVIconButton :icon="SETTINGS_ICON" label="Settings" href="/components/" />
+    <BVIconButton text="Settings" :icon="SETTINGS_ICON" href="https://example.com/settings" />
+    <BVIconButton :icon="SETTINGS_ICON" label="Settings" href="https://example.com/settings" />
     <BVIconButton text="Submit" />
   </div>
 </template>

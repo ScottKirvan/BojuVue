@@ -4,7 +4,7 @@ import { BVButton } from '@scottkirvan/bojuvue/vitepress'
 
 <template>
   <div style="display: flex; flex-wrap: wrap; gap: 12px; align-items: center;">
-    <BVButton text="Get started" href="/guide/" theme="brand" size="big" />
+    <BVButton text="Get started" href="https://example.com/get-started" theme="brand" size="big" />
     <BVButton text="Learn more" href="https://example.com" theme="alt" />
     <BVButton text="No href (button)" />
   </div>
