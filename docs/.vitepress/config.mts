@@ -89,9 +89,9 @@ export default defineConfig({
           { text: 'BVIconButton', link: '/components/icon-button' },
           { text: 'BVMoreButton', link: '/components/more-button' },
           { text: 'BVPlatformButton', link: '/components/platform-button' },
-          { text: 'Live Examples', link: '/components/examples' },
         ],
       },
+      { text: 'Appendix', link: '/appendix/examples' },
       { text: 'GitHub', link: 'https://github.com/ScottKirvan/BojuVue' }
     ],
     // A single flat sidebar, not one keyed per path prefix — VitePress scopes
@@ -116,7 +116,12 @@ export default defineConfig({
           { text: 'BVIconButton', link: '/components/icon-button' },
           { text: 'BVMoreButton', link: '/components/more-button' },
           { text: 'BVPlatformButton', link: '/components/platform-button' },
-          { text: 'Live Examples', link: '/components/examples' },
+        ],
+      },
+      {
+        text: 'Appendix',
+        items: [
+          { text: 'Live Examples', link: '/appendix/examples' },
         ],
       },
     ],
