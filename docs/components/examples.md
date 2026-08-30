@@ -11,13 +11,9 @@ import BVPlatformButtonVitePressExample from '../examples/BVPlatformButtonVitePr
 
 # Live Examples
 
-Every code block on this page is the literal contents of a small file under
-[`docs/examples/`](https://github.com/ScottKirvan/BojuVue/tree/main/docs/examples), pulled
-in through VitePress's own [code-snippet
-import](https://vitepress.dev/guide/markdown#import-code-snippets) (`<<< @/path`) — not
-retyped by hand. The component rendered directly below each block is that same file,
-mounted as-is. There's no second copy to drift out of sync: if the snippet ever stopped
-matching what's running, the render underneath it would be the proof.
+Each example below links to its own file in the repo. That linked file is both the code
+block shown here and the component rendered underneath it — copy it as-is and it works
+exactly like this.
 
 ::: tip Two import paths, one working example each
 Every component below ships as two independent builds — a generic Vue implementation
@@ -31,11 +27,15 @@ own real import path.
 
 ### Generic (Vue)
 
+[`docs/examples/BVButtonGeneric.vue`](https://github.com/ScottKirvan/BojuVue/blob/main/docs/examples/BVButtonGeneric.vue)
+
 <<< @/examples/BVButtonGeneric.vue{vue}
 
 <BVButtonGenericExample />
 
 ### VitePress
+
+[`docs/examples/BVButtonVitePress.vue`](https://github.com/ScottKirvan/BojuVue/blob/main/docs/examples/BVButtonVitePress.vue)
 
 <<< @/examples/BVButtonVitePress.vue{vue}
 
@@ -45,11 +45,15 @@ own real import path.
 
 ### Generic (Vue)
 
+[`docs/examples/BVIconButtonGeneric.vue`](https://github.com/ScottKirvan/BojuVue/blob/main/docs/examples/BVIconButtonGeneric.vue)
+
 <<< @/examples/BVIconButtonGeneric.vue{vue}
 
 <BVIconButtonGenericExample />
 
 ### VitePress
+
+[`docs/examples/BVIconButtonVitePress.vue`](https://github.com/ScottKirvan/BojuVue/blob/main/docs/examples/BVIconButtonVitePress.vue)
 
 <<< @/examples/BVIconButtonVitePress.vue{vue}
 
@@ -59,11 +63,15 @@ own real import path.
 
 ### Generic (Vue)
 
+[`docs/examples/BVMoreButtonGeneric.vue`](https://github.com/ScottKirvan/BojuVue/blob/main/docs/examples/BVMoreButtonGeneric.vue)
+
 <<< @/examples/BVMoreButtonGeneric.vue{vue}
 
 <BVMoreButtonGenericExample />
 
 ### VitePress
+
+[`docs/examples/BVMoreButtonVitePress.vue`](https://github.com/ScottKirvan/BojuVue/blob/main/docs/examples/BVMoreButtonVitePress.vue)
 
 <<< @/examples/BVMoreButtonVitePress.vue{vue}
 
@@ -71,22 +79,27 @@ own real import path.
 
 ## BVPlatformButton
 
-This page's own `docs/public/platformButton.json` has an entry for every platform, so
-both variants below link somewhere no matter which platform gets detected.
+The manifest behind this demo —
+[`docs/public/platformButton.json`](https://github.com/ScottKirvan/BojuVue/blob/main/docs/public/platformButton.json)
+— has an entry for every platform, so both variants below link somewhere no matter
+which platform gets detected.
 
 ### Generic (Vue)
 
-The generic build has no VitePress `useData()` to read a site base path from, so it
-takes one as a `base` prop instead. A real Vite-built app (VitePress included) exposes
-its own base at `import.meta.env.BASE_URL` — passing that through is what keeps this
-example working under whatever base this site itself is deployed at, without hardcoding
-a path that would only be correct here.
+The generic build has no VitePress `useData()` to read a site base path from, so `base`
+is a prop you supply yourself. Inside a Vite-built app, `import.meta.env.BASE_URL`
+already holds your app's own configured base — pass that through instead of hardcoding
+a path.
+
+[`docs/examples/BVPlatformButtonGeneric.vue`](https://github.com/ScottKirvan/BojuVue/blob/main/docs/examples/BVPlatformButtonGeneric.vue)
 
 <<< @/examples/BVPlatformButtonGeneric.vue{vue}
 
 <BVPlatformButtonGenericExample />
 
 ### VitePress
+
+[`docs/examples/BVPlatformButtonVitePress.vue`](https://github.com/ScottKirvan/BojuVue/blob/main/docs/examples/BVPlatformButtonVitePress.vue)
 
 <<< @/examples/BVPlatformButtonVitePress.vue{vue}
 
