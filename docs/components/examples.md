@@ -79,17 +79,7 @@ own real import path.
 
 ## BVPlatformButton
 
-The manifest behind this demo —
-[`docs/public/platformButton.json`](https://github.com/ScottKirvan/BojuVue/blob/main/docs/public/platformButton.json)
-— has an entry for every platform, so both variants below link somewhere no matter
-which platform gets detected.
-
 ### Generic (Vue)
-
-The generic build has no VitePress `useData()` to read a site base path from, so `base`
-is a prop you supply yourself. Inside a Vite-built app, `import.meta.env.BASE_URL`
-already holds your app's own configured base — pass that through instead of hardcoding
-a path.
 
 [`docs/examples/BVPlatformButtonGeneric.vue`](https://github.com/ScottKirvan/BojuVue/blob/main/docs/examples/BVPlatformButtonGeneric.vue)
 
