@@ -8,6 +8,8 @@
 * formatting in README.md - force a release ([a340c6d](https://github.com/ScottKirvan/BojuVue/commit/a340c6da2851cccbed303831d647e2e3eb520818))
 * remove registry-url from setup-node to fix OIDC publish auth ([06d545a](https://github.com/ScottKirvan/BojuVue/commit/06d545ad68c4977709026f38a3fc0b31250918ea))
 
+Includes PRs: [#58](https://github.com/ScottKirvan/BojuVue/pull/58), [#59](https://github.com/ScottKirvan/BojuVue/pull/59)
+
 ## [0.3.0](https://github.com/ScottKirvan/BojuVue/compare/v0.2.1...v0.3.0) (2026-09-04)
 
 
