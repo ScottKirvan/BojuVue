@@ -43,8 +43,8 @@ const redirectSharedDepsFromSrc: Plugin = {
 
 // docs/examples/*.vue files (the live-example snippets shown and rendered on
 // the Live Examples page) import this package the same way a real consumer
-// would — the bare specifiers `@scottkirvan/bojuvue` and
-// `@scottkirvan/bojuvue/vitepress` — so the code displayed on that page is
+// would — the bare specifiers `bojuvue` and
+// `bojuvue/vitepress` — so the code displayed on that page is
 // exactly what a reader would type themselves, not an internal relative path.
 // Those specifiers aren't installed under docs/node_modules (the package
 // isn't published here), so redirect them straight to this repo's own entry
@@ -60,10 +60,10 @@ const resolvePackageSpecifiersFromExamples: Plugin = {
     if (!importer) return null
     const normalizedImporter = importer.replace(/\\/g, '/')
     if (!normalizedImporter.startsWith(examplesDir)) return null
-    if (source === '@scottkirvan/bojuvue') {
+    if (source === 'bojuvue') {
       return this.resolve(`${srcDir}index.ts`, configFilePath, { skipSelf: true })
     }
-    if (source === '@scottkirvan/bojuvue/vitepress') {
+    if (source === 'bojuvue/vitepress') {
       return this.resolve(`${srcDir}vitepress.ts`, configFilePath, { skipSelf: true })
     }
     return null

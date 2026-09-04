@@ -20,14 +20,14 @@ from the same package — pick whichever matches your site:
 // relative to a `base` prop you supply yourself (see below) — pass nothing
 // and it's treated as an empty base. Renders its own hand-rolled styling,
 // since it can't depend on `vitepress` at all.
-import { BVPlatformButton } from '@scottkirvan/bojuvue'
+import { BVPlatformButton } from 'bojuvue'
 
 // VitePress-specific implementation. Same component name and (almost) the
 // same props, plus it resolves `base` for you from VitePress's own
 // `useData().site.value.base`, so you never pass it yourself. Renders
 // through VitePress's own real `VPButton`, so it gets VitePress's real
 // theme styling for free.
-import { BVPlatformButton } from '@scottkirvan/bojuvue/vitepress'
+import { BVPlatformButton } from 'bojuvue/vitepress'
 ```
 
 If you're building a VitePress site, use the `/vitepress` path — that's what this
@@ -36,9 +36,9 @@ the bare package path when you're embedding `BVPlatformButton` in a plain Vue 3 
 with its own manifest-hosting setup, where there's no VitePress `useData()` to read a
 base path from.
 
-`vitepress` is an *optional* peer dependency — installing `@scottkirvan/bojuvue`
+`vitepress` is an *optional* peer dependency — installing `bojuvue`
 alone (importing only the bare package path) never requires `vitepress` to be
-installed. Only importing from `@scottkirvan/bojuvue/vitepress` does.
+installed. Only importing from `bojuvue/vitepress` does.
 
 Everything else this package exports — `detectPlatform`, `resolveDownload`,
 `resolveManifestUrl`, `defaultLabels`, and the `BV`-prefixed types — is reachable
@@ -70,13 +70,13 @@ from out of your own manifest, then reload. Or read the `resolveDownload` tests 
 
 The two import paths style themselves differently:
 
-- **`@scottkirvan/bojuvue/vitepress`** delegates its rendering to `BVIconButton` (the
+- **`bojuvue/vitepress`** delegates its rendering to `BVIconButton` (the
   `/vitepress` implementation), which in icon+text mode wraps VitePress's own real
   `VPButton` component (`vitepress/theme`'s public export). `size`, `theme`, `target`,
   and `rel` below are passed straight through, with the same meaning and defaults
   `VPButton` itself gives them, and the button gets real VitePress theme styling for
   free — no CSS of its own beyond positioning the icon.
-- **`@scottkirvan/bojuvue`** can't depend on `vitepress` at all, so it can't use
+- **`bojuvue`** can't depend on `vitepress` at all, so it can't use
   `VPButton`. It delegates its rendering to the generic `BVIconButton`, which in turn
   renders through the generic [`BVButton`](./button) — hand-rolled markup and
   `<style scoped>` CSS that approximates the same look by reading the same *public,
@@ -88,7 +88,7 @@ The two import paths style themselves differently:
 
 | Prop | Type | Default | Description |
 | --- | --- | --- | --- |
-| `base` | `string` | `''` | **`@scottkirvan/bojuvue` only** — not exposed on the VitePress-specific implementation, which resolves this for you from `useData().site.value.base`. Site base path a site-relative `manifestUrl` is resolved against. Only relevant if you're embedding the generic implementation directly in a non-VitePress Vue app with its own base-path concept. |
+| `base` | `string` | `''` | **`bojuvue` only** — not exposed on the VitePress-specific implementation, which resolves this for you from `useData().site.value.base`. Site base path a site-relative `manifestUrl` is resolved against. Only relevant if you're embedding the generic implementation directly in a non-VitePress Vue app with its own base-path concept. |
 | `manifestUrl` | `string` | `'platformButton.json'` | Path to the manifest. Either a site-relative path, resolved relative to `base` (so it works the same in local dev and in production), or a full absolute URL (`https://...`/`http://...`), fetched as-is with no `base` prefixing — useful when the manifest is hosted on another origin or CDN rather than alongside the docs site itself. Reactive — changing it after mount re-fetches. |
 | `fallbackHref` | `string` | *(none)* | Link used when the platform can't be detected, the manifest fetch fails (including a non-2xx response), or the manifest has no entry for the detected platform. **Omit this to hide the button entirely** in those cases instead of showing a generic link. |
 | `fallbackLabel` | `string` | `'View Downloads'` | Button label used alongside `fallbackHref`. |
@@ -274,7 +274,7 @@ In a VitePress site (resolves `base` for you):
 
 ```vue
 <script setup>
-import { BVPlatformButton } from '@scottkirvan/bojuvue/vitepress'
+import { BVPlatformButton } from 'bojuvue/vitepress'
 </script>
 
 <template>
@@ -303,7 +303,7 @@ In any other Vue 3 app (no `vitepress` install required — pass `base` yourself
 
 ```vue
 <script setup>
-import { BVPlatformButton } from '@scottkirvan/bojuvue'
+import { BVPlatformButton } from 'bojuvue'
 </script>
 
 <template>

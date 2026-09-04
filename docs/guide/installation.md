@@ -1,7 +1,7 @@
 # Installation & Setup
 
 ```sh
-npm install @scottkirvan/bojuvue
+npm install bojuvue
 ```
 
 That's the only required install. `vitepress` is an *optional* peer dependency — you
@@ -17,7 +17,7 @@ already register components in your app:
 ```ts
 // main.ts (or wherever you create your Vue app)
 import { createApp } from 'vue'
-import { BVPlatformButton, BVMoreButton } from '@scottkirvan/bojuvue'
+import { BVPlatformButton, BVMoreButton } from 'bojuvue'
 import App from './App.vue'
 
 const app = createApp(App)
@@ -30,7 +30,7 @@ Or register it only where it's used, no global registration needed:
 
 ```vue
 <script setup>
-import { BVPlatformButton } from '@scottkirvan/bojuvue'
+import { BVPlatformButton } from 'bojuvue'
 </script>
 
 <template>
@@ -42,13 +42,13 @@ import { BVPlatformButton } from '@scottkirvan/bojuvue'
 
 VitePress sites register global components in `.vitepress/theme/index.ts` instead of
 `main.ts` — same `app.component()` call, just made from VitePress's `enhanceApp` hook.
-Prefer importing from `@scottkirvan/bojuvue/vitepress` here (see
+Prefer importing from `bojuvue/vitepress` here (see
 [Choosing an import path](#choosing-an-import-path) below):
 
 ```ts
 import DefaultTheme from 'vitepress/theme'
-import { BVPlatformButton } from '@scottkirvan/bojuvue/vitepress'
-import { BVMoreButton } from '@scottkirvan/bojuvue'
+import { BVPlatformButton } from 'bojuvue/vitepress'
+import { BVMoreButton } from 'bojuvue'
 
 export default {
   extends: DefaultTheme,
@@ -74,7 +74,7 @@ in a `.vue` file:
 
 ```md
 <script setup>
-import { BVPlatformButton } from '@scottkirvan/bojuvue'
+import { BVPlatformButton } from 'bojuvue'
 </script>
 
 <BVPlatformButton fallback-href="https://github.com/your-org/your-repo/releases" />
@@ -83,24 +83,24 @@ import { BVPlatformButton } from '@scottkirvan/bojuvue'
 
 ## Choosing an import path
 
-Every component is available from `@scottkirvan/bojuvue`. Some components — currently
-`BVPlatformButton` — are *also* available from `@scottkirvan/bojuvue/vitepress`, as a
+Every component is available from `bojuvue`. Some components — currently
+`BVPlatformButton` — are *also* available from `bojuvue/vitepress`, as a
 second, independent implementation of the same exported name:
 
 ```ts
 // Generic Vue implementation — works in any Vue 3 app, no vitepress dependency.
-import { BVPlatformButton } from '@scottkirvan/bojuvue'
+import { BVPlatformButton } from 'bojuvue'
 
 // VitePress-specific implementation — same name, resolves VitePress-specific
 // details (like the site's base path) for you, and renders through VitePress's
 // own VPButton for real theme styling.
-import { BVPlatformButton } from '@scottkirvan/bojuvue/vitepress'
+import { BVPlatformButton } from 'bojuvue/vitepress'
 ```
 
 If your site is a VitePress site, prefer the `/vitepress` path for any component that
 offers it — you get the same visual language as the rest of the site for free, and
 you don't have to pass VitePress-specific values (like a base path) yourself. Use the
-bare `@scottkirvan/bojuvue` path when you're either embedding a component in a
+bare `bojuvue` path when you're either embedding a component in a
 non-VitePress Vue 3 app, or using a component that has no VitePress-specific build in
 the first place (check the component's own reference page — see
 [Components](/components/)).

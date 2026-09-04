@@ -12,20 +12,20 @@ Update this file in the same commit as the work it documents.
 ## Project Overview
 
 BojuVue is a Vue 3 + TypeScript component library published to npm as
-`@scottkirvan/bojuvue`. It's consumed by multiple VitePress sites (a homepage blog and
+`bojuvue`. It's consumed by multiple VitePress sites (a homepage blog and
 several local documentation sites) that need shared landing-page/UX components instead
 of duplicating them per repo.
 
 - `src/index.ts` — the generic entry point; framework-agnostic components/utilities are
   re-exported from here. Built to `dist/bojuvue.js`, published as the package's `.`
-  export (`@scottkirvan/bojuvue`). Has zero dependency on `vitepress` anywhere in its
+  export (`bojuvue`). Has zero dependency on `vitepress` anywhere in its
   module graph — that's a hard invariant, not an implementation detail; verify it after
   touching anything under `src/` by checking the built `dist/bojuvue.js` (and any chunk
   it imports) for the literal string `vitepress`.
 - `src/vitepress.ts` — the VitePress-specific entry point. Re-exports everything
   `src/index.ts` has (same names) plus its own VitePress-specific component
   implementations. Built to `dist/vitepress.js`, published as the package's
-  `./vitepress` export (`@scottkirvan/bojuvue/vitepress`). `vitepress` is an *optional*
+  `./vitepress` export (`bojuvue/vitepress`). `vitepress` is an *optional*
   peer dependency (`peerDependenciesMeta`) — only code reachable from this entry may
   import it.
 - A component that needs anything VitePress-specific (site data, router, etc.) gets

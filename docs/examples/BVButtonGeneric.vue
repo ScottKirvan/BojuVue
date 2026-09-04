@@ -1,5 +1,5 @@
 <script setup>
-import { BVButton } from '@scottkirvan/bojuvue'
+import { BVButton } from 'bojuvue'
 </script>
 
 <template>

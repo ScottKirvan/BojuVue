@@ -81,7 +81,9 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
-          registry-url: 'https://registry.npmjs.org'
+
+      - name: Upgrade npm for OIDC trusted publishing support
+        run: npm install -g npm@^11
 
       - name: Install dependencies
         run: npm ci
@@ -91,8 +93,6 @@ jobs:
 
       - name: Publish to npm
         run: npm publish --provenance --access public
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
   improve-release-notes:
     needs: [release-please, apply-staged-notes]
@@ -103,11 +103,11 @@ jobs:
     with:
       tag_name: ${{ needs.release-please.outputs.tag_name }}
       project_name: ${{ github.event.repository.name }}
-      project_context: "BojuVue is a Vue 3 component library published to npm as @scottkirvan/bojuvue, providing shared UI components — including VitePress-aware builds — for use in any Vue 3 or VitePress project."
+      project_context: "BojuVue is a Vue 3 component library published to npm as bojuvue, providing shared UI components — including VitePress-aware builds — for use in any Vue 3 or VitePress project."
       header: |
         ## BojuVue
 
-        > A Vue3/VitePress component library, available on npm as @scottkirvan/bojuvue
+        > A Vue3/VitePress component library, available on npm as bojuvue
 
         ---
       footer: |

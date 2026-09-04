@@ -19,7 +19,7 @@ hero:
 features:
   - icon: 🔀
     title: Two builds, one import surface
-    details: Every component is exported from @scottkirvan/bojuvue. Components with VitePress-specific needs ship a second, fully independent implementation under the same name at @scottkirvan/bojuvue/vitepress — the import path is what disambiguates them.
+    details: Every component is exported from bojuvue. Components with VitePress-specific needs ship a second, fully independent implementation under the same name at bojuvue/vitepress — the import path is what disambiguates them.
 
   - icon: 📦
     title: vitepress is optional
