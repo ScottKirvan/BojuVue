@@ -117,8 +117,8 @@ restricted, so don't build a release process that depends on them lasting.
 ### Where this is heading
 
 Trusted publishing (OIDC from CI, no long-lived tokens at all) is the direction npm is
-pushing for automated releases. Worth looking at when you set up the release workflow
-rather than wiring in a token that gets deprecated.
+pushing for automated releases. **This is now done for BojuVue — see Part 6 for
+how it was set up and the non-obvious failure modes hit along the way.**
 
 ---
 
@@ -218,13 +218,118 @@ npm warn publish "repository.url" was normalized to
 
 ## Part 5 — Open items
 
-- [ ] `npm pkg fix` to clear the repository.url normalization warning
+- [x] `npm pkg fix` to clear the repository.url normalization warning
 - [ ] Stop shipping `dist/**/*.test.d.ts` — eleven 11-byte files of type declarations
       for tests that no consumer uses. Exclude tests from the declaration build.
 - [ ] Transfer the package to the `scottkirvan` org (package settings page on
       npmjs.com — no CLI equivalent found)
-- [ ] Commit `.gitattributes` with `* text=auto eol=lf`
+- [x] Commit `.gitattributes` with `* text=auto eol=lf`
 - [ ] Set `homepage` once the docs site is on Pages, then republish
+
+---
+
+## Part 6 — OIDC trusted publishing (set up 4 September 2026)
+
+BojuVue's release workflow now publishes via OIDC — no `NPM_TOKEN` required. This
+section documents how it was configured and the failure modes hit along the way.
+
+### How it works
+
+1. `release-please` merges a release PR and creates a GitHub release + tag.
+2. The `publish-npm` job runs with `id-token: write`.
+3. npm detects the GitHub OIDC environment, requests a short-lived token, and
+   exchanges it with npmjs.com for publish auth.
+4. `npm publish --provenance` publishes the package with a sigstore attestation.
+
+### Configuration
+
+Configured once via CLI (requires npm ≥ 11.15.0):
+
+```bash
+npm trust github bojuvue --file release.yml --repo ScottKirvan/BojuVue --allow-publish
+```
+
+Verify with:
+
+```bash
+npm trust list bojuvue
+# expected:
+# type: github
+# file: release.yml
+# repository: ScottKirvan/BojuVue
+# permissions: publish, stage publish
+```
+
+### Gotchas
+
+**1. Do NOT use `registry-url` in `setup-node`.**
+
+When `registry-url` is set, `setup-node` injects `github.token` as `NODE_AUTH_TOKEN`
+into all subsequent steps. npm then authenticates with that token instead of doing the
+OIDC exchange — and npmjs.com returns a misleading 404 ("not in this registry") rather
+than a 401.
+
+```yaml
+# Wrong
+- uses: actions/setup-node@v4
+  with:
+    node-version: '20'
+    registry-url: 'https://registry.npmjs.org'  # ← causes silent auth override
+
+# Right
+- uses: actions/setup-node@v4
+  with:
+    node-version: '20'
+```
+
+**2. Upgrade npm in the workflow.**
+
+The runner's bundled npm may be too old to support OIDC auth exchange (added in
+npm 10.9.0). Upgrade before publishing:
+
+```yaml
+- name: Upgrade npm for OIDC trusted publishing support
+  run: npm install -g npm@^11
+```
+
+**3. Reading the error codes.**
+
+- `E404 "not in this registry"` — likely `registry-url` is set and github.token is
+  being used for auth. Remove `registry-url`.
+- `ENEEDAUTH "need auth"` — the OIDC exchange isn't happening. Usually the runner's
+  npm is too old. Upgrade npm.
+- Both errors can look like a misconfigured trusted publisher when they're not — verify
+  the config with `npm trust list` before changing npmjs.com settings.
+
+### Working workflow snippet
+
+```yaml
+publish-npm:
+  runs-on: ubuntu-latest
+  permissions:
+    contents: read
+    id-token: write
+  steps:
+    - uses: actions/checkout@v4
+
+    - uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+        # no registry-url — would inject github.token and break OIDC auth
+
+    - name: Upgrade npm for OIDC trusted publishing support
+      run: npm install -g npm@^11
+
+    - name: Install dependencies
+      run: npm ci
+
+    - name: Build
+      run: npm run build
+
+    - name: Publish to npm
+      run: npm publish --provenance --access public
+      # no NODE_AUTH_TOKEN — OIDC handles auth automatically
+```
 
 ---
 
