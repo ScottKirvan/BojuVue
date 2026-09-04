@@ -60,6 +60,8 @@
 * use RELEASE_PLEASE_TOKEN so push events trigger downstream workflows ([fccebfb](https://github.com/ScottKirvan/BojuVue/commit/fccebfb3229cfaf0e740fbfec358f3f0fd37be37))
 * wire automated npm publish on release ([6519079](https://github.com/ScottKirvan/BojuVue/commit/651907966465b5119c87737f7c37b9593f5a4ba9))
 
+Includes PRs: [#53](https://github.com/ScottKirvan/BojuVue/pull/53), [#54](https://github.com/ScottKirvan/BojuVue/pull/54), [#55](https://github.com/ScottKirvan/BojuVue/pull/55), [#56](https://github.com/ScottKirvan/BojuVue/pull/56), [#57](https://github.com/ScottKirvan/BojuVue/pull/57)
+
 ## [0.2.0](https://github.com/ScottKirvan/BojuVue/compare/v0.1.0...v0.2.0) (2026-08-29)
 
 
