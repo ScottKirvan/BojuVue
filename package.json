@@ -1,9 +1,9 @@
 {
-  "name": "@scottkirvan/bojuvue",
+  "name": "bojuvue",
   "version": "0.2.0",
   "type": "module",
   "license": "MIT",
-  "description": "Shared Vue 3 component library for ScottKirvan's VitePress sites.",
+  "description": "Vue 3 components for VitePress — platform-aware download buttons and shared UI, built so publishing them doesn't duplicate Vue.",
   "repository": {
     "type": "git",
     "url": "https://github.com/ScottKirvan/BojuVue"
@@ -48,5 +48,18 @@
     "vitepress": {
       "optional": true
     }
-  }
+  },
+  "keywords": [
+    "vue",
+    "vue3",
+    "vitepress",
+    "vitepress-components",
+    "vitepress-theme",
+    "component-library",
+    "download-button",
+    "platform-detection",
+    "typescript",
+    "vite"
+  ],
+  "homepage": "https://github.com/ScottKirvan/BojuVue#readme"
 }
