@@ -1,6 +1,6 @@
 {
   "name": "bojuvue",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "type": "module",
   "license": "MIT",
   "description": "Vue 3 components for VitePress — platform-aware download buttons and shared UI, built so publishing them doesn't duplicate Vue.",
