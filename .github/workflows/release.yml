@@ -103,17 +103,17 @@ jobs:
     with:
       tag_name: ${{ needs.release-please.outputs.tag_name }}
       project_name: ${{ github.event.repository.name }}
-      # TODO: Replace with a one-sentence description of what this project does
-      project_context: "${{ github.event.repository.name }} is a project by ${{ github.repository_owner }}."
+      project_context: "BojuVue is a Vue 3 component library published to npm as @scottkirvan/bojuvue, providing shared UI components — including VitePress-aware builds — for use in any Vue 3 or VitePress project."
       header: |
-        ## ${{ github.event.repository.name }}
+        ## BojuVue
 
-        > TODO: Replace with your project tagline.
+        > A Vue3/VitePress component library, available on npm as @scottkirvan/bojuvue
 
         ---
       footer: |
         ---
         📖 [User Guide](https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/) · 💬 [Discord](https://discord.gg/TN6XJSNK5Y) · 🐛 [Report a Bug](https://github.com/${{ github.repository }}/issues/new?template=bug_report.md) · ✨ [Request Feature](https://github.com/${{ github.repository }}/issues/new?template=feature_request.md)
+      changelog_path: "notes/CHANGELOG.md"
     secrets: inherit
 
   update-changelog-prs:
@@ -133,6 +133,6 @@ jobs:
     with:
       tag_name: ${{ needs.release-please.outputs.tag_name }}
       project_name: ${{ github.event.repository.name }}
-      emoji: "🚀"  # TODO: Replace with your project's emoji
+      emoji: "🧩"
       discord_blurb: ${{ needs.apply-staged-notes.outputs.discord_blurb || needs.improve-release-notes.outputs.discord_blurb }}
     secrets: inherit

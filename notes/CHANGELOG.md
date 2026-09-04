@@ -1,5 +1,36 @@
 # Changelog
 
+## [0.2.0](https://github.com/ScottKirvan/BojuVue/compare/v0.1.0...v0.2.0) (2026-08-29)
+
+
+### Features
+
+* add a visible text label mode to BVMoreButton ([15a9c5e](https://github.com/ScottKirvan/BojuVue/commit/15a9c5e0c04dfdfdd084c35eca9cc81ddd78c9ee))
+* add BVButton primitive ([dbba900](https://github.com/ScottKirvan/BojuVue/commit/dbba900a8b8b93d8fbd7cb76c702757841d6e970))
+* add BVIconButton primitive ([35edce4](https://github.com/ScottKirvan/BojuVue/commit/35edce406bfb7bea9c25818a5883f919d952097f))
+* add BVMoreButton dropdown trigger component ([7a0ca2b](https://github.com/ScottKirvan/BojuVue/commit/7a0ca2b56ac13d36fa4c522258227cf308f564fd))
+
+
+### Bug Fixes
+
+* add a visible text label mode to BVMoreButton ([b2ea052](https://github.com/ScottKirvan/BojuVue/commit/b2ea05217b98427a5acfceba94c91d2e6b868ded))
+* add changelog_path to release footer ([0efcf76](https://github.com/ScottKirvan/BojuVue/commit/0efcf766ef15c7e9cbf0206466c46fe7353cfeb4))
+* base-prefix icon-only BVIconButton hrefs on VitePress sites ([daaa6a0](https://github.com/ScottKirvan/BojuVue/commit/daaa6a0c2cb36ae9abf3ebcdf4c0ff8de4385a69))
+* correct BVMoreButton panel placement default and zoom handling ([7066b30](https://github.com/ScottKirvan/BojuVue/commit/7066b30e34bebc7df4ad67e15cdce9b06f621406))
+* default BVMoreButton to visible "More..." text instead of icon-only ([ac6ad18](https://github.com/ScottKirvan/BojuVue/commit/ac6ad18b0460eb770cc65d0a96b7c4e9390a377e))
+* drop redundant 'All rights reserved' from credits ([951da1b](https://github.com/ScottKirvan/BojuVue/commit/951da1b4acf4fa3eb08ff31d5e8eee3568393317))
+* fill in project context, tagline, emoji; remove template boilerplate ([46ba038](https://github.com/ScottKirvan/BojuVue/commit/46ba0387c390672a8b02be5d7798919b13c794fd))
+* overlay BVIconButton's icon on the button, fix VPButton underline ([b152197](https://github.com/ScottKirvan/BojuVue/commit/b152197790fd9d2bf0352d14c449bd5b9b20329a))
+* recompute BVMoreButton panel position on scroll ([d68708b](https://github.com/ScottKirvan/BojuVue/commit/d68708beb7e2a8edafecf64c5e92fddae1b013d6))
+* reframe credits for public npm package, drop 'All rights reserved' ([cc2d60d](https://github.com/ScottKirvan/BojuVue/commit/cc2d60dde413949207e7d746ba8f0c422e09a3df))
+* restore All rights reserved; reframe project_context for public npm audience ([38c0b26](https://github.com/ScottKirvan/BojuVue/commit/38c0b26ed5d2b6c970afd4d348fe06e79447aef9))
+* route BVIconButton's forwarded attrs and $el to the real control ([d11853d](https://github.com/ScottKirvan/BojuVue/commit/d11853d74277d458d7754bc3d5d6321a04669f95))
+* shorten project_context to one sentence; remove personal framing from header tagline ([9208d4a](https://github.com/ScottKirvan/BojuVue/commit/9208d4a864ab30817971056c844d1adb90241a36))
+* turn Components nav link into a real dropdown, demo BVMoreButton on homepage ([8bce949](https://github.com/ScottKirvan/BojuVue/commit/8bce949df52d597e13425df26d98262ab651e276))
+* update release header tagline ([41715b1](https://github.com/ScottKirvan/BojuVue/commit/41715b16124fa1d17bcb321bff0412472de685e9))
+
+Includes PRs: [#39](https://github.com/ScottKirvan/BojuVue/pull/39), [#40](https://github.com/ScottKirvan/BojuVue/pull/40), [#41](https://github.com/ScottKirvan/BojuVue/pull/41), [#44](https://github.com/ScottKirvan/BojuVue/pull/44), [#45](https://github.com/ScottKirvan/BojuVue/pull/45), [#48](https://github.com/ScottKirvan/BojuVue/pull/48), [#49](https://github.com/ScottKirvan/BojuVue/pull/49), [#50](https://github.com/ScottKirvan/BojuVue/pull/50), [#51](https://github.com/ScottKirvan/BojuVue/pull/51), [#52](https://github.com/ScottKirvan/BojuVue/pull/52)
+
 ## [0.1.0](https://github.com/ScottKirvan/BojuVue/compare/v0.0.4...v0.1.0) (2026-08-26)
 
 
@@ -23,6 +54,8 @@
 * restructure manifest schema so labels are nested, not conventional ([f62aae0](https://github.com/ScottKirvan/BojuVue/commit/f62aae0e32f1b79b3d0c6e02347c6dac6ca5148e))
 * rework DownloadButton per PR review feedback ([0a1148a](https://github.com/ScottKirvan/BojuVue/commit/0a1148a10d67d2678681687826182762d82d7838))
 * trigger docs deploy on src/ changes too ([ad8cfd5](https://github.com/ScottKirvan/BojuVue/commit/ad8cfd5646f16a6fbb82562bb505d2265d095b85))
+
+Includes PRs: [#18](https://github.com/ScottKirvan/BojuVue/pull/18), [#29](https://github.com/ScottKirvan/BojuVue/pull/29), [#30](https://github.com/ScottKirvan/BojuVue/pull/30), [#31](https://github.com/ScottKirvan/BojuVue/pull/31), [#33](https://github.com/ScottKirvan/BojuVue/pull/33), [#34](https://github.com/ScottKirvan/BojuVue/pull/34), [#35](https://github.com/ScottKirvan/BojuVue/pull/35), [#36](https://github.com/ScottKirvan/BojuVue/pull/36), [#37](https://github.com/ScottKirvan/BojuVue/pull/37), [#38](https://github.com/ScottKirvan/BojuVue/pull/38)
 
 ## [0.0.4](https://github.com/ScottKirvan/BojuVue/compare/v0.0.3...v0.0.4) (2026-08-24)
 

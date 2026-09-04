@@ -3,7 +3,7 @@
 
   <img src="assets/media/logo.jpg" alt="logo" width="200" height="auto" />
     <h1><a href="https://github.com/ScottKirvan/BojuVue">ScottKirvan/BojuVue</a></h1>
-  <h3>Shared Vue 3 components, with VitePress-aware builds where it helps</h3>
+  <h3>Shared Vue 3 components, with VitePress-aware builds</h3>
   
   
 <!-- Badges -->
@@ -33,9 +33,7 @@
 </p>
    
 <h4>
-    <a href="https://tinyurl.com/3vf7whyd">View Demo</a>
-  <span> · </span>
-    <a href="https://github.com/ScottKirvan/BojuVue/blob/main/README.md">Documentation</a>
+    <a href="https://scottkirvan.github.io/BojuVue/">Documentation</a>
   <span> · </span>
     <a href="https://github.com/ScottKirvan/BojuVue/issues/new?template=bug_report.md">Report Bug</a>
   <span> · </span>
@@ -280,8 +278,9 @@ Contributions / Contact
 
 Credits
 -------
-**[ScooterGitTemplate](https://github.com/ScottKirvan/ScooterGitTemplate) Copyright (c) (2025):** [Scott Kirvan](https://github.com/ScottKirvan)  - All rights reserved
-*ScooterGitTemplate is licensed under the [MIT License](LICENSE.md).*
+**BojuVue** — Copyright (c) 2026 [Scott Kirvan](https://github.com/ScottKirvan). [MIT License](LICENSE.md).
+
+Scaffolded from [ScooterGitTemplate](https://github.com/ScottKirvan/ScooterGitTemplate).
 
 Project Link:  [BojuVue](https://github.com/ScottKirvan/BojuVue)  
 [CHANGELOG](notes/CHANGELOG.md)  

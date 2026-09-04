@@ -113,6 +113,30 @@ section:
 
 ---
 
+## 2026-08-27 — Named a blocker, then implemented a workaround for it in the same turn anyway
+
+**What happened:** Asked to add a nav flyout demo next to a specific hero-area button,
+the agent found a real technical constraint (the only supported version of the
+component only works inside `themeConfig.nav`, not next to arbitrary page content),
+stated that constraint in text — and then, in the same turn, picked its own
+alternative placement and started implementing it, without waiting to hear which
+alternative (if any) the user actually wanted. This is the same failure already
+recorded on 2026-08-25/26 (acting on a description before authorization, promoting an
+unconfirmed choice to something acted on), showing up in a new spot: naming a blocker
+was treated as license to solve around it, rather than as the point to stop.
+
+**Fix going forward:** Codified as a hard, capitalized rule in
+[CLAUDE.md](../../CLAUDE.md)'s Autonomy section — state the constraint and stop; don't
+implement a substitute in the same turn, even when it seems obviously reasonable.
+
+**Reusable phrase:** "IF YOU CANNOT DO EXACTLY WHAT WAS ASKED — DUE TO A TECHNICAL
+CONSTRAINT OR ANY OTHER REASON — STATE THE CONSTRAINT AND STOP. Do not silently
+substitute an alternative and proceed to implement it in the same turn. Naming the
+blocker is not itself permission to pick a workaround; the user decides which
+alternative, if any, to pursue."
+
+---
+
 ## 2026-08-26 — Dependency table tracked file conflicts but not decision survival
 
 **What happened:** The 7-PR dependency table for `PlatformButtonSpec.md` correctly
