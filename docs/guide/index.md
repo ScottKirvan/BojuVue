@@ -1,7 +1,7 @@
 # Introduction
 
 BojuVue is a Vue 3 + TypeScript component library, published to npm as
-[`@scottkirvan/bojuvue`](https://www.npmjs.com/package/@scottkirvan/bojuvue). It provides
+[`bojuvue`](https://www.npmjs.com/package/bojuvue). It provides
 shared landing-page and UX components — a platform-aware download button, a
 secondary-links menu, and whatever's added next — for use in VitePress sites and other
 Vue 3 apps. Install it, register the components you need, and update later with `npm

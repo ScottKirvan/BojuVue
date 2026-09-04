@@ -41,7 +41,7 @@
   </h4>
 </div>
 
-**BojuVue** is a Vue 3 component library published to npm as [`@scottkirvan/bojuvue`](https://www.npmjs.com/package/@scottkirvan/bojuvue). It exists so that VitePress sites — this author's homepage blog and several local documentation sites — can share one set of landing-page and UX components instead of duplicating them per repo. Update this repo, bump the version, publish, and every consuming site can pull in the update with `npm update`.
+**BojuVue** is a Vue 3 component library published to npm as [`bojuvue`](https://www.npmjs.com/package/bojuvue). It exists so that VitePress sites — this author's homepage blog and several local documentation sites — can share one set of landing-page and UX components instead of duplicating them per repo. Update this repo, bump the version, publish, and every consuming site can pull in the update with `npm update`.
 
 Branches
 --------
@@ -92,7 +92,7 @@ Features
 - `vue` is a peer dependency, so consuming sites use their own Vue instance — no duplicate copies, no broken reactivity
 - Every component is exported from one entry point (`src/index.ts`), so consuming a new component is a one-line import change
 - The `docs/` VitePress site imports directly from `src/index.ts`/`src/vitepress.ts` and registers every exported component globally, so new components can be previewed live in a real VitePress site without publishing or `npm link`
-- Some components (currently `BVPlatformButton`) ship as **two fully independent builds behind two import paths**: a generic implementation at `@scottkirvan/bojuvue`, with zero dependency on `vitepress`, and a VitePress-specific implementation at `@scottkirvan/bojuvue/vitepress`, same component name, resolving anything VitePress-specific for you. Neither component imports or renders the other — the import path is what disambiguates them. `vitepress` is an *optional* peer dependency — installing the package alone never requires it; only importing from the `/vitepress` path does.
+- Some components (currently `BVPlatformButton`) ship as **two fully independent builds behind two import paths**: a generic implementation at `bojuvue`, with zero dependency on `vitepress`, and a VitePress-specific implementation at `bojuvue/vitepress`, same component name, resolving anything VitePress-specific for you. Neither component imports or renders the other — the import path is what disambiguates them. `vitepress` is an *optional* peer dependency — installing the package alone never requires it; only importing from the `/vitepress` path does.
 
 Architecture
 ------------
@@ -165,7 +165,7 @@ references, so `build` is the only way to typecheck the library.
 Installation
 ------------
 ```
-npm install @scottkirvan/bojuvue
+npm install bojuvue
 ```
 
 Usage
@@ -175,7 +175,7 @@ Register components however you already register components in your app:
 ```ts
 // main.ts (or wherever you create your Vue app)
 import { createApp } from 'vue'
-import { BVPlatformButton, SomeComponent } from '@scottkirvan/bojuvue'
+import { BVPlatformButton, SomeComponent } from 'bojuvue'
 import App from './App.vue'
 
 const app = createApp(App)
@@ -186,13 +186,13 @@ app.mount('#app')
 
 Building a VitePress site? Register the same way from `enhanceApp` in
 `.vitepress/theme/index.ts` instead of `main.ts`, and prefer importing from
-`@scottkirvan/bojuvue/vitepress` for any component with a VitePress-aware build (see
+`bojuvue/vitepress` for any component with a VitePress-aware build (see
 Features above):
 
 ```ts
 import DefaultTheme from 'vitepress/theme'
-import { BVPlatformButton } from '@scottkirvan/bojuvue/vitepress'
-import { SomeComponent } from '@scottkirvan/bojuvue'
+import { BVPlatformButton } from 'bojuvue/vitepress'
+import { SomeComponent } from 'bojuvue'
 
 export default {
   extends: DefaultTheme,

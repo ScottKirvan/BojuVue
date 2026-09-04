@@ -1,5 +1,5 @@
 <script setup>
-import { BVPlatformButton } from '@scottkirvan/bojuvue'
+import { BVPlatformButton } from 'bojuvue'
 
 const siteBase = import.meta.env.BASE_URL
 </script>

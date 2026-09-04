@@ -20,7 +20,7 @@ Update this in place as decisions land; don't let it go stale.
   own `VPButton` look via the same `--vp-button-brand-*` variables, rather
   than using `VPButton` itself.
 - Coupled to VitePress: imports `useData` from `'vitepress'` for `site.base`.
-- Published and live: `@scottkirvan/bojuvue` on npm, this component included.
+- Published and live: `bojuvue` on npm, this component included.
 
 ## Known issues (filed, not yet resolved)
 
@@ -61,11 +61,11 @@ rather than fixing them in place on the current single-component shape.
   "Other use cases" below), and the name shouldn't imply it is.
   Component name: **`BVPlatformButton`** — used for *both* the core and the
   VitePress adapter (see the split below). They don't need distinct names:
-  the import path is the scoping mechanism (`@scottkirvan/bojuvue` vs
-  `@scottkirvan/bojuvue/vitepress`), the same way two files can each export
+  the import path is the scoping mechanism (`bojuvue` vs
+  `bojuvue/vitepress`), the same way two files can each export
   something called the same thing with zero collision. On the rare occasion
   both are needed in the same file, standard import aliasing resolves it
-  (`import { BVPlatformButton as BVPlatformButtonCore } from '@scottkirvan/bojuvue'`);
+  (`import { BVPlatformButton as BVPlatformButtonCore } from 'bojuvue'`);
   without aliasing, importing both unaliased in one file is a hard
   compile-time "duplicate identifier" error, not a silent runtime bug — so
   there's no real risk in sharing the name. Related renames to do in the
@@ -145,8 +145,8 @@ non-VitePress consumers requires two things together, not one:**
 2. **Separate build outputs**, exposed as separate subpath imports — both
    named `BVPlatformButton`, disambiguated by the import path itself:
    ```ts
-   import { BVPlatformButton } from '@scottkirvan/bojuvue'            // core — no vitepress anywhere in this file
-   import { BVPlatformButton } from '@scottkirvan/bojuvue/vitepress'  // adapter — this one imports vitepress
+   import { BVPlatformButton } from 'bojuvue'            // core — no vitepress anywhere in this file
+   import { BVPlatformButton } from 'bojuvue/vitepress'  // adapter — this one imports vitepress
    ```
    This is the part that actually matters — (1) alone doesn't help if both
    components still compile into one physical `dist/bojuvue.js`, since a
@@ -249,7 +249,7 @@ relocated into the core component regardless, so fixing these at the same
 time avoids touching that logic twice. *Tests:* relocate/adapt existing
 tests to the new module boundaries (this is largely superseded by PR 6's
 dedicated coverage, but shouldn't ship broken in the interim). *Docs:*
-document both import paths (`@scottkirvan/bojuvue` vs `/vitepress`) in the
+document both import paths (`bojuvue` vs `/vitepress`) in the
 component reference and the README.
 
 **6. Test coverage for the split shape ([#21](https://github.com/ScottKirvan/BojuVue/issues/21)).** Dedicated test files for
@@ -283,7 +283,7 @@ wants one of these, not speculatively:
 - **The `./vitepress` subpath re-exports everything the core package has**,
   plus its own VitePress-specific additions — `defaultLabels`,
   `detectPlatform`, `resolveDownload`, and the `BV`-prefixed types are all
-  reachable from `@scottkirvan/bojuvue/vitepress`, not just `BVPlatformButton`
+  reachable from `bojuvue/vitepress`, not just `BVPlatformButton`
   itself. A VitePress site developer should never need to remember which of
   two paths a given export lives on; non-VitePress consumers are unaffected
   either way since they only ever import the bare package.

@@ -18,21 +18,21 @@ the same package — pick whichever matches your site:
 // <style scoped> CSS that reads the same public --vp-button-* custom
 // properties VitePress itself exposes for theming, with a fallback value for
 // each so it still looks like a real button outside VitePress.
-import { BVButton } from '@scottkirvan/bojuvue'
+import { BVButton } from 'bojuvue'
 
 // VitePress-specific implementation. Same component name and props, thin
 // wrapper rendering VitePress's own real VPButton — gets real VitePress
 // theme styling for free.
-import { BVButton } from '@scottkirvan/bojuvue/vitepress'
+import { BVButton } from 'bojuvue/vitepress'
 ```
 
 If you're building a VitePress site, use the `/vitepress` path — that's what this
 site's own demo below uses. Use the bare package path when you're embedding
 `BVButton` in a plain Vue 3 app with no VitePress install.
 
-`vitepress` is an *optional* peer dependency — installing `@scottkirvan/bojuvue`
+`vitepress` is an *optional* peer dependency — installing `bojuvue`
 alone (importing only the bare package path) never requires `vitepress` to be
-installed. Only importing from `@scottkirvan/bojuvue/vitepress` does.
+installed. Only importing from `bojuvue/vitepress` does.
 
 ## Demo
 
@@ -61,7 +61,7 @@ installed. Only importing from `@scottkirvan/bojuvue/vitepress` does.
 
 ```vue
 <script setup>
-import { BVButton } from '@scottkirvan/bojuvue/vitepress'
+import { BVButton } from 'bojuvue/vitepress'
 </script>
 
 <template>
@@ -75,7 +75,7 @@ In any other Vue 3 app (no `vitepress` install required):
 
 ```vue
 <script setup>
-import { BVButton } from '@scottkirvan/bojuvue'
+import { BVButton } from 'bojuvue'
 </script>
 
 <template>

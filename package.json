@@ -6,7 +6,7 @@
   "description": "Vue 3 components for VitePress — platform-aware download buttons and shared UI, built so publishing them doesn't duplicate Vue.",
   "repository": {
     "type": "git",
-    "url": "https://github.com/ScottKirvan/BojuVue"
+    "url": "git+https://github.com/ScottKirvan/BojuVue.git"
   },
   "files": [
     "dist"

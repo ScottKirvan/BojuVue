@@ -27,23 +27,23 @@ the same package — pick whichever matches your site:
 ```ts
 // Generic Vue implementation. Works in any Vue 3 app. Wraps the generic,
 // hand-rolled BVButton for both icon-only and icon+text modes.
-import { BVIconButton } from '@scottkirvan/bojuvue'
+import { BVIconButton } from 'bojuvue'
 
 // VitePress-specific implementation. Same component name and props.
 // Icon+text mode wraps VitePress's own real VPButton, with the icon
 // overlaid on it. Icon-only mode reuses the *generic* hand-rolled
 // BVButton instead, since VPButton has no icon-only concept (its `text`
 // prop is required, no icon prop or slot).
-import { BVIconButton } from '@scottkirvan/bojuvue/vitepress'
+import { BVIconButton } from 'bojuvue/vitepress'
 ```
 
 If you're building a VitePress site, use the `/vitepress` path — that's what this
 site's own demo below uses. Use the bare package path when you're embedding
 `BVIconButton` in a plain Vue 3 app with no VitePress install.
 
-`vitepress` is an *optional* peer dependency — installing `@scottkirvan/bojuvue` alone
+`vitepress` is an *optional* peer dependency — installing `bojuvue` alone
 (importing only the bare package path) never requires `vitepress` to be installed.
-Only importing from `@scottkirvan/bojuvue/vitepress` does.
+Only importing from `bojuvue/vitepress` does.
 
 ## Demo
 
@@ -100,7 +100,7 @@ default for an example of a component that layers its own defaults on top of
 
 ```vue
 <script setup>
-import { BVIconButton } from '@scottkirvan/bojuvue/vitepress'
+import { BVIconButton } from 'bojuvue/vitepress'
 
 const SETTINGS_ICON = "<svg viewBox='0 0 24 24' width='16' height='16'>...</svg>"
 </script>
@@ -121,7 +121,7 @@ In any other Vue 3 app (no `vitepress` install required):
 
 ```vue
 <script setup>
-import { BVIconButton } from '@scottkirvan/bojuvue'
+import { BVIconButton } from 'bojuvue'
 </script>
 
 <template>

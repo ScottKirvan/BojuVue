@@ -3,7 +3,7 @@
 Install the package, then import whichever components you need:
 
 ```
-npm install @scottkirvan/bojuvue
+npm install bojuvue
 ```
 
 Some components have a VitePress-aware build, available from a second import path —
@@ -11,11 +11,11 @@ see each component's own page for whether it does and what the difference is:
 
 ```ts
 // Generic Vue implementation — works in any Vue 3 app, no vitepress dependency
-import { BVPlatformButton } from '@scottkirvan/bojuvue'
+import { BVPlatformButton } from 'bojuvue'
 
 // VitePress-specific implementation — same component name, resolves
 // VitePress-specific details (like the site's base path) for you
-import { BVPlatformButton } from '@scottkirvan/bojuvue/vitepress'
+import { BVPlatformButton } from 'bojuvue/vitepress'
 ```
 
 See each component's page for its props, a usage example, and which import path(s) it's
@@ -27,7 +27,7 @@ rendered live from both import paths side by side, see [Live Examples](/appendix
 This site is itself a VitePress site, so every live Demo and the first code sample on
 a component's page run through the `/vitepress` import path where a component has
 one — that's what's actually rendering on the page you're looking at. Building a
-non-VitePress Vue 3 app instead? Use the bare `@scottkirvan/bojuvue` import — each
+non-VitePress Vue 3 app instead? Use the bare `bojuvue` import — each
 component's own reference page includes that usage too.
 :::
 

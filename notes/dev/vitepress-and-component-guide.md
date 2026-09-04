@@ -65,8 +65,8 @@ would take that data as a prop instead.
 - `src/index.ts` is the generic export barrel — framework-agnostic components/
   utilities, zero dependency on `vitepress`. `src/vitepress.ts` is a second barrel:
   everything `src/index.ts` has, plus VitePress-specific component implementations,
-  under the *same* exported names (the import path — `@scottkirvan/bojuvue` vs.
-  `@scottkirvan/bojuvue/vitepress` — is what disambiguates them, not the name). A
+  under the *same* exported names (the import path — `bojuvue` vs.
+  `bojuvue/vitepress` — is what disambiguates them, not the name). A
   component with no VitePress-specific needs just gets one line in `src/index.ts`:
   `export { default as ComponentName } from './ComponentName.vue'`. A component that
   does need something VitePress-specific instead gets two fully independent
@@ -174,7 +174,7 @@ not this repo's own `docs/`. It does **not** get the global-registration shortcu
 §2; that only exists here.
 
 ```
-npm install @scottkirvan/bojuvue
+npm install bojuvue
 ```
 
 Then register what you need explicitly in that site's own
@@ -184,7 +184,7 @@ anything VitePress-specific for you:
 
 ```ts
 import DefaultTheme from 'vitepress/theme'
-import { BVPlatformButton } from '@scottkirvan/bojuvue/vitepress'
+import { BVPlatformButton } from 'bojuvue/vitepress'
 
 export default {
   extends: DefaultTheme,
@@ -195,7 +195,7 @@ export default {
 ```
 
 A component with no VitePress-specific implementation (or a non-VitePress consuming
-app) is imported from the bare `@scottkirvan/bojuvue` path instead — same pattern, no
+app) is imported from the bare `bojuvue` path instead — same pattern, no
 `vitepress` install required.
 
 Or, for a component only used on one page, skip global registration entirely and
@@ -203,7 +203,7 @@ import it directly in that page's markdown body (the Lucide pattern from §1):
 
 ```md
 <script setup>
-import { BVPlatformButton } from '@scottkirvan/bojuvue'
+import { BVPlatformButton } from 'bojuvue'
 </script>
 
 <BVPlatformButton />
@@ -211,7 +211,7 @@ import { BVPlatformButton } from '@scottkirvan/bojuvue'
 
 Updating later is `npm update`.
 
-**Current status (as of this writing):** `@scottkirvan/bojuvue` is not yet published —
+**Current status (as of this writing):** `bojuvue` is not yet published —
 checked the registry directly, it 404s. Publishing automation is being wired up
 separately; once it's live, the first `npm install` above will actually resolve. Until
 then, the only way to test consumption from another repo is `npm link` or a manual

@@ -1,5 +1,5 @@
 <script setup>
-import { BVPlatformButton } from '@scottkirvan/bojuvue/vitepress'
+import { BVPlatformButton } from 'bojuvue/vitepress'
 </script>
 
 <template>

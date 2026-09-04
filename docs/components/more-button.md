@@ -23,9 +23,9 @@ Import it from either path; the `/vitepress` path gets real `VPButton` styling f
 free, so prefer it inside a VitePress site:
 
 ```ts
-import { BVMoreButton } from '@scottkirvan/bojuvue'
+import { BVMoreButton } from 'bojuvue'
 // or, inside a VitePress site, for real VPButton styling in text mode:
-import { BVMoreButton } from '@scottkirvan/bojuvue/vitepress'
+import { BVMoreButton } from 'bojuvue/vitepress'
 ```
 
 ## Demo
@@ -100,7 +100,7 @@ own — it only ever toggles the menu.
 
 ## Styling
 
-On the bare `@scottkirvan/bojuvue` import, the button (via `BVIconButton`/`BVButton`)
+On the bare `bojuvue` import, the button (via `BVIconButton`/`BVButton`)
 reads the same public `--vp-button-*` CSS custom properties VitePress itself exposes
 for theming, each with a fallback value so it still looks like a clickable button
 outside a VitePress site (where those variables are undefined) — the same tokens
@@ -173,7 +173,7 @@ package, so it's just as valid in a non-VitePress Vue 3 app:
 
 ```vue
 <script setup>
-import { BVMoreButton, BVPlatformButton } from '@scottkirvan/bojuvue'
+import { BVMoreButton, BVPlatformButton } from 'bojuvue'
 </script>
 
 <template>
