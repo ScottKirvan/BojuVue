@@ -285,3 +285,4 @@ Scaffolded from [ScooterGitTemplate](https://github.com/ScottKirvan/ScooterGitTe
 Project Link:  [BojuVue](https://github.com/ScottKirvan/BojuVue)  
 [CHANGELOG](notes/CHANGELOG.md)  
 [TODO](notes/TODO.md)
+
