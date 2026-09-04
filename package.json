@@ -3,10 +3,14 @@
   "version": "0.3.2",
   "type": "module",
   "license": "MIT",
-  "description": "Vue 3 components for VitePress — platform-aware download buttons and shared UI, built so publishing them doesn't duplicate Vue.",
+  "description": "Vue 3 components including a download button that serves each visitor the right build for their OS. Works in any Vue 3 app; VitePress-aware variants included.",
+  "homepage": "https://www.scottkirvan.com/BojuVue/",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/ScottKirvan/BojuVue.git"
+  },
+  "bugs": {
+    "url": "https://github.com/ScottKirvan/BojuVue/issues"
   },
   "files": [
     "dist"
@@ -60,6 +64,5 @@
     "platform-detection",
     "typescript",
     "vite"
-  ],
-  "homepage": "https://github.com/ScottKirvan/BojuVue#readme"
+  ]
 }
