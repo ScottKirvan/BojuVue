@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.3.2](https://github.com/ScottKirvan/BojuVue/compare/v0.3.1...v0.3.2) (2026-09-04)
+
+
+### Bug Fixes
+
+* formatting in README.md -  release-please build force ([0e4d01a](https://github.com/ScottKirvan/BojuVue/commit/0e4d01af2ef2db62ae0a26100f56294b4165d1a7))
+* upgrade npm to 11.x for OIDC trusted publishing auth support ([a1107dc](https://github.com/ScottKirvan/BojuVue/commit/a1107dcc8db12206ece69626b39cacdbf3947ec4))
+
 ## [0.3.1](https://github.com/ScottKirvan/BojuVue/compare/v0.3.0...v0.3.1) (2026-09-04)
 
 
