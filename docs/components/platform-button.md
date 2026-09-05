@@ -86,17 +86,17 @@ The two import paths style themselves differently:
   `theme` below apply the equivalent modifier classes to that markup rather than to a
   real `VPButton`.
 
-| Prop | Type | Default | Description |
-| --- | --- | --- | --- |
-| `base` | `string` | `''` | **`bojuvue` only** — not exposed on the VitePress-specific implementation, which resolves this for you from `useData().site.value.base`. Site base path a site-relative `manifestUrl` is resolved against. Only relevant if you're embedding the generic implementation directly in a non-VitePress Vue app with its own base-path concept. |
-| `manifestUrl` | `string` | `'platformButton.json'` | Path to the manifest. Either a site-relative path, resolved relative to `base` (so it works the same in local dev and in production), or a full absolute URL (`https://...`/`http://...`), fetched as-is with no `base` prefixing — useful when the manifest is hosted on another origin or CDN rather than alongside the docs site itself. Reactive — changing it after mount re-fetches. |
-| `fallbackHref` | `string` | *(none)* | Link used when the platform can't be detected, the manifest fetch fails (including a non-2xx response), or the manifest has no entry for the detected platform. **Omit this to hide the button entirely** in those cases instead of showing a generic link. |
-| `fallbackLabel` | `string` | `'View Downloads'` | Button label used alongside `fallbackHref`. |
-| `size` | `'medium' \| 'big'` | `'medium'` | On `/vitepress`, passed straight through to `VPButton`'s own `size` prop. On the bare package, applied as the equivalent modifier class on this component's own markup. |
-| `theme` | `'brand' \| 'alt' \| 'sponsor'` | `'brand'` | On `/vitepress`, passed straight through to `VPButton`'s own `theme` prop. On the bare package, applied as the equivalent modifier class on this component's own markup. |
-| `target` | `string` | *(none)* | Left unset by default so a smart default applies: `target="_blank"` when the resolved link is external (via `VPButton`'s own detection on `/vitepress`, or an equivalent check on the bare package). Set it explicitly only to override that. |
-| `rel` | `string` | *(none)* | Left unset by default so a smart default applies: `rel="noreferrer"` when the resolved link is external (via `VPButton`'s own detection on `/vitepress`, or an equivalent check on the bare package). Set it explicitly only to override that. |
-| `icon` | `string` | *(none)* | Raw SVG markup rendered via `v-html`, via `BVIconButton`. `VPButton` has no icon support of its own (no prop, no slot), so on both import paths this is a sibling element in the DOM, but positioned on the button itself, not beside it — see [`BVIconButton`'s own docs](./icon-button) for how. Same trust model as VitePress's own home-page `features[].icon`: it's rendered unescaped, so only ever pass something a site author wrote, never anything sourced from the fetched manifest. |
+| Prop            | Type                            | Default                 | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
+| --------------- | ------------------------------- | ----------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `base`          | `string`                        | `''`                    | **`bojuvue` only** — not exposed on the VitePress-specific implementation, which resolves this for you from `useData().site.value.base`. Site base path a site-relative `manifestUrl` is resolved against. Only relevant if you're embedding the generic implementation directly in a non-VitePress Vue app with its own base-path concept.                                                                                                                                                     |
+| `manifestUrl`   | `string`                        | `'platformButton.json'` | Path to the manifest. Either a site-relative path, resolved relative to `base` (so it works the same in local dev and in production), or a full absolute URL (`https://...`/`http://...`), fetched as-is with no `base` prefixing — useful when the manifest is hosted on another origin or CDN rather than alongside the docs site itself. Reactive — changing it after mount re-fetches.                                                                                                      |
+| `fallbackHref`  | `string`                        | *(none)*                | Link used when the platform can't be detected, the manifest fetch fails (including a non-2xx response), or the manifest has no entry for the detected platform. **Omit this to hide the button entirely** in those cases instead of showing a generic link.                                                                                                                                                                                                                                     |
+| `fallbackLabel` | `string`                        | `'View Downloads'`      | Button label used alongside `fallbackHref`.                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
+| `size`          | `'medium' \| 'big'`             | `'medium'`              | On `/vitepress`, passed straight through to `VPButton`'s own `size` prop. On the bare package, applied as the equivalent modifier class on this component's own markup.                                                                                                                                                                                                                                                                                                                         |
+| `theme`         | `'brand' \| 'alt' \| 'sponsor'` | `'brand'`               | On `/vitepress`, passed straight through to `VPButton`'s own `theme` prop. On the bare package, applied as the equivalent modifier class on this component's own markup.                                                                                                                                                                                                                                                                                                                        |
+| `target`        | `string`                        | *(none)*                | Left unset by default so a smart default applies: `target="_blank"` when the resolved link is external (via `VPButton`'s own detection on `/vitepress`, or an equivalent check on the bare package). Set it explicitly only to override that.                                                                                                                                                                                                                                                   |
+| `rel`           | `string`                        | *(none)*                | Left unset by default so a smart default applies: `rel="noreferrer"` when the resolved link is external (via `VPButton`'s own detection on `/vitepress`, or an equivalent check on the bare package). Set it explicitly only to override that.                                                                                                                                                                                                                                                  |
+| `icon`          | `string`                        | *(none)*                | Raw SVG markup rendered via `v-html`, via `BVIconButton`. `VPButton` has no icon support of its own (no prop, no slot), so on both import paths this is a sibling element in the DOM, but positioned on the button itself, not beside it — see [`BVIconButton`'s own docs](./icon-button) for how. Same trust model as VitePress's own home-page `features[].icon`: it's rendered unescaped, so only ever pass something a site author wrote, never anything sourced from the fetched manifest. |
 
 ::: warning `icon` is rendered unescaped
 `icon` goes through `v-html` with no sanitization — same trust model as VitePress's
@@ -149,31 +149,35 @@ local dev and production.
 
 ```json
 {
-  "windows": { "href": "https://example.com/releases/app-windows.msi", "label": "Get the app" },
-  "macos": { "href": "https://example.com/releases/app-macos.dmg" },
-  "linux": { "href": "https://example.com/releases/app-linux.tar.gz" },
-  "android": { "href": "https://example.com/releases/app-android.apk" },
-  "ios": { "href": "https://example.com/releases/app-ios-or-testflight-link" },
-  "chromeos": { "href": "https://example.com/releases/app-chromeos.apk" }
+  "platforms": {
+    "windows": { "href": "https://example.com/releases/app-windows.msi", "label": "Get the app" },
+    "macos": { "href": "https://example.com/releases/app-macos.dmg" },
+    "linux": { "href": "https://example.com/releases/app-linux.tar.gz" },
+    "android": { "href": "https://example.com/releases/app-android.apk" },
+    "ios": { "href": "https://example.com/releases/app-ios-or-testflight-link" },
+    "chromeos": { "href": "https://example.com/releases/app-chromeos.apk" }
+  }
 }
 ```
 
-Each top-level key is a `BVPlatformId`; its value is a `{ href, label? }` object —
-`href` is required, `label` optionally overrides that platform's default button text
-(`windows` above renders "Get the app" instead of the default "Download for Windows").
+The top-level `platforms` object contains one optional key per `BVPlatformId`; each
+value is a `{ href, label? }` object. `href` is required, and `label` optionally
+overrides that platform's default button text (`windows` above renders "Get the app"
+instead of the default "Download for Windows"). The `platforms` envelope is required —
+a manifest that's just a bare platform map with no envelope is not recognized.
 A label is always attached to the entry it belongs to, not a separate key floating
 next to it — there's no way to express "a label with nothing to link to."
 
 The default label used when an entry has no `label`:
 
-| Platform | Default label |
-| --- | --- |
-| `windows` | Download for Windows |
-| `macos` | Download for macOS |
-| `linux` | Download for Linux |
-| `android` | Get for Android |
-| `ios` | Get for iOS |
-| `chromeos` | Get for ChromeOS |
+| Platform   | Default label        |
+| ---------- | -------------------- |
+| `windows`  | Download for Windows |
+| `macos`    | Download for macOS   |
+| `linux`    | Download for Linux   |
+| `android`  | Get for Android      |
+| `ios`      | Get for iOS          |
+| `chromeos` | Get for ChromeOS     |
 
 This is keyed off the *visitor's detected platform*, not which entry actually
 supplied the link — a ChromeOS visitor whose link fell back to the `android` entry

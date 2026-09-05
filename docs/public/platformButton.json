@@ -1,21 +1,23 @@
 {
-  "windows": {
-    "href": "https://github.com/ScottKirvan/BojuVue/releases/latest",
-    "label": "Get the Windows build"
-  },
-  "macos": {
-    "href": "https://github.com/ScottKirvan/BojuVue/releases/latest"
-  },
-  "linux": {
-    "href": "https://github.com/ScottKirvan/BojuVue/releases/latest"
-  },
-  "android": {
-    "href": "https://github.com/ScottKirvan/BojuVue/releases/latest"
-  },
-  "ios": {
-    "href": "https://github.com/ScottKirvan/BojuVue/releases/latest"
-  },
-  "chromeos": {
-    "href": "https://github.com/ScottKirvan/BojuVue/releases/latest"
+  "platforms": {
+    "windows": {
+      "href": "https://github.com/ScottKirvan/BojuVue/releases/latest",
+      "label": "Get the Windows build"
+    },
+    "macos": {
+      "href": "https://github.com/ScottKirvan/BojuVue/releases/latest"
+    },
+    "linux": {
+      "href": "https://github.com/ScottKirvan/BojuVue/releases/latest"
+    },
+    "android": {
+      "href": "https://github.com/ScottKirvan/BojuVue/releases/latest"
+    },
+    "ios": {
+      "href": "https://github.com/ScottKirvan/BojuVue/releases/latest"
+    },
+    "chromeos": {
+      "href": "https://github.com/ScottKirvan/BojuVue/releases/latest"
+    }
   }
 }

@@ -6,11 +6,15 @@ export interface BVPlatformEntry {
 }
 
 // Expected shape of the JSON file BVPlatformButton fetches:
-// { "windows": { "href": "https://...", "label": "Get the app" }, "macos": { "href": "https://..." } }
+// { "platforms": { "windows": { "href": "https://...", "label": "Get the app" }, "macos": { "href": "https://..." } } }
 // Every platform key is optional — omit any you don't ship a build for. A label only
 // ever makes sense attached to its own entry, so it's nested under it rather than
 // living as a separate sibling key.
-export type BVPlatformManifest = Partial<Record<BVPlatformId, BVPlatformEntry>>
+export type BVPlatformData = Partial<Record<BVPlatformId, BVPlatformEntry>>
+
+export interface BVPlatformManifest {
+  platforms: BVPlatformData
+}
 
 export interface NavigatorLike {
   userAgent: string
@@ -71,15 +75,22 @@ export interface ResolveDownloadOptions {
   fallbackLabel?: string
 }
 
+function isPlatformData(value: unknown): value is BVPlatformData {
+  return typeof value === 'object' && value !== null
+}
+
 export function resolveDownload(
   platform: BVPlatformId | null,
   manifest: BVPlatformManifest | null,
   options: ResolveDownloadOptions = {}
 ): { href: string; label: string } | null {
   if (platform && manifest) {
+    const platformData = isPlatformData(manifest.platforms) ? manifest.platforms : undefined
+
     // ChromeOS runs Android apps — fall back to the Android entry if no
     // ChromeOS-specific one is published.
-    const entry = platform === 'chromeos' ? (manifest.chromeos ?? manifest.android) : manifest[platform]
+    const entry =
+      platformData && (platform === 'chromeos' ? (platformData.chromeos ?? platformData.android) : platformData[platform])
     if (entry) {
       return { href: entry.href, label: entry.label ?? defaultLabels[platform] }
     }

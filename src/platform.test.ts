@@ -128,8 +128,20 @@ describe('detectPlatform', () => {
 describe('resolveDownload', () => {
   const options = { fallbackHref: 'https://example.com/releases', fallbackLabel: 'View Downloads' }
 
+  it('resolves the enveloped manifest shape', () => {
+    expect(
+      resolveDownload(
+        'windows',
+        { platforms: { windows: { href: 'https://example.com/win.msi', label: 'Get the app' } } },
+        options
+      )
+    ).toEqual({ href: 'https://example.com/win.msi', label: 'Get the app' })
+  })
+
   it('falls back when no platform was detected', () => {
-    expect(resolveDownload(null, { windows: { href: 'https://example.com/win.msi' } }, options)).toEqual({
+    expect(
+      resolveDownload(null, { platforms: { windows: { href: 'https://example.com/win.msi' } } }, options)
+    ).toEqual({
       href: 'https://example.com/releases',
       label: 'View Downloads',
     })
@@ -142,8 +154,19 @@ describe('resolveDownload', () => {
     })
   })
 
+  it('falls back with a neutral label when the manifest has a malformed (non-object) platforms field', () => {
+    expect(
+      resolveDownload('windows', { platforms: null } as unknown as { platforms: { windows: { href: string } } }, options)
+    ).toEqual({
+      href: 'https://example.com/releases',
+      label: 'View Downloads',
+    })
+  })
+
   it('falls back with a neutral label when the manifest has no entry for the detected platform', () => {
-    expect(resolveDownload('linux', { windows: { href: 'https://example.com/win.msi' } }, options)).toEqual({
+    expect(
+      resolveDownload('linux', { platforms: { windows: { href: 'https://example.com/win.msi' } } }, options)
+    ).toEqual({
       href: 'https://example.com/releases',
       label: 'View Downloads',
     })
@@ -157,13 +180,17 @@ describe('resolveDownload', () => {
   })
 
   it('returns null (hides the button) when nothing matches and no fallbackHref was given', () => {
-    expect(resolveDownload('linux', { windows: { href: 'https://example.com/win.msi' } }, {})).toBeNull()
+    expect(
+      resolveDownload('linux', { platforms: { windows: { href: 'https://example.com/win.msi' } } }, {})
+    ).toBeNull()
     expect(resolveDownload('windows', null, {})).toBeNull()
     expect(resolveDownload(null, null, {})).toBeNull()
   })
 
   it('returns the manifest link and default label for a matched platform', () => {
-    expect(resolveDownload('windows', { windows: { href: 'https://example.com/win.msi' } }, options)).toEqual({
+    expect(
+      resolveDownload('windows', { platforms: { windows: { href: 'https://example.com/win.msi' } } }, options)
+    ).toEqual({
       href: 'https://example.com/win.msi',
       label: 'Download for Windows',
     })
@@ -174,8 +201,10 @@ describe('resolveDownload', () => {
       resolveDownload(
         'chromeos',
         {
-          chromeos: { href: 'https://example.com/chromeos.apk' },
-          android: { href: 'https://example.com/android.apk' },
+          platforms: {
+            chromeos: { href: 'https://example.com/chromeos.apk' },
+            android: { href: 'https://example.com/android.apk' },
+          },
         },
         options
       )
@@ -184,7 +213,11 @@ describe('resolveDownload', () => {
 
   it('falls back to the Android entry for ChromeOS when no ChromeOS-specific one is published', () => {
     expect(
-      resolveDownload('chromeos', { android: { href: 'https://example.com/android.apk' } }, options)
+      resolveDownload(
+        'chromeos',
+        { platforms: { android: { href: 'https://example.com/android.apk' } } },
+        options
+      )
     ).toEqual({
       href: 'https://example.com/android.apk',
       label: 'Get for ChromeOS',
@@ -193,7 +226,11 @@ describe('resolveDownload', () => {
 
   it('falls back to fallbackHref for ChromeOS when the manifest has neither a chromeos nor an android entry', () => {
     expect(
-      resolveDownload('chromeos', { windows: { href: 'https://example.com/win.msi' } }, options)
+      resolveDownload(
+        'chromeos',
+        { platforms: { windows: { href: 'https://example.com/win.msi' } } },
+        options
+      )
     ).toEqual({
       href: 'https://example.com/releases',
       label: 'View Downloads',
@@ -204,7 +241,7 @@ describe('resolveDownload', () => {
     expect(
       resolveDownload(
         'windows',
-        { windows: { href: 'https://example.com/win.msi', label: 'Get the app' } },
+        { platforms: { windows: { href: 'https://example.com/win.msi', label: 'Get the app' } } },
         options
       )
     ).toEqual({ href: 'https://example.com/win.msi', label: 'Get the app' })
