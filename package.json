@@ -53,6 +53,16 @@
       "optional": true
     }
   },
+  "funding": [
+    {
+      "type": "github",
+      "url": "https://github.com/sponsors/ScottKirvan"
+    },
+    {
+      "type": "ko-fi",
+      "url": "https://ko-fi.com/ScottKirvan"
+    }
+  ],
   "keywords": [
     "vue",
     "vue3",
