@@ -82,6 +82,15 @@ Published to npm as [`bojuvue`](https://www.npmjs.com/package/bojuvue). It exist
 
 Every component exports from `bojuvue`. Components with VitePress-specific builds are located at `bojuvue/vitepress` — same exported name, resolves VitePress-specific values and renders through real VitePress components. `vitepress` is an optional peer dependency: installing the package alone never requires it.
 
+Why not a monorepo workspace?
+-----------------------------
+
+npm/yarn/pnpm workspaces already solve "share a component across projects" for free, and if every consuming site lived in this repo, that would be the right answer — skip this package entirely.
+
+It only holds while that's true. The moment a consuming site is a separate repo — a different site, a client's project, a repo you don't control — a workspace can't reach across that boundary. There's no shared `package.json` to add an entry to, no symlinked `node_modules` to rely on. Publishing is what still works: a versioned package on the registry that any repo, anywhere, can `npm install` and `npm update`.
+
+That's the actual reason this exists — not "components in a folder," but components that survive the boundary between repos.
+
 Contributing
 ------------
 See [CONTRIBUTING.md](CONTRIBUTING.md) for development setup, the branch and commit
