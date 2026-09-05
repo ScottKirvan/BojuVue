@@ -1,6 +1,6 @@
 {
   "name": "bojuvue",
-  "version": "0.3.2",
+  "version": "0.4.0",
   "type": "module",
   "license": "MIT",
   "description": "Vue 3 components including a download button that serves each visitor the right build for their OS. Works in any Vue 3 app; VitePress-aware variants included.",

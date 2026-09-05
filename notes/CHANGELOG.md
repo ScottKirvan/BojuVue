@@ -1,5 +1,18 @@
 # Changelog
 
+## [0.4.0](https://github.com/ScottKirvan/BojuVue/compare/v0.3.2...v0.4.0) (2026-09-05)
+
+
+### Features
+
+* require the enveloped platform manifest shape ([5df1de4](https://github.com/ScottKirvan/BojuVue/commit/5df1de46e74c7c65a964c482c9942e72eb0b8880))
+
+
+### Bug Fixes
+
+* add funding call to npm package ([696d4b9](https://github.com/ScottKirvan/BojuVue/commit/696d4b99d0d9d88dc4d397208dec1e6c2874fecc))
+* update package description, update homepage, and add a bugs link. ([bf9003a](https://github.com/ScottKirvan/BojuVue/commit/bf9003a86ab317ac2244ece6fadddeb24e908641))
+
 ## [0.3.2](https://github.com/ScottKirvan/BojuVue/compare/v0.3.1...v0.3.2) (2026-09-04)
 
 
