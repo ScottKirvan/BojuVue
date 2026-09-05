@@ -9,7 +9,7 @@
 // rather than via `export * from './index'`, which would otherwise collide
 // on that name.
 export { detectPlatform, resolveDownload, resolveManifestUrl, defaultLabels } from './platform'
-export type { BVPlatformManifest, BVPlatformEntry, BVPlatformId } from './platform'
+export type { BVPlatformData, BVPlatformEntry, BVPlatformId, BVPlatformManifest } from './platform'
 export type { BVPlatformButtonProps } from './BVPlatformButton.types'
 export { default as BVPlatformButton } from './vitepress/BVPlatformButton.vue'
 
