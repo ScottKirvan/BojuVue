@@ -1,15 +1,20 @@
-# BojuVue 보주뷰 [![starline](https://raw.githubusercontent.com/ScottKirvan/BojuVue/refs/heads/starlines/ScottKirvan/BojuVue/starline.svg)](https://github.com/qoomon/starlines)
-[![stars](https://img.shields.io/github/stars/ScottKirvan/BojuVue)](https://github.com/ScottKirvan/BojuVue/stargazers) [![last update](https://img.shields.io/github/last-commit/ScottKirvan/BojuVue)](https://github.com/ScottKirvan/BojuVue/commits/main) [![license](https://img.shields.io/github/license/ScottKirvan/BojuVue.svg)](https://github.com/ScottKirvan/BojuVue/blob/main/LICENSE.md) [![discord](https://img.shields.io/discord/1052011377415438346?style=flat-square&label=discord&color=00ACD7)](https://discord.gg/TN6XJSNK5Y)
+# BojuVue 보주뷰 <a href="https://github.com/qoomon/starlines"><img src="https://raw.githubusercontent.com/ScottKirvan/BojuVue/refs/heads/starlines/ScottKirvan/BojuVue/starline.svg" alt="starline" /></a>
 
 BojuVue is a Vue 3 component library including a download button that serves each visitor the right build for their OS. Works in any Vue 3 app; VitePress-aware variants at a second import path, zero VitePress overhead in the generic build.
 
 <!-- TODO: demo GIF — record label changing across macOS, Windows, Linux → save to assets/media/demo.gif -->
 
+<div align="center"><a href="https://github.com/ScottKirvan/BojuVue/stargazers"><img src="https://img.shields.io/github/stars/ScottKirvan/BojuVue" alt="stars" /></a> <a href="https://github.com/ScottKirvan/BojuVue/commits/main"><img src="https://img.shields.io/github/last-commit/ScottKirvan/BojuVue" alt="last update" /></a> <a href="https://github.com/ScottKirvan/BojuVue/blob/main/LICENSE.md"><img src="https://img.shields.io/github/license/ScottKirvan/BojuVue.svg" alt="license" /></a> <a href="https://discord.gg/TN6XJSNK5Y"><img src="https://img.shields.io/discord/1052011377415438346?style=flat-square&label=discord&color=00ACD7" alt="discord" /></a></div>
+
 **[See it live](https://www.scottkirvan.com/BojuVue/appendix/examples.html)** — every component rendered, not just described.
+
+## Install
 
 ```sh
 npm install bojuvue
 ```
+
+## Usage
 
 ```vue
 <script setup>
@@ -43,8 +48,9 @@ export default {
 }
 ```
 
+Then in any .md page, no import needed:
+
 ```md
-<!-- any .md page, no import needed -->
 <BVPlatformButton manifest-url="platformButton.json" />
 ```
 
@@ -69,10 +75,10 @@ What's in the package
 Published to npm as [`bojuvue`](https://www.npmjs.com/package/bojuvue). It exists so that VitePress sites can share one set of landing-page components instead of duplicating them per repo. This repo gets updated, the package gets published, and every consuming site picks it up with `npm update`.
 
 - **BVPlatformButton** — reads the visitor's OS from the browser, fetches a manifest you host, and links to the right download. No manifest entry for a platform? The button hides itself, or shows a fallback link if you provide one. VitePress sites get real `VPButton` styling from `bojuvue/vitepress`; plain Vue 3 apps use the same prop surface without any VitePress dependency.
-- **BVMoreButton** — an overflow dropdown for the secondary links every project needs (repo, report a bug, request a feature) without letting them outweigh your primary call-to-action. Modeled on the pattern Obsidian uses on its community-plugin pages. Visible-text mode ("More...") or a compact icon-only "⋯" trigger; VitePress sites get real `VPButton` styling for free via `bojuvue/vitepress`, same as `BVPlatformButton`.
+- **BVMoreButton** — an overflow dropdown for the secondary links every project needs (repo, report a bug, request a feature) without letting them outweigh your primary call-to-action.  Visible-text mode ("More...") or a compact icon-only "⋯" button; VitePress sites get real `VPButton` styling for free via `bojuvue/vitepress`, same as `BVPlatformButton`.
   <!-- TODO: demo GIF/screenshot — the dropdown open, showing the GitHub/bug/feature links → save to assets/media/more-button-demo.gif -->
 - **BVButton** — VitePress's own `VPButton` prop shape, usable in any Vue 3 app. The primitive the others build on.
-- **BVIconButton** — `BVButton` with an optional inline SVG icon.
+- **BVIconButton** — `BVButton` with an optional inline SVG icon in addition to, or in place of, the button text.
 
 Every component exports from `bojuvue`. Components with VitePress-specific builds are located at `bojuvue/vitepress` — same exported name, resolves VitePress-specific values and renders through real VitePress components. `vitepress` is an optional peer dependency: installing the package alone never requires it.
 
