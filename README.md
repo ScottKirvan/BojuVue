@@ -1,10 +1,5 @@
-# BojuVue 보주뷰
-
-[![starline](https://raw.githubusercontent.com/ScottKirvan/BojuVue/refs/heads/starlines/ScottKirvan/BojuVue/starline.svg)](https://github.com/qoomon/starlines)
-[![stars](https://img.shields.io/github/stars/ScottKirvan/BojuVue)](https://github.com/ScottKirvan/BojuVue/stargazers)
-[![last update](https://img.shields.io/github/last-commit/ScottKirvan/BojuVue)](https://github.com/ScottKirvan/BojuVue/commits/main)
-[![license](https://img.shields.io/github/license/ScottKirvan/BojuVue.svg)](https://github.com/ScottKirvan/BojuVue/blob/main/LICENSE.md)
-[![discord](https://img.shields.io/discord/1052011377415438346?style=flat-square&label=discord&color=00ACD7)](https://discord.gg/TN6XJSNK5Y)
+# BojuVue 보주뷰 [![starline](https://raw.githubusercontent.com/ScottKirvan/BojuVue/refs/heads/starlines/ScottKirvan/BojuVue/starline.svg)](https://github.com/qoomon/starlines)
+[![stars](https://img.shields.io/github/stars/ScottKirvan/BojuVue)](https://github.com/ScottKirvan/BojuVue/stargazers) [![last update](https://img.shields.io/github/last-commit/ScottKirvan/BojuVue)](https://github.com/ScottKirvan/BojuVue/commits/main) [![license](https://img.shields.io/github/license/ScottKirvan/BojuVue.svg)](https://github.com/ScottKirvan/BojuVue/blob/main/LICENSE.md) [![discord](https://img.shields.io/discord/1052011377415438346?style=flat-square&label=discord&color=00ACD7)](https://discord.gg/TN6XJSNK5Y)
 
 BojuVue is a Vue 3 component library including a download button that serves each visitor the right build for their OS. Works in any Vue 3 app; VitePress-aware variants at a second import path, zero VitePress overhead in the generic build.
 
