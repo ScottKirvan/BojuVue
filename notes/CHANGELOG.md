@@ -13,6 +13,8 @@
 * add funding call to npm package ([696d4b9](https://github.com/ScottKirvan/BojuVue/commit/696d4b99d0d9d88dc4d397208dec1e6c2874fecc))
 * update package description, update homepage, and add a bugs link. ([bf9003a](https://github.com/ScottKirvan/BojuVue/commit/bf9003a86ab317ac2244ece6fadddeb24e908641))
 
+Includes PRs: [#62](https://github.com/ScottKirvan/BojuVue/pull/62), [#63](https://github.com/ScottKirvan/BojuVue/pull/63), [#64](https://github.com/ScottKirvan/BojuVue/pull/64), [#65](https://github.com/ScottKirvan/BojuVue/pull/65)
+
 ## [0.3.2](https://github.com/ScottKirvan/BojuVue/compare/v0.3.1...v0.3.2) (2026-09-04)
 
 
