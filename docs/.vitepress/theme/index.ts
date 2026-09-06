@@ -21,6 +21,8 @@ const BUG_ICON =
   '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5 7 3M15 5l2-2"/><circle cx="12" cy="6" r="2"/><rect x="7" y="8" width="10" height="11" rx="5"/><path d="M7 11H3M21 11h-4M7 14H3M21 14h-4M7 17l-3 3M17 17l3 3"/></svg>'
 const LIGHTBULB_ICON =
   '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18h6M10 22h4M12 2a6 6 0 0 0-4 10.472c.53.474 1 1.028 1 1.528v1H15v-1c0-.5.47-1.054 1-1.528A6 6 0 0 0 12 2z"/></svg>'
+const HEART_ICON =
+  '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 9.5a5.5 5.5 0 0 1 9.591-3.676.56.56 0 0 0 .818 0A5.49 5.49 0 0 1 22 9.5c0 2.29-1.5 4-3 5.5l-5.492 5.313a2 2 0 0 1-3 .019L5 15c-1.5-1.5-3-3.2-3-5.5"/></svg>'
 
 export default {
   extends: DefaultTheme,
@@ -36,12 +38,28 @@ export default {
           'div',
           { style: { display: 'flex', gap: '12px', alignItems: 'center', marginTop: '12px' } },
           [
-            h(BojuVue.BVPlatformButton, {
-              fallbackHref: 'https://github.com/ScottKirvan/BojuVue/releases',
+            h(BojuVue.BVButton, {
+              text: 'Get Started',
+              href: '/guide/',
+            }),
+            h(BojuVue.BVButton, {
+              text: 'Components',
+              href: '/components/',
+              theme: 'alt'
+            }),
+            h(BojuVue.BVIconButton, {
+              text: 'Sponsor',
+              href: '/components/',
+              theme: 'alt',
+              icon: HEART_ICON
             }),
             h(BojuVue.BVMoreButton, {
               items: [
-                { label: 'GitHub repo', href: 'https://github.com/ScottKirvan/BojuVue', icon: GITHUB_ICON },
+                {
+                  label: 'View on GitHub',
+                  href: 'https://github.com/ScottKirvan/BojuVue',
+                  icon: GITHUB_ICON
+                },
                 {
                   label: 'Report a bug',
                   href: 'https://github.com/ScottKirvan/BojuVue/issues/new?template=bug_report.md',
