@@ -36,14 +36,15 @@ Works as-is in any Vue 3 app. Building a VitePress site instead? Swap the import
 ```ts
 // .vitepress/theme/index.ts
 import DefaultTheme from 'vitepress/theme'
-import * as BojuVue from 'bojuvue/vitepress'
+import { BVPlatformButton, BVMoreButton, BVButton, BVIconButton } from 'bojuvue/vitepress'
 
 export default {
   extends: DefaultTheme,
   enhanceApp({ app }) {
-    for (const [name, component] of Object.entries(BojuVue)) {
-      app.component(name, component)
-    }
+    app.component('BVPlatformButton', BVPlatformButton)
+    app.component('BVMoreButton', BVMoreButton)
+    app.component('BVButton', BVButton)
+    app.component('BVIconButton', BVIconButton)
   },
 }
 ```
