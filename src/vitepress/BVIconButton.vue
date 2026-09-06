@@ -135,8 +135,8 @@ defineOptions({ inheritAttrs: false })
 }
 
 .bv-icon-button-icon :deep(svg) {
-  width: 1em;
-  height: 1em;
+  width: 1.4em;
+  height: 1.4em;
 }
 
 /* Icon-only mode's icon sits centered on top of the (visually empty)
@@ -152,7 +152,7 @@ defineOptions({ inheritAttrs: false })
    also sized in VPButton's own em units. */
 .bv-icon-button.has-icon .bv-icon-button-icon {
   top: 50%;
-  transform: translateY(-50%);
+  transform: translate(-10%, calc(-50% - 0.06em));
 }
 
 .bv-icon-button.has-icon.medium .bv-icon-button-icon {
