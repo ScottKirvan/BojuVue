@@ -147,9 +147,11 @@ defineOptions({ inheritAttrs: false })
 
 /* Icon+text mode's icon sits on the real VPButton's left edge. Its
    font-size is pinned to match VPButton's own font-size for this size class
-   (rather than inheriting ambient page font-size) so its 1em width below
+   (rather than inheriting ambient page font-size) so its 1.4em width below
    lines up exactly with the padding-left reservation further down, which is
-   also sized in VPButton's own em units. */
+   also sized in VPButton's own em units. The 0.06em tweak above ensures precise vertical alignment. 
+   the text looks good cheated down slightly in the button, but the 
+   icon will look to low using the same alignment */
 .bv-icon-button.has-icon .bv-icon-button-icon {
   top: 50%;
   transform: translate(-10%, calc(-50% - 0.06em));
@@ -186,15 +188,15 @@ defineOptions({ inheritAttrs: false })
 
 /* Reserves room on the real VPButton's left for the overlaid icon plus a
    gap before the text, on top of VPButton's own normal left padding (20px/
-   24px, mirrored exactly by ../BVButton.vue). The `1em` here is relative to
+   24px, mirrored exactly by ../BVButton.vue). The `1.4em` here is relative to
    VPButton's own font-size (14px/16px for medium/big) — the same 14px/16px
    the icon span above is pinned to, so the two stay in sync even though
    they're set on different elements. */
 :deep(.VPButton.has-icon.medium) {
-  padding-left: calc(20px + 1em + 6px);
+  padding-left: calc(20px + 1.4em + 6px);
 }
 
 :deep(.VPButton.has-icon.big) {
-  padding-left: calc(24px + 1em + 6px);
+  padding-left: calc(24px + 1.4em + 6px);
 }
 </style>
