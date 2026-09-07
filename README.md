@@ -16,6 +16,13 @@ npm install bojuvue
 
 ## Usage
 
+Import the stylesheet once, anywhere in your app's entry point — components render
+with no button skin, no dropdown panel background, and raw-size icons without it:
+
+```ts
+import 'bojuvue/style.css'
+```
+
 ```vue
 <script setup>
 import { BVPlatformButton } from 'bojuvue'
@@ -37,6 +44,7 @@ Works as-is in any Vue 3 app. Building a VitePress site instead? Swap the import
 // .vitepress/theme/index.ts
 import DefaultTheme from 'vitepress/theme'
 import { BVPlatformButton, BVMoreButton, BVButton, BVIconButton } from 'bojuvue/vitepress'
+import 'bojuvue/style.css'
 
 export default {
   extends: DefaultTheme,
@@ -48,6 +56,9 @@ export default {
   },
 }
 ```
+
+The same stylesheet covers every component from both import paths — one import is
+enough regardless of which paths you use.
 
 Then in any .md page, no import needed:
 
