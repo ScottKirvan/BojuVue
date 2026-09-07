@@ -91,7 +91,13 @@ export default defineConfig({
           { text: 'BVPlatformButton', link: '/components/platform-button' },
         ],
       },
-      { text: 'Appendix', link: '/appendix/examples' },
+      {
+        text: 'Appendix',
+        items: [
+          { text: 'Live Examples', link: '/appendix/examples' },
+          { text: 'Troubleshooting', link: '/appendix/troubleshooting' },
+        ],
+      },
       { text: 'GitHub', link: 'https://github.com/ScottKirvan/BojuVue' }
     ],
     // A single flat sidebar, not one keyed per path prefix — VitePress scopes
@@ -122,6 +128,7 @@ export default defineConfig({
         text: 'Appendix',
         items: [
           { text: 'Live Examples', link: '/appendix/examples' },
+          { text: 'Troubleshooting', link: '/appendix/troubleshooting' },
         ],
       },
     ],
