@@ -9,6 +9,8 @@
 * tweak the size and position of the icon on the BVIconButton ([771c52d](https://github.com/ScottKirvan/BojuVue/commit/771c52d9a262d85304ac379e8e08c93b293460cb))
 * update comments to reflect the actual code and fix icon padding ([ab1ef39](https://github.com/ScottKirvan/BojuVue/commit/ab1ef396e24148bb2c82a09d6ab6d6b06d6a5116))
 
+Includes PRs: [#66](https://github.com/ScottKirvan/BojuVue/pull/66), [#67](https://github.com/ScottKirvan/BojuVue/pull/67)
+
 ## [0.4.0](https://github.com/ScottKirvan/BojuVue/compare/v0.3.2...v0.4.0) (2026-09-05)
 
 
