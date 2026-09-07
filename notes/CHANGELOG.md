@@ -1,5 +1,14 @@
 # Changelog
 
+## [0.4.1](https://github.com/ScottKirvan/BojuVue/compare/v0.4.0...v0.4.1) (2026-09-07)
+
+
+### Bug Fixes
+
+* remove 10% shift left on icon padding - earlier alignment fix supersedes this change. ([93af2c7](https://github.com/ScottKirvan/BojuVue/commit/93af2c72650c2237ae053c61463ea82d6c7c500d))
+* tweak the size and position of the icon on the BVIconButton ([771c52d](https://github.com/ScottKirvan/BojuVue/commit/771c52d9a262d85304ac379e8e08c93b293460cb))
+* update comments to reflect the actual code and fix icon padding ([ab1ef39](https://github.com/ScottKirvan/BojuVue/commit/ab1ef396e24148bb2c82a09d6ab6d6b06d6a5116))
+
 ## [0.4.0](https://github.com/ScottKirvan/BojuVue/compare/v0.3.2...v0.4.0) (2026-09-05)
 
 
