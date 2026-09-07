@@ -28,6 +28,22 @@ import { BVMoreButton } from 'bojuvue'
 import { BVMoreButton } from 'bojuvue/vitepress'
 ```
 
+::: warning Dropdown panel looks unstyled? You're missing the stylesheet import
+`BVMoreButton`'s trigger renders through the real `VPButton` (or a hand-rolled
+equivalent), so it can look basically fine even without BojuVue's own CSS loaded — but
+the dropdown panel itself (background, border, shadow, item spacing, icon sizing) is
+all BojuVue-authored, not VitePress's. If it opens as plain unstyled links instead of a
+floating card, you're missing:
+
+```ts
+import 'bojuvue/style.css'
+```
+
+See [Import the stylesheet](/guide/installation#import-the-stylesheet) — this is the
+one setup step it's easiest to skip, since everything else about a component can look
+fine without it right up until you open this menu.
+:::
+
 ## Demo
 
 <script setup>
