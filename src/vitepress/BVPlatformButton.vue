@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { computed, onMounted, ref } from 'vue'
-import { useData } from 'vitepress'
+import { computed, inject, onMounted, ref } from 'vue'
+import { BaseKey } from './injectionKeys'
 import {
   detectPlatform,
   resolveDownload,
@@ -44,16 +44,17 @@ const props = withDefaults(
   }
 )
 
-const { site } = useData()
-// Read explicitly here rather than leaning on template auto-unwrap of
-// `site` (a ref) — keeps the base-resolution behavior in one place that's
-// straightforward to unit test regardless of how faithfully a test double
-// for `useData()` reproduces Vue's real ref semantics.
-const base = computed(() => site.value.base)
+// See createVitePressButtons.ts / #70 for why this can't be
+// `import { useData } from 'vitepress'` + `useData().site.value.base` here.
+// `base` comes from whichever app called createVitePressButtons({ base })
+// and app.use()'d the result — a plain string, not a ref, since it's
+// resolved once in the consumer's own source rather than read reactively
+// from VitePress's own site data.
+const base = inject(BaseKey, '')
 
 const platform = ref<BVPlatformId | null>(null)
 
-const { manifest } = useManifestFetch(() => resolveManifestUrl(base.value, props.manifestUrl))
+const { manifest } = useManifestFetch(() => resolveManifestUrl(base, props.manifestUrl))
 
 onMounted(() => {
   platform.value = detectPlatform(typeof navigator === 'undefined' ? undefined : navigator)

@@ -37,28 +37,52 @@ import { BVPlatformButton } from 'bojuvue'
 ```
 
 Works as-is in any Vue 3 app. Building a VitePress site instead? Swap the import for
-`bojuvue/vitepress` to get real `VPButton` theme styling, and register it once so every
-`.md` page can use it with no per-page import:
+`bojuvue/vitepress` to get real `VPButton` theme styling. This path needs one extra
+setup call in `enhanceApp` — see [VitePress plugin setup](#vitepress-plugin-setup)
+below for why — then every `.md` page can use it with no per-page import:
 
 ```ts
 // .vitepress/theme/index.ts
 import DefaultTheme from 'vitepress/theme'
-import { BVPlatformButton, BVMoreButton, BVButton, BVIconButton } from 'bojuvue/vitepress'
+import { VPButton } from 'vitepress/theme'
+import { useData } from 'vitepress'
+import { createVitePressButtons } from 'bojuvue/vitepress'
 import 'bojuvue/style.css'
 
 export default {
   extends: DefaultTheme,
   enhanceApp({ app }) {
-    app.component('BVPlatformButton', BVPlatformButton)
-    app.component('BVMoreButton', BVMoreButton)
-    app.component('BVButton', BVButton)
-    app.component('BVIconButton', BVIconButton)
+    // useData() needs a component setup context — enhanceApp's callback
+    // body isn't one, so runWithContext() bridges that.
+    const base = app.runWithContext(() => useData().site.value.base)
+    app.use(createVitePressButtons({ VPButton, base }))
   },
 }
 ```
 
 The same stylesheet covers every component from both import paths — one import is
 enough regardless of which paths you use.
+
+### VitePress plugin setup
+
+The `/vitepress` variants of `BVButton`, `BVIconButton`, `BVMoreButton`, and
+`BVPlatformButton` can't get their real `VPButton` reference from a plain top-level
+`import { VPButton } from 'vitepress/theme'` inside this package itself — that import
+breaks the moment a consumer's VitePress SSR build externalizes `bojuvue` (Vite's
+default for any `node_modules` dependency), because an externalized import bypasses
+Vite's own module resolution and falls through to Node's raw resolver, which doesn't
+know about VitePress's internal aliasing. See
+[#70](https://github.com/ScottKirvan/BojuVue/issues/70) for the full failure mode.
+
+`createVitePressButtons({ VPButton, base? })` fixes this by taking `VPButton` from
+*your* source instead — the one place guaranteed to resolve it correctly — and
+`app.use()`-installing the four components against it. `base` is optional (defaults to
+`''`); only pass it if your site isn't deployed at the domain root, since
+`BVPlatformButton` needs it to resolve a site-relative `manifestUrl` correctly.
+
+Skipping this and importing `BVButton` etc. directly (the old zero-config pattern)
+throws immediately with a message pointing back here, rather than failing silently or
+rendering with the wrong styling.
 
 Then in any .md page, no import needed:
 

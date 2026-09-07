@@ -1,8 +1,18 @@
 <script setup lang="ts">
-import { computed } from 'vue'
-import { withBase } from 'vitepress'
+import { computed, inject } from 'vue'
+import { joinBase } from '../url'
+import { BaseKey } from './injectionKeys'
 import VPBVButton from './BVButton.vue'
 import GenericBVButton from '../BVButton.vue'
+
+// See createVitePressButtons.ts / #70 for why this can't be
+// `import { withBase } from 'vitepress'` here. joinBase() is a zero-
+// dependency reimplementation of withBase()'s actual logic (base-prefixing
+// a root-relative path); `base` itself comes from whichever app called
+// createVitePressButtons({ base: ... }) and app.use()'d the result —
+// defaults to '' (no prefix) if that was never given, matching a site
+// deployed at the domain root.
+const base = inject(BaseKey, '')
 
 // The prop type is written out inline here (matching `BVIconButtonProps` in
 // ../BVIconButton.types.ts, and the prop type in the generic implementation
@@ -72,23 +82,23 @@ defineOptions({ inheritAttrs: false })
       likewise rendered after the button (not before) for the same on-top
       paint-order reason.
 
-      `href` is run through `withBase()` here because GenericBVButton has no
+      `href` is run through `joinBase()` here because GenericBVButton has no
       idea it's running inside VitePress and renders whatever `href` it's
       given verbatim — whereas in the v-else branch below, VPBVButton's real
       VPButton already base-prefixes internally (its own normalizeLink()
-      calls withBase() on any non-external href). Without this, the exact
-      same site-relative `href` value would need to differ depending on
-      which mode a given BVIconButton instance happened to be in, which is
-      not a contract callers should have to think about. withBase() is a
-      no-op for an external URL or a path that isn't root-relative, so this
-      is safe to apply unconditionally.
+      calls VitePress's own withBase() on any non-external href). Without
+      this, the exact same site-relative `href` value would need to differ
+      depending on which mode a given BVIconButton instance happened to be
+      in, which is not a contract callers should have to think about.
+      joinBase() is a no-op for an external URL or a path that isn't
+      root-relative, so this is safe to apply unconditionally.
     -->
     <template v-if="isIconOnly">
       <GenericBVButton
         v-bind="$attrs"
         class="bv-icon-button-target icon-only"
         text=""
-        :href="href ? withBase(href) : undefined"
+        :href="href ? joinBase(base, href) : undefined"
         :target="target"
         :rel="rel"
         :size="size"

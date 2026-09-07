@@ -1,22 +1,31 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { mount, flushPromises } from '@vue/test-utils'
+import { config, mount, flushPromises } from '@vue/test-utils'
+import { VPButton } from 'vitepress/theme'
 import BVPlatformButton from './BVPlatformButton.vue'
+import { VPButtonKey, BaseKey } from './injectionKeys'
 
-const useDataMock = vi.fn()
-
+// BVPlatformButton itself no longer calls useData() (see #70 —
+// createVitePressButtons.ts is why; base now arrives via inject(), set
+// per-test below), but importing VPButton from 'vitepress/theme' (via
+// BVIconButton -> BVButton) pulls in that entry's whole theme barrel,
+// and NotFound.vue calls useData() at module-eval time — so this mock is
+// here purely to satisfy that transitive import.
 vi.mock('vitepress', () => ({
-  useData: () => useDataMock(),
+  useData: () => ({ site: { value: { base: '/', cleanUrls: false } } }),
+  withBase: (path: string) => path,
 }))
+
+config.global.provide = { [VPButtonKey as symbol]: VPButton, [BaseKey as symbol]: '/' }
 
 const FALLBACK_HREF = 'https://example.com/downloads'
 
 async function mountButton(props: Record<string, unknown> = {}, base = '/') {
-  useDataMock.mockReturnValue({ site: { value: { base } } })
   const wrapper = mount(BVPlatformButton, {
     props: {
       fallbackHref: FALLBACK_HREF,
       ...props,
     },
+    global: { provide: { [BaseKey as symbol]: base } },
   })
   await flushPromises()
   return wrapper
@@ -141,7 +150,6 @@ describe('BVPlatformButton (VitePress-specific implementation)', () => {
         })
       }) as unknown as typeof fetch
 
-      useDataMock.mockReturnValue({ site: { value: { base: '/' } } })
       const wrapper = mount(BVPlatformButton, { props: { fallbackHref: FALLBACK_HREF } })
       await flushPromises()
 
@@ -159,7 +167,6 @@ describe('BVPlatformButton (VitePress-specific implementation)', () => {
         })
       }) as unknown as typeof fetch
 
-      useDataMock.mockReturnValue({ site: { value: { base: '/' } } })
       const wrapper = mount(BVPlatformButton, {
         props: { fallbackHref: FALLBACK_HREF, manifestUrl: 'first.json' },
       })

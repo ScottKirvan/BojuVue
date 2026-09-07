@@ -1,6 +1,8 @@
 import { describe, it, expect, vi } from 'vitest'
-import { mount } from '@vue/test-utils'
+import { config, mount } from '@vue/test-utils'
+import { VPButton } from 'vitepress/theme'
 import BVMoreButton from './BVMoreButton.vue'
+import { VPButtonKey, BaseKey } from './injectionKeys'
 
 // BVMoreButton itself never calls useData(), but importing VPButton from
 // 'vitepress/theme' (via ./BVIconButton.vue -> ./BVButton.vue) pulls in that
@@ -15,6 +17,12 @@ vi.mock('vitepress', () => ({
   useData: () => ({ site: { value: { base: '/', cleanUrls: false } } }),
   withBase: (path: string) => path,
 }))
+
+// BVButton (rendered internally via BVIconButton in text mode) gets
+// VPButton via inject(), not a top-level import — every mount() in this
+// file needs the real component provided the same way
+// app.use(createVitePressButtons(...)) would in production.
+config.global.provide = { [VPButtonKey as symbol]: VPButton, [BaseKey as symbol]: '' }
 
 const ITEMS = [
   { label: 'GitHub repo', href: 'https://github.com/example/example' },

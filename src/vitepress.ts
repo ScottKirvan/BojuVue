@@ -35,3 +35,13 @@ export { default as BVIconButton } from './vitepress/BVIconButton.vue'
 // mode gets real VPButton styling automatically.
 export type { BVMoreButtonItem, BVMoreButtonProps } from './BVMoreButton.types'
 export { default as BVMoreButton } from './vitepress/BVMoreButton.vue'
+
+// Required setup call for all four exports above (see #70 and
+// createVitePressButtons.ts): none of them can resolve their real
+// VitePress-specific values (VPButton, the site's base path) from a
+// top-level `import ... from 'vitepress'` inside this package's own
+// compiled output — that import breaks under a consumer's SSR build once
+// this package gets externalized, which Vite does by default. The consumer
+// supplies those values instead, from their own source, via
+// app.use(createVitePressButtons({ VPButton, base })) in enhanceApp.
+export { createVitePressButtons } from './vitepress/createVitePressButtons'

@@ -1,5 +1,18 @@
 <script setup lang="ts">
-import { VPButton } from 'vitepress/theme'
+import { inject } from 'vue'
+import { VPButtonKey } from './injectionKeys'
+
+// See createVitePressButtons.ts / #70: VPButton can't be a top-level
+// `import ... from 'vitepress/theme'` in this file — that import breaks
+// under a consumer's SSR build once bojuvue gets externalized (the default).
+// It's supplied instead by whichever app called
+// createVitePressButtons({ VPButton, ... }) and app.use()'d the result.
+const VPButton = inject(VPButtonKey)
+if (!VPButton) {
+  throw new Error(
+    "BVButton (bojuvue/vitepress) requires createVitePressButtons()'s plugin to be installed first — call app.use(createVitePressButtons({ VPButton })) in your VitePress theme's enhanceApp. See the 'VitePress plugin setup' section of the installation guide."
+  )
+}
 
 // The prop type is written out inline here (matching `BVButtonProps` in
 // ../BVButton.types.ts, which is exported for public/programmatic use, and

@@ -1,8 +1,11 @@
 import { describe, it, expect, vi } from 'vitest'
-import { mount } from '@vue/test-utils'
+import { config, mount } from '@vue/test-utils'
+import { VPButton } from 'vitepress/theme'
 import BVIconButton from './BVIconButton.vue'
+import { VPButtonKey, BaseKey } from './injectionKeys'
 
-// BVIconButton itself never calls useData(), but importing VPButton from
+// BVIconButton itself no longer calls withBase() (see #70 —
+// createVitePressButtons.ts is why), but importing VPButton from
 // 'vitepress/theme' (via ./BVButton.vue) pulls in that entry's whole theme
 // barrel (NavBar, NotFound, etc.), and NotFound.vue calls useData() at
 // module-eval time — so this mock is here purely to satisfy that transitive
@@ -15,6 +18,13 @@ vi.mock('vitepress', () => ({
   useData: () => ({ site: { value: { base: '/', cleanUrls: false } } }),
   withBase: (path: string) => path,
 }))
+
+// BVButton (rendered internally in icon+text mode) gets VPButton via
+// inject(), not a top-level import — every mount() in this file needs the
+// real component provided the same way app.use(createVitePressButtons(...))
+// would in production. base defaults to '' — none of these tests exercise
+// a non-root site base.
+config.global.provide = { [VPButtonKey as symbol]: VPButton, [BaseKey as symbol]: '' }
 
 describe('BVIconButton (VitePress-specific implementation)', () => {
   describe('icon-only mode (no text)', () => {

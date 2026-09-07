@@ -66,6 +66,18 @@ of duplicating them per repo.
   those entries existing. This went unnoticed until a real external consumer
   (BojuBot) hit `ERR_PACKAGE_PATH_NOT_EXPORTED` trying to load it — this repo's own
   dogfooding never exercises real package resolution, only source imports.
+- The `/vitepress` entry's `BVButton`, `BVIconButton`, `BVMoreButton`, and
+  `BVPlatformButton` get VitePress's real `VPButton` (and, for `BVPlatformButton`,
+  the site's `base`) via `inject()`, not a top-level `import ... from 'vitepress'` —
+  that import breaks under a consumer's SSR build once this package is externalized
+  (Vite's default), the same failure class as the CSS bullet above, just for JS
+  instead of CSS (see #70). `createVitePressButtons({ VPButton, base? })`, exported
+  from `src/vitepress.ts`, is how a consumer supplies those values from their own
+  source and `app.use()`s the result — required now; a bare `import { BVButton }
+  from 'bojuvue/vitepress'` throws immediately if the plugin was never installed.
+  `src/url.ts`'s `joinBase()` is a zero-dependency reimplementation of VitePress's
+  own `withBase()`, used internally so `BVIconButton`'s icon-only mode doesn't need
+  `withBase` injected as a fourth dependency.
 - Components with real logic (detection, data-shaping, anything beyond pure rendering)
   should have that logic extracted into a plain `.ts` module (see `src/platform.ts`)
   rather than living inline in the `.vue` file's `<script setup>` — much easier to unit

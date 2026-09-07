@@ -1,6 +1,8 @@
 import { h } from 'vue'
 import type { Theme } from 'vitepress'
 import DefaultTheme from 'vitepress/theme'
+import { VPButton } from 'vitepress/theme'
+import { useData } from 'vitepress'
 // Imports the vitepress-specific *source* entry (not the published
 // package's `./vitepress` subpath) so this site keeps live-previewing
 // components straight from this repo's own source, the same way it always
@@ -85,8 +87,12 @@ export default {
     })
   },
   enhanceApp({ app }) {
-    for (const [name, component] of Object.entries(BojuVue)) {
-      app.component(name, component as any)
-    }
+    // See #70 and notes/dev/lessonslearned.md: the /vitepress components
+    // can't resolve VPButton themselves from inside this package's own
+    // compiled output, so it's supplied here instead. useData() needs a
+    // component setup context to resolve its own injection, which
+    // enhanceApp's callback body isn't — runWithContext() bridges that.
+    const base = app.runWithContext(() => useData().site.value.base)
+    app.use(BojuVue.createVitePressButtons({ VPButton, base }))
   },
 } satisfies Theme

@@ -1,9 +1,12 @@
 import { describe, it, expect, vi } from 'vitest'
-import { mount } from '@vue/test-utils'
+import { config, mount } from '@vue/test-utils'
+import { VPButton } from 'vitepress/theme'
 import BVButton from './BVButton.vue'
+import { VPButtonKey } from './injectionKeys'
 
-// BVButton itself never calls useData(), but vitepress/theme's barrel
-// export transitively pulls in NotFound.vue, which does call useData() at
+// BVButton itself no longer calls useData()/withBase() (see #70 —
+// createVitePressButtons.ts is why), but vitepress/theme's barrel export
+// still transitively pulls in NotFound.vue, which calls useData() at
 // module-eval time — without this mock, importing VPButton from
 // 'vitepress/theme' below throws outside a real VitePress app context.
 // VPButton's own normalizeLink() (invoked for a non-external href) also
@@ -14,6 +17,12 @@ vi.mock('vitepress', () => ({
   useData: () => ({ site: { value: { base: '/', cleanUrls: false } } }),
   withBase: (path: string) => path,
 }))
+
+// BVButton now gets VPButton via inject() (createVitePressButtons.ts),
+// not a top-level import — every mount() in this file needs the real
+// component provided the same way app.use(createVitePressButtons(...))
+// would in production.
+config.global.provide = { [VPButtonKey as symbol]: VPButton }
 
 describe('BVButton (VitePress-specific implementation)', () => {
   describe('tag auto-detection', () => {
