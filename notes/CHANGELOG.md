@@ -7,6 +7,8 @@
 
 * expose the built CSS via package.json exports ([ad40f02](https://github.com/ScottKirvan/BojuVue/commit/ad40f025e841256ea1fb0157d2909dd2564a18c8))
 
+Includes PRs: [#68](https://github.com/ScottKirvan/BojuVue/pull/68), [#69](https://github.com/ScottKirvan/BojuVue/pull/69)
+
 ## [0.4.1](https://github.com/ScottKirvan/BojuVue/compare/v0.4.0...v0.4.1) (2026-09-07)
 
 
