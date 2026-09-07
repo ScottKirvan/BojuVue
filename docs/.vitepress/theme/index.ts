@@ -38,8 +38,13 @@ export default {
           'div',
           { style: { display: 'flex', gap: '12px', alignItems: 'center', marginTop: '12px' } },
           [
+            h(BojuVue.BVIconButton, {
+              text: 'Sponsor',
+              href: 'https://github.com/sponsors/ScottKirvan',
+              icon: HEART_ICON
+            }),
             h(BojuVue.BVButton, {
-              text: 'Get Started',
+              text: 'Getting Started',
               href: '/guide/',
             }),
             h(BojuVue.BVButton, {
@@ -47,13 +52,8 @@ export default {
               href: '/components/',
               theme: 'alt'
             }),
-            h(BojuVue.BVIconButton, {
-              text: 'Sponsor',
-              href: '/components/',
-              theme: 'alt',
-              icon: HEART_ICON
-            }),
             h(BojuVue.BVMoreButton, {
+              theme: 'alt',
               items: [
                 {
                   label: 'View on GitHub',
