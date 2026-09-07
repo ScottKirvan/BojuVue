@@ -5,6 +5,7 @@ hero:
   name: "BojuVue"
   text: "Shared Vue 3 components"
   tagline: A component library published to npm, for any Vue 3 app — with VitePress-aware builds available where they help. Install it, register the components you need, and update later with npm update.
+# Action buttons manually disables in favor of BojuVue buttons
 #  actions:
 #    - theme: brand
 #      text: Get Started
