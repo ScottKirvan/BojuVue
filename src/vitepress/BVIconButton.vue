@@ -154,7 +154,7 @@ defineOptions({ inheritAttrs: false })
    icon will look to low using the same alignment */
 .bv-icon-button.has-icon .bv-icon-button-icon {
   top: 50%;
-  transform: translate(-10%, calc(-50% - 0.06em));
+  transform: translate(-0%, calc(-50% - 0.06em));
 }
 
 .bv-icon-button.has-icon.medium .bv-icon-button-icon {
