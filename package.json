@@ -26,7 +26,9 @@
     "./vitepress": {
       "types": "./dist/vitepress.d.ts",
       "import": "./dist/vitepress.js"
-    }
+    },
+    "./style.css": "./dist/bojuvue.css",
+    "./dist/bojuvue.css": "./dist/bojuvue.css"
   },
   "scripts": {
     "build": "vue-tsc -b && vite build",

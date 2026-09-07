@@ -151,6 +151,19 @@ npm run build
 grep -r vitepress dist/bojuvue.js   # should print nothing
 ```
 
+**One CSS file covers both entries — and must stay importable.** Every component's
+`<style scoped>` block gets extracted into a single `dist/bojuvue.css` regardless of
+which entry pulls it in (the two entries share most of the same underlying `.vue`
+files). `package.json`'s `exports` map must expose a subpath to it (`./style.css` and
+the literal `./dist/bojuvue.css`) — an unlisted subpath isn't just undocumented, it's
+hard-blocked by Node's own resolution (`ERR_PACKAGE_PATH_NOT_EXPORTED`). This repo's
+own docs site never catches a regression here on its own, since it imports component
+*source* directly rather than the published package (see the docs bullet above) — a
+real npm consumer is what actually exercises this. `package.exports.test.ts` at the
+repo root guards the `exports` entries; there's no equivalent automated check that
+the two entries' compiled JS stays free of a stray second CSS file, so a manual
+`ls dist/*.css` after `npm run build` is worth doing if you touch `vite.config.ts`.
+
 **Two independent implementations per VitePress-aware component.** A component that
 needs anything VitePress-specific (site data, the router, VitePress's own `VPButton`)
 doesn't take a runtime "VitePress mode" flag — it gets two fully independent

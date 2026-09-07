@@ -9,6 +9,25 @@ only need it if you're building a VitePress site and want the VitePress-aware
 component builds (see below). If you're embedding BojuVue components in a plain Vue 3
 app, skip it entirely — everything below works the same either way.
 
+## Import the stylesheet
+
+A compiled Vue library's `<style scoped>` blocks are extracted into a plain CSS file
+at build time, not auto-injected at runtime the way they are in this docs site's own
+dev server (which compiles component source directly). Import it once, anywhere in
+your app's entry point:
+
+```ts
+import 'bojuvue/style.css'
+```
+
+One file covers every component from *both* import paths (`bojuvue` and
+`bojuvue/vitepress`) — importing it once is enough regardless of which paths you use.
+Skipping this step doesn't error; components just render with browser-default
+styling instead — no button skin, no dropdown panel background/border/shadow, icons
+at their raw SVG size instead of scaled and positioned. Easy to miss until you look
+closely, so it's worth double-checking this is in place if a component looks
+unstyled.
+
 ## Registering components
 
 Every component works as an ordinary Vue 3 component — register it however you

@@ -56,6 +56,16 @@ of duplicating them per repo.
   files — not two exports of one file), ES module output, `vue` and `vitepress`
   external as peer dependencies, types emitted via `vite-plugin-dts`. Also holds the
   `test` config (vitest, jsdom environment) — no separate vitest config file.
+- Both entries' `<style scoped>` blocks compile into a single `dist/bojuvue.css` (the
+  two entries share most of the same `.vue` files, so Rollup merges the CSS). A
+  compiled Vue library's scoped styles aren't auto-injected at runtime the way they
+  are in this repo's own `docs/` dev server (which imports component *source*
+  directly, not the published package) — a real consumer must import this CSS file
+  themselves. `package.json`'s `exports` map exposes it as `./style.css` (and the
+  literal `./dist/bojuvue.css`); `package.exports.test.ts` at the repo root guards
+  those entries existing. This went unnoticed until a real external consumer
+  (BojuBot) hit `ERR_PACKAGE_PATH_NOT_EXPORTED` trying to load it — this repo's own
+  dogfooding never exercises real package resolution, only source imports.
 - Components with real logic (detection, data-shaping, anything beyond pure rendering)
   should have that logic extracted into a plain `.ts` module (see `src/platform.ts`)
   rather than living inline in the `.vue` file's `<script setup>` — much easier to unit
