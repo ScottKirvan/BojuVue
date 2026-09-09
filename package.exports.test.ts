@@ -1,7 +1,10 @@
 import { describe, expect, it } from 'vitest'
 import { existsSync, readFileSync } from 'node:fs'
 import { fileURLToPath } from 'node:url'
+import { createRequire } from 'node:module'
 import path from 'node:path'
+
+const require = createRequire(import.meta.url)
 
 // A compiled Vue library's `<style scoped>` blocks are extracted into a plain
 // CSS file at build time — nothing auto-injects them into a consumer's page
@@ -33,5 +36,29 @@ describe('package.json exports the built CSS', () => {
   it.skipIf(!existsSync(cssPath))('the built stylesheet actually contains component styles', () => {
     const css = readFileSync(cssPath, 'utf-8')
     expect(css).toContain('.bv-more-button-panel')
+  })
+})
+
+// #70/#72: a VitePress site's own .vitepress/config.js (or .ts) is loaded by
+// Vite's config bundler under Node's default module-type rules -- .js/.ts
+// fall back to CommonJS unless the consumer's package.json sets "type":
+// "module" (a real consumer, BojuBot, doesn't). An ESM-only package hits
+// `require()` on that path and fails outright, so this subpath needs both
+// conditions genuinely present -- not just the "import" one other subpaths
+// use, since it can be loaded from a CJS context this package doesn't
+// control.
+describe('package.json exports a CJS build of the Vite plugin, not just ESM', () => {
+  it('declares both the import and require conditions', () => {
+    expect(pkg.exports['./vite']).toEqual({
+      types: './dist/vite-plugin.d.ts',
+      import: './dist/vite.js',
+      require: './dist/vite.cjs',
+    })
+  })
+
+  const cjsPath = path.join(rootDir, 'dist/vite.cjs')
+  it.skipIf(!existsSync(cjsPath))('the built CJS file is actually require()-able and exports the plugin factory', () => {
+    const { bojuvue } = require(cjsPath)
+    expect(bojuvue().name).toBe('bojuvue')
   })
 })

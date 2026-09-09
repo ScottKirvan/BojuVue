@@ -67,6 +67,17 @@ of duplicating them per repo.
   injection required. Verified against a real reproduction (a packed tarball install,
   not a `file:`/symlink one — a symlinked install skips Vite's externalization path
   entirely and won't reproduce #70).
+- `bojuvue/vite`'s `exports` entry needs **both** an `import` and a `require`
+  condition (`dist/vite.js` and `dist/vite.cjs`), unlike every other subpath here,
+  which is ESM-only. A consumer's `.vitepress/config.js`/`.ts` is loaded by Vite's own
+  config bundler under Node's default module-type rules — plain `.js`/`.ts` fall back
+  to CommonJS unless the consumer's `package.json` sets `"type": "module"` (only
+  `.mjs`/`.mts` force ESM regardless of that field). An ESM-only package hits
+  `require()` on that path and fails outright — confirmed against a real consumer
+  (BojuBot) whose config is exactly this shape. `vite.plugin-cjs.config.ts` is a
+  second, separate build pass solely for the CJS copy (`vite.config.ts`'s own build
+  already emits the ESM one and the shared `.d.ts`) — `package.exports.test.ts` guards
+  both conditions actually resolve and that the CJS file is genuinely `require()`-able.
 - Both entries' `<style scoped>` blocks compile into a single `dist/bojuvue.css` (the
   two entries share most of the same `.vue` files, so Rollup merges the CSS). A
   compiled Vue library's scoped styles aren't auto-injected at runtime the way they

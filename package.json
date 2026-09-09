@@ -29,13 +29,14 @@
     },
     "./vite": {
       "types": "./dist/vite-plugin.d.ts",
-      "import": "./dist/vite.js"
+      "import": "./dist/vite.js",
+      "require": "./dist/vite.cjs"
     },
     "./style.css": "./dist/bojuvue.css",
     "./dist/bojuvue.css": "./dist/bojuvue.css"
   },
   "scripts": {
-    "build": "vue-tsc -b && vite build",
+    "build": "vue-tsc -b && vite build && vite build --config vite.plugin-cjs.config.ts",
     "test": "vitest run"
   },
   "devDependencies": {
