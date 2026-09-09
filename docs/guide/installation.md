@@ -85,6 +85,26 @@ registered globally:
 <BVPlatformButton fallback-href="https://github.com/your-org/your-repo/releases" />
 ```
 
+::: warning Production SSR builds (`vitepress build`)
+Add `bojuvue`'s Vite plugin to your `.vitepress/config.mts`, or importing anything from
+`bojuvue/vitepress` can break your build:
+
+```ts
+import { defineConfig } from 'vitepress'
+import { bojuvue } from 'bojuvue/vite'
+
+export default defineConfig({
+  vite: { plugins: [bojuvue()] },
+})
+```
+
+Vite externalizes `node_modules` dependencies by default during an SSR build, which
+breaks this package's internal `vitepress/theme` import — Node's raw loader resolves
+it instead of Vite's own resolver, and that fails. The plugin fixes it with no
+component API changes. See [#70](https://github.com/ScottKirvan/BojuVue/issues/70) for
+the full failure mode.
+:::
+
 ::: tip Registering per-page instead
 If a component is only used on one page, skip global registration and import it
 directly in that page's markdown body — a `.md` file compiles as a Vue SFC (VitePress-

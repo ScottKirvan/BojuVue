@@ -51,11 +51,22 @@ of duplicating them per repo.
   `BVPlatformButtonProps` in `src/BVPlatformButton.types.ts`) is fine to keep in its
   own file — the constraint is specifically about the `defineProps<T>()` type
   position.
-- `vite.config.ts` — Vite library-mode build with **two entries** (`src/index.ts` →
-  `bojuvue`, `src/vitepress.ts` → `vitepress`, producing two separate physical output
-  files — not two exports of one file), ES module output, `vue` and `vitepress`
-  external as peer dependencies, types emitted via `vite-plugin-dts`. Also holds the
-  `test` config (vitest, jsdom environment) — no separate vitest config file.
+- `vite.config.ts` — Vite library-mode build with **three entries** (`src/index.ts` →
+  `bojuvue`, `src/vitepress.ts` → `vitepress`, `src/vite-plugin.ts` → `vite`, each a
+  separate physical output file — not exports of one bundle), ES module output, `vue`
+  and `vitepress` external as peer dependencies, types emitted via `vite-plugin-dts`.
+  Also holds the `test` config (vitest, jsdom environment) — no separate vitest config
+  file.
+- `src/vite-plugin.ts` (published as `bojuvue/vite`) — a Vite plugin a *consumer* adds
+  to their own `vite.plugins` config. Fixes #70: a VitePress site's production SSR
+  build externalizes `node_modules` dependencies by default, which breaks this
+  package's internal `vitepress/theme` import inside `dist/vitepress.js` (Node's raw
+  ESM loader resolves it instead of Vite's, and fails). The plugin's `config()` hook
+  sets `ssr.noExternal: ['bojuvue']`, telling Vite to bundle this package through its
+  own resolver instead — no component API changes, no consumer-side dependency
+  injection required. Verified against a real reproduction (a packed tarball install,
+  not a `file:`/symlink one — a symlinked install skips Vite's externalization path
+  entirely and won't reproduce #70).
 - Both entries' `<style scoped>` blocks compile into a single `dist/bojuvue.css` (the
   two entries share most of the same `.vue` files, so Rollup merges the CSS). A
   compiled Vue library's scoped styles aren't auto-injected at runtime the way they
