@@ -60,6 +60,31 @@ export default {
 The same stylesheet covers every component from both import paths — one import is
 enough regardless of which paths you use.
 
+### VitePress SSR builds
+
+If your site does a production SSR build (VitePress's default `vitepress build`), add
+this package's Vite plugin to your own `.vitepress/config.mts` so the build doesn't
+break:
+
+```ts
+// .vitepress/config.mts
+import { defineConfig } from 'vitepress'
+import { bojuvue } from 'bojuvue/vite'
+
+export default defineConfig({
+  vite: { plugins: [bojuvue()] },
+})
+```
+
+Without it, importing anything from `bojuvue/vitepress` can break your SSR build,
+because Vite externalizes `node_modules` dependencies by default during an SSR build —
+which means this package's own internal `vitepress/theme` import gets resolved by
+Node's raw module loader instead of Vite's, and that fails. The plugin tells Vite to
+bundle this package through its own resolver instead, the same way your site's own
+theme code already resolves an identical import successfully. See
+[#70](https://github.com/ScottKirvan/BojuVue/issues/70) for the full failure mode.
+No component API changes — this is the only thing that changes.
+
 Then in any .md page, no import needed:
 
 ```md

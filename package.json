@@ -27,6 +27,10 @@
       "types": "./dist/vitepress.d.ts",
       "import": "./dist/vitepress.js"
     },
+    "./vite": {
+      "types": "./dist/vite-plugin.d.ts",
+      "import": "./dist/vite.js"
+    },
     "./style.css": "./dist/bojuvue.css",
     "./dist/bojuvue.css": "./dist/bojuvue.css"
   },

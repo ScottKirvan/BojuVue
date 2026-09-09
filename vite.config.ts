@@ -19,6 +19,7 @@ export default defineConfig({
       entry: {
         bojuvue: 'src/index.ts',
         vitepress: 'src/vitepress.ts',
+        vite: 'src/vite-plugin.ts',
       },
       name: 'BojuVue',
       fileName: (_format, entryName) => `${entryName}.js`,
