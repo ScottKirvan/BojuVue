@@ -8,6 +8,8 @@
 * ship a CJS build of the Vite plugin, not just ESM ([eefe4b8](https://github.com/ScottKirvan/BojuVue/commit/eefe4b8a55e59b6dd6ce0c7b3ca55b9762153721))
 * ship a Vite plugin so consumers avoid SSR externalization breakage (fixes [#70](https://github.com/ScottKirvan/BojuVue/issues/70)) ([7c7d44f](https://github.com/ScottKirvan/BojuVue/commit/7c7d44f0ffcc96ae24d60be21dc58ce3d2b72ac0))
 
+Includes PRs: [#72](https://github.com/ScottKirvan/BojuVue/pull/72), [#73](https://github.com/ScottKirvan/BojuVue/pull/73)
+
 ## [0.4.2](https://github.com/ScottKirvan/BojuVue/compare/v0.4.1...v0.4.2) (2026-09-07)
 
 
