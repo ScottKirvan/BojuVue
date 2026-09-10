@@ -7,11 +7,11 @@ import { defineConfig } from 'vite'
 // .js/.ts default to CommonJS unless the consumer's package.json sets
 // "type": "module" (only .mjs/.mts force ESM regardless). An ESM-only
 // package hits `require()` on that default path and fails outright — see
-// notes/dev/mistakes.md and #70/#72 for the real consumer (BojuBot) this
-// broke on. The plugin has zero runtime dependencies, so a plain CJS build
-// alongside the ESM one (already produced by vite.config.ts's own 'vite'
-// entry) costs nothing and needs no external/dts config of its own — types
-// are already emitted once, from the ESM build, and apply to both.
+// notes/dev/lessonslearned.md and #70/#72 for the real consumer (BojuBot)
+// this broke on. The plugin has zero runtime dependencies, so a plain CJS
+// build alongside the ESM one (already produced by vite.config.ts's own
+// 'vite' entry) costs nothing and needs no dts config of its own — types are
+// already emitted once, from the ESM build, and apply to both.
 export default defineConfig({
   build: {
     emptyOutDir: false,
@@ -19,6 +19,15 @@ export default defineConfig({
       entry: { vite: 'src/vite-plugin.ts' },
       formats: ['cjs'],
       fileName: () => 'vite.cjs',
+    },
+    rollupOptions: {
+      // Nothing to externalize today — the plugin's only import is a
+      // type-only `import type { Plugin } from 'vite'`, which erases. This
+      // is here so that stays true by construction: without it, adding any
+      // real runtime import (`normalizePath` from 'vite', say) would
+      // silently bundle that dependency's source into dist/vite.cjs rather
+      // than failing the build.
+      external: [/^[^.]/],
     },
   },
 })
