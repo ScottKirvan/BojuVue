@@ -237,11 +237,18 @@ A description of a desired change is not, by itself, authorization to execute it
 message separates *what* to do from *when* ("I'll tell you when"), wait for the
 explicit go-ahead before acting — even on a fully-specified, low-risk change.
 
-**IF YOU CANNOT DO EXACTLY WHAT WAS ASKED — DUE TO A TECHNICAL CONSTRAINT OR ANY OTHER
-REASON — STATE THE CONSTRAINT AND STOP.** Do not silently substitute an alternative and
-proceed to implement it in the same turn. Naming the blocker is not itself permission
-to pick a workaround; the user decides which alternative (if any) to pursue. This
-applies even when the substitute seems obviously reasonable.
+**IF YOU CANNOT DO EXACTLY WHAT WAS ASKED — DUE TO A TECHNICAL CONSTRAINT, MISSING
+INFORMATION (a file path, a location, an ID), OR ANY OTHER REASON — STATE THE
+CONSTRAINT AND STOP.** Do not silently substitute an alternative and proceed to
+implement it in the same turn. Naming the blocker is not itself permission to pick a
+workaround; the user decides which alternative (if any) to pursue. This applies even
+when the substitute seems obviously reasonable.
+
+**Verify time-sensitive state before acting on it.** A claim like "that PR is still
+open" or "that fix isn't published yet" can go stale within the same conversation.
+Before an action's justification depends on a claim like that, check it against the
+current source of truth (`gh pr view`, `npm view`, etc.) — don't reuse an assumption
+from earlier in the session.
 
 **Two-strike auto-comply.** If corrected twice on the same point, treat the second
 correction as an automatic stop: comply immediately, with no further justification or

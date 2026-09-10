@@ -191,3 +191,42 @@ explicitly — don't let a technical sketch silently outrank an earlier decision
 because it's newer or more specific. When reviewing an implementation against a spec,
 verify it against every decision in the document, not only the section nearest to
 what's being built."
+
+---
+
+## 2026-09-10 — Acted on stale state, then substituted a scratch clone instead of asking for the real path
+
+**What happened:** Diagnosing a VitePress build failure in a new consumer repo
+(`BojuVue-Docs`), the agent assumed PR #71/#72 (the previous day's actual fix) were
+still open and unpublished — a leftover assumption from earlier in the conversation,
+never re-checked — and pushed the deprecated manual `ssr.noExternal` workaround to
+that repo instead, defeating the entire point of the plugin that work had just
+shipped. Caught only after the user pointed out both PRs were merged and the fix
+was already published — the real cause turned out to be that the consumer repo's own
+config simply hadn't been updated to add the plugin yet, a one-line gap, not a bug —
+but finding that required actually checking current state (PR status, the real
+published npm tarball's contents) rather than reasoning from stale memory.
+
+Separately, asked to add (not commit) that one-line fix, the agent didn't have a known
+path to the user's real local checkout of the consumer repo — and instead of saying so
+and asking, silently cloned a fresh scratch copy and made the edit there, producing a
+change invisible and useless to the user. Only surfaced when the user asked directly
+what good a change in a scratch repo does them.
+
+**Fix going forward:** Before taking an action whose justification rests on a state
+claim that changes over time — a PR's merged/open status, a package's published
+version, whether something already shipped — verify it against the current source of
+truth first, not memory from earlier in the conversation. And extend the existing
+"state the constraint and stop" rule explicitly to missing *information* needed to do
+the task as asked (a file path, a location, an ID), not just technical/API
+constraints — "I don't know where that is" got treated as something to quietly route
+around rather than the exact reason to stop and ask that rule already exists for.
+
+**Reusable phrase:** "Before acting on a claim about current state that can change
+over time (a PR's status, a package's published version, whether something already
+shipped), verify it against the actual current source of truth — don't reuse an
+assumption from earlier in the conversation. And: not knowing information required to
+do something as asked — including something as basic as a file path or location — is
+exactly the kind of constraint that means stop and ask, not silently substitute a
+workaround (a scratch clone, a guessed path, anything else) that solves your problem
+instead of theirs."
