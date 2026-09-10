@@ -191,3 +191,44 @@ explicitly — don't let a technical sketch silently outrank an earlier decision
 because it's newer or more specific. When reviewing an implementation against a spec,
 verify it against every decision in the document, not only the section nearest to
 what's being built."
+
+---
+
+## 2026-09-09 — A throwaway repro proved the wrong thing, twice, before verifying against the real consumer
+
+**What happened:** Fixing #70 (a VitePress SSR build breaking on `bojuvue/vitepress`'s
+internal `vitepress/theme` import), a `file:`-symlinked throwaway repro was built
+first to confirm the bug — and it didn't reproduce anything. Vite's SSR
+externalization step, the actual mechanism the bug depends on, is skipped entirely for
+a symlinked `node_modules` package (npm's default behavior for a `file:` directory
+dependency). Repacking the exact same code as a real tarball reproduced the bug
+immediately. After shipping a Vite-plugin fix (PR #72) and re-verifying it against
+that same repro — now with the fix applied — the build succeeded, and the fix was
+reported as verified.
+
+It wasn't. Testing the "verified" fix against BojuBot, the actual consumer that
+originally reported #70, immediately surfaced a second, unrelated failure: BojuBot's
+`.vitepress/config.js` is plain `.js` under a `package.json` with no `"type":
+"module"`, so Vite's own config-loading bundler treats it as CommonJS and `require()`s
+the plugin — but the shipped build was ESM-only, so it failed outright. The repro used
+a `.mts` extension, which always forces ESM regardless of package type, so it never
+exercised that path at all. Two different, unrelated failure modes, and the repro's
+own specific choices (symlink vs. tarball on the first pass, file extension on the
+second) happened to dodge each one in turn.
+
+**Fix going forward:** A fix verified only against a repro built to test it isn't
+verified against the actual bug — it's verified against whatever narrower thing the
+repro's specific choices happen to exercise. Once a fix passes its own repro, verify
+it again against the real, unmodified files of the actual reporting consumer before
+calling it done, since a repro's incidental choices (symlink vs. real install, file
+extension, module type, and anything else not deliberately controlled for) can
+silently avoid the exact failure path the fix is supposed to cover.
+
+**Reusable phrase:** "A fix verified only against your own throwaway repro isn't
+verified — repro environments make incidental choices (symlink vs. real install, file
+extension, module type) that can accidentally dodge the exact failure path you're
+trying to test. Once a fix passes your own repro, re-verify it against the real,
+unmodified files of the actual reporting consumer before calling it done. For anything
+touching npm dependency resolution or build-tool externalization specifically: never
+test via a `file:` directory dependency (npm installs it as a symlink, which skips
+that resolution path entirely) — pack a real tarball and install that instead."
