@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.4.4](https://github.com/ScottKirvan/BojuVue/compare/v0.4.3...v0.4.4) (2026-10-16)
+
+
+### Bug Fixes
+
+* add VitePress local search provider to docs ([b84a5f9](https://github.com/ScottKirvan/BojuVue/commit/b84a5f9eb793423cd057930de53ce0be6d1ebcb6))
+
 ## [0.4.3](https://github.com/ScottKirvan/BojuVue/compare/v0.4.2...v0.4.3) (2026-09-10)
 
 
