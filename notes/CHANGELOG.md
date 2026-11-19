@@ -1,5 +1,15 @@
 # Changelog
 
+## [0.4.4](https://github.com/ScottKirvan/BojuVue/compare/v0.4.3...v0.4.4) (2026-11-19)
+
+
+### Bug Fixes
+
+* add a 7-day cooldown to Dependabot version updates ([44c7870](https://github.com/ScottKirvan/BojuVue/commit/44c787070399f26a3dd7d04b2a65d5eadfe5da66))
+* add Dependabot config for monthly grouped dependency updates ([311f7a5](https://github.com/ScottKirvan/BojuVue/commit/311f7a5b7e1b115363e455f630f1d0c8af7cc559))
+* add VitePress local search provider to docs ([b84a5f9](https://github.com/ScottKirvan/BojuVue/commit/b84a5f9eb793423cd057930de53ce0be6d1ebcb6))
+* group Dependabot security fixes into one PR per folder ([d5fa7d4](https://github.com/ScottKirvan/BojuVue/commit/d5fa7d4ee3ba2e1117d207a6aa9d3e71e040efb9))
+
 ## [0.4.3](https://github.com/ScottKirvan/BojuVue/compare/v0.4.2...v0.4.3) (2026-09-10)
 
 
